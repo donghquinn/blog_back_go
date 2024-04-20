@@ -1,0 +1,57 @@
+version: "3.7"
+services:
+  db:
+    image: postgres:15-alpine3.17
+    ports:
+      - 5432:5432
+    restart: always
+    container_name: blog_db
+    env_file:
+      - .postgres.env
+    volumes:
+      - ./blogData:/var/lib/postgresql/data
+    networks:
+      - proxy
+
+  redis:
+    image: redis:7.0.15
+    container_name: blog_redis
+    restart: always
+    expose:
+      - ${REDIS_PORT}
+    volumes:
+      - ./redis.conf:/usr/local/conf/redis.conf
+      - ./redis_data:/data\
+    command: redis-server --requirepass ${REDIS_PASS}
+    env_file:
+      - .redis.env
+    labels:
+      - "name=blog"
+      - "mode=standalone"
+    networks:
+      - proxy
+    
+  app:
+    depends_on: 
+      - redis
+      - db
+    # image: ${REGISTRY_URL}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dong_ian_back
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - 9482:9482
+    volumes:
+      - ./logs:/home/node/logs
+    networks:
+      - proxy
+    
+volumes:
+  blog_minio_storage: {}
+networks:
+  proxy:
+    external: true
