@@ -49,8 +49,8 @@ func SetDatabaseConfig() {
 }
 
 func SetMinioConfig() {
-	MinioConfig.AccessKey = os.Getenv("ACCESS_KEY")
-	MinioConfig.HostUrl = os.Getenv("HOST_URL")
-	MinioConfig.SecretKey = os.Getenv("SECRET_KEY")
-	MinioConfig.VideoBucket = os.Getenv("VIDEO_BUCKET")
+	MinioConfig.AccessKey = os.Getenv("MINIO_ACCESSKEY")
+	MinioConfig.HostUrl = os.Getenv("MINIO_URL")
+	MinioConfig.SecretKey = os.Getenv("MINIO_SECRET")
+	MinioConfig.VideoBucket = os.Getenv("MINIO_BLOG_BUCKET")
 }
