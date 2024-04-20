@@ -12,7 +12,7 @@ import (
 	"github.com/donghquinn/blog_back_go/types"
 )
 
-
+// 전체 포스트 가져오기 - 페이징
 func GetPost(req *http.Request, res http.ResponseWriter) {
 	// parseBodyErr :=utils.DecodeBody(&req.Body)
 	connect, dbErr := database.InitDatabaseConnection()
@@ -46,8 +46,11 @@ func GetPost(req *http.Request, res http.ResponseWriter) {
 	dto.SetPostListResponse(res, 200, "01", queryResult)
 }
 
+// 포스트들 가져오기
 func QueryAllPostData(connect *sql.DB, parameters url.Values) ([]types.SelectAllPostData, error) {
-	result, queryErr := database.Query(connect, quries.GetAllPosts, parameters.Get("page"), parameters.Get("size") )
+	// 페이징 파라미터 파싱
+	result, queryErr := database.Query(connect, quries.GetAllPosts, parameters.Get("page"), parameters.Get("size"))
+
 	if queryErr != nil {
 		log.Printf("[POST] Get Post Data Error: %v", queryErr)
 
