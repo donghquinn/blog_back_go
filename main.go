@@ -36,7 +36,9 @@ func main() {
 		ReadTimeout:  30 * time.Second,
 	}
 
-	log.Printf("[START] Server Start")
+	log.Printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+	log.Printf("[START] Server Listening On: %s", configs.GlobalConfig.AppPort)
+	log.Printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
 	serving.ListenAndServe()
 }
