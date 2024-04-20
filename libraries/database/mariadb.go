@@ -53,3 +53,21 @@ func CheckConnection() error {
 
 	return nil
 }
+
+func Query(connect *sql.DB, queryString string, args ...string) (*sql.Rows, error) {
+	var arguments []interface{}
+
+    for _, arg := range args {
+        arguments = append(arguments, arg)
+    }	
+	
+	result, err := connect.Query(queryString, arguments...)
+
+	if err != nil {
+		log.Printf("[QUERY] Query Error: %v\n", err)
+
+		return nil, err
+	}
+
+	return result, nil
+}
