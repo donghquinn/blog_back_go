@@ -7,6 +7,8 @@ import (
 
 	"github.com/donghquinn/blog_back_go/configs"
 	"github.com/donghquinn/blog_back_go/libraries/database"
+	"github.com/donghquinn/blog_back_go/middlewares"
+	"github.com/donghquinn/blog_back_go/routers"
 	"github.com/joho/godotenv"
 )
 
@@ -28,6 +30,9 @@ func main() {
 	}
 
 	server := http.NewServeMux()
+	
+	middlewares.CorsMiddlewares(server)
+	routers.DefaultRouter(server)
 
 	serving := &http.Server {
 		Handler: server,

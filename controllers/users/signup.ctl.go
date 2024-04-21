@@ -16,6 +16,7 @@ import (
 func SignupController(res http.ResponseWriter, req *http.Request) {
 	var signupRequestBody types.UserSignupRequest
 
+	// BODY 파싱
 	parseErr := utils.DecodeBody(req, &signupRequestBody)
 
 	if parseErr != nil {
@@ -24,7 +25,8 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 		dto.SetErrorResponse(res, 401, "01", "SignUp Parsing Error", parseErr)
 		return
 	}
-	
+
+	// 요청 회원가입 데이터 복호화 (패스워드는 암호화의 암호화된 상태로 전달됨)
 	decodedEmail, decodedName, decodedPassword, decodeErr := decodeSignupUserRequest(signupRequestBody)
 
 	if decodeErr != nil {
@@ -39,6 +41,7 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// 암호화해서 업로드
 	userId, encodedEmail, encodedName, encodedPassword, enocodErr := encodeSignupUserInfo(decodedEmail, decodedPassword, decodedName)
 
 	if enocodErr != nil {
@@ -46,6 +49,7 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	
+	// 새로운 유저 데이터 입력
 	_, insertErr := database.InsertQuery(connect, queries.InsertSignupUser, userId, encodedEmail, encodedName, encodedPassword)
 
 	if insertErr != nil {
@@ -54,6 +58,7 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	dto.SetResponse(res, 200, "01")
+	return
 }
 
 func decodeSignupUserRequest(signupRequest types.UserSignupRequest) (string, string, string, error) {

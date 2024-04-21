@@ -72,6 +72,13 @@ func CheckConnection() error {
 		return createPostErr
 	}
 	
+	_, createFileErr := connect.Query(queries.CreateFileTable)
+
+	if createFileErr != nil {
+		log.Printf("[DATABASE] Create File Table Error: %v", createFileErr)
+
+		return createFileErr
+	}
 	
 	defer connect.Close()
 

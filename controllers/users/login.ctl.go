@@ -26,6 +26,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// 복호화
 	decodeEmail, decodePassword, decodeErr := decodeLoginRequest(loginRequst)
 
 	if decodeErr != nil {
@@ -34,6 +35,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// DB에서 유저 데이터 체크
 	queryResult, queryErr := getUserInfo(decodeEmail)
 
 	if queryErr != nil {
@@ -41,6 +43,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	
+	// 패스워드 비교 (암호화 해싱된 패스워드)
 	isMatch, matchErr := crypto.PasswordCompare(queryResult.User_password, decodePassword)
 
 	if matchErr != nil {
@@ -49,12 +52,14 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// 패스워드 일치하지 않을 때
 	if !isMatch {
 		log.Printf("[LOGIN] Password Does Not Match: %v", isMatch)
 		dto.SetErrorResponse(res, 405, "05", "Password Does not Match", fmt.Errorf("Password Does not match"))
 		return
 	}
 
+	// JWT 토큰 생성
 	token, tokenErr := auth.CreateJwtToken(queryResult.User_id, decodeEmail, queryResult.User_status)
 
 	if tokenErr != nil {
@@ -63,6 +68,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	dto.SetTokenResponse(res, 200, "01", token)
+	return
 }
 
 func decodeLoginRequest(loginRequest types.UserLoginRequest) (string, string, error) {

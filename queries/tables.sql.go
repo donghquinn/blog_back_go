@@ -31,8 +31,8 @@ var CreateFileTable = `
 	CREATE TABLE IF NOT EXISTS file_table (
 		file_seq 		BIGINT(20) 			NOT NULL 	AUTO_INCREMENT PRIMARY KEY,
 		file_type		TINYINT(1)			NOT NULL 	COMMENT '1 - 이미지, 2 - 비디오',
-		target_seq 		INT(20)				NULL	 	COMMENT '이미지 타겟 포스트 시퀀스',
-		target_id		VARCHAR(50)			NOT NULL	COMMENT '이미지 타겟 유저 id - 프로필 / 업로드 유저',
+		target_seq 		INT(20)				NULL	 	COMMENT '이미지 타겟 포스트 시퀀스' REFERENCES post_table(post_seq),
+		target_id		VARCHAR(50)			NOT NULL	COMMENT '이미지 타겟 유저 id - 프로필 / 업로드 유저' REFERENCES user_table(user_id),
 		target_table 	VARCHAR(20)			NOT NULL,
 		file_size		INT(20)				NOT NULL,
 		version_id 		VARCHAR(50)			NOT NULL,
