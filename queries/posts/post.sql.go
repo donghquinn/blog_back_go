@@ -8,8 +8,8 @@ var GetAllPosts = `
 		post_table
 	ORDER BY
 		reg_date ASC
-	LIMIT
-		?, ?
+	LIMIT ?
+	OFFSET ?
 `
 
 var InsertPost = `

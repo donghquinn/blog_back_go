@@ -2,8 +2,10 @@ package posts
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
@@ -24,7 +26,10 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 
 	log.Printf("[LIST] Request URL PAth - page: %s, size: %s", req.URL.Query().Get("page"), req.URL.Query().Get("size"))
 
-	queryResult, queryErr := QueryAllPostData(connect, req.URL.Query().Get("page"), req.URL.Query().Get("size"))
+	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
+	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
+
+	queryResult, queryErr := QueryAllPostData(connect, page, size)
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Query Post Data Error", queryErr)
@@ -36,12 +41,12 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 }
 
 // 포스트들 가져오기 - 모듈함수
-func QueryAllPostData(connect *sql.DB, page string, size string) ([]types.SelectAllPostData, error) {
+func QueryAllPostData(connect *sql.DB, page int, size int) ([]types.SelectAllPostData, error) {
 	// 페이징 파라미터 파싱
-	result, queryErr := database.Query(connect, quries.GetAllPosts, page, size)
+	result, queryErr := database.Query(connect, quries.GetAllPosts,  fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if queryErr != nil {
-		log.Printf("[POST] Get Post Data Error: %v", queryErr)
+		log.Printf("[LIST] Get Post Data Error: %v", queryErr)
 
 		return nil, queryErr
 	}
@@ -59,7 +64,7 @@ func QueryAllPostData(connect *sql.DB, page string, size string) ([]types.Select
 			&row.ModDate)
 
 		if scanErr != nil {
-			log.Printf("[POST] Scan and Assign Query Result Error: %v", scanErr)
+			log.Printf("[LIST] Scan and Assign Query Result Error: %v", scanErr)
 
 			return nil, scanErr
 		}
