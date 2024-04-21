@@ -36,7 +36,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// DB에서 유저 데이터 체크
-	queryResult, queryErr := getUserInfo(decodeEmail)
+	queryResult, queryErr := getUserInfo(loginRequst.Email)
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Query User Info Error", queryErr)
@@ -44,7 +44,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 	}
 	
 	// 패스워드 비교 (암호화 해싱된 패스워드)
-	isMatch, matchErr := crypto.PasswordCompare(queryResult.User_password, decodePassword)
+	isMatch, matchErr := crypto.PasswordCompare(queryResult.UserPassword, decodePassword)
 
 	if matchErr != nil {
 		log.Printf("[LOGIN] Match Hashed Password Error: %v", matchErr)
@@ -60,7 +60,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// JWT 토큰 생성
-	token, tokenErr := auth.CreateJwtToken(queryResult.User_id, decodeEmail, queryResult.User_status)
+	token, tokenErr := auth.CreateJwtToken(queryResult.UserId, decodeEmail, queryResult.UserStatus)
 
 	if tokenErr != nil {
 		dto.SetErrorResponse(res, 406, "06", "Create JWT Token Error", tokenErr)
@@ -89,25 +89,27 @@ func decodeLoginRequest(loginRequest types.UserLoginRequest) (string, string, er
 	return decodeEmail, decodePassword, nil
 }
 
-func getUserInfo(decodeEmail string) (types.UserLoginQueryResult, error){
+func getUserInfo(encodedEmail string) (types.UserLoginQueryResult, error){
 	connect, connectErr := database.InitDatabaseConnection()
 
 	if connectErr != nil {
 		return types.UserLoginQueryResult{}, connectErr
 	}
 
-	result, queryErr := database.Query(connect, queries.SelectUserInfo, decodeEmail)
+	result, queryErr := database.QueryOne(connect, queries.SelectUserInfo, encodedEmail)
 
 	if queryErr != nil {
 		return types.UserLoginQueryResult{}, queryErr
 	}
 
+	defer connect.Close()
+
 	var queryUserInfoResult types.UserLoginQueryResult
 
 	result.Scan(
-		&queryUserInfoResult.User_id,
-		&queryUserInfoResult.User_password,
-		&queryUserInfoResult.User_status)
+		&queryUserInfoResult.UserId,
+		&queryUserInfoResult.UserPassword,
+		&queryUserInfoResult.UserStatus)
 
 	return queryUserInfoResult, nil
 }

@@ -105,6 +105,25 @@ func Query(connect *sql.DB, queryString string, args ...string) (*sql.Rows, erro
 	return result, nil
 }
 
+// 쿼리
+func QueryOne(connect *sql.DB, queryString string, args ...string) (*sql.Row, error) {
+	var arguments []interface{}
+
+    for _, arg := range args {
+        arguments = append(arguments, arg)
+    }	
+	
+	result := connect.QueryRow(queryString, arguments...)
+
+	if result.Err() != nil {
+		log.Printf("[QUERY] Query Error: %v\n", result.Err())
+
+		return nil, result.Err()
+	}
+
+	return result, nil
+}
+
 // 인서트 쿼리
 func InsertQuery(connect *sql.DB, queryString string, args ...string) (int64, error) {
 	var arguments []interface{}

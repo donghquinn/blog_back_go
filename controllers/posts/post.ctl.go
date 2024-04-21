@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	quries "github.com/donghquinn/blog_back_go/queries/posts"
@@ -14,6 +15,14 @@ import (
 
 // 전체 포스트 가져오기 - 페이징
 func GetPostController(req *http.Request, res http.ResponseWriter) {
+	_, _, _, err := auth.ValidateJwtToken(req)
+
+	if err != nil {
+		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+
+		return
+	}
+
 	// parseBodyErr :=utils.DecodeBody(&req.Body)
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -63,11 +72,11 @@ func QueryAllPostData(connect *sql.DB, parameters url.Values) ([]types.SelectAll
 		var row types.SelectAllPostData
 
 		scanErr := result.Scan(
-			&row.Post_title,
-			&row.Post_contents,
-			&row.User_id,
-			&row.Reg_date,
-			&row.Mod_date)
+			&row.PostTitle,
+			&row.PostContents,
+			&row.UserId,
+			&row.RegDate,
+			&row.ModDate)
 
 		if scanErr != nil {
 			log.Printf("[POST] Scan and Assign Query Result Error: %v", scanErr)

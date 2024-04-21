@@ -6,5 +6,6 @@ var SelectUserInfo = `
 	FROM
 		user_table
 	WHERE
-		user_email = ?;
+		user_email = ?
+	;
 `

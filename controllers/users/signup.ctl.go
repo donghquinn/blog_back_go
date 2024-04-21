@@ -29,7 +29,7 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 	// 요청 회원가입 데이터 복호화 (패스워드는 암호화의 암호화된 상태로 전달됨)
 	decodedEmail, decodedName, decodedPassword, decodeErr := decodeSignupUserRequest(signupRequestBody)
 
-	log.Printf("[SIGNUP] decodedEmail: %s, decodedName: %s, decodedPassword: %s", decodedEmail, decodedName, decodedPassword)
+	// log.Printf("[SIGNUP] decodedEmail: %s, decodedName: %s, decodedPassword: %s", decodedEmail, decodedName, decodedPassword)
 
 	if decodeErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Decode Received User Info", decodeErr)
@@ -51,7 +51,7 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	
-	log.Printf("[SIGNUP] userId: %s, encodedEmail: %s, encodedName: %s, encodedPassword: %s",userId, encodedEmail, encodedName, encodedPassword)
+	// log.Printf("[SIGNUP] userId: %s, encodedEmail: %s, encodedName: %s, encodedPassword: %s",userId, encodedEmail, encodedName, encodedPassword)
 	// 새로운 유저 데이터 입력
 	_, insertErr := database.InsertQuery(connect, queries.InsertSignupUser, userId, encodedEmail, encodedPassword, encodedName)
 

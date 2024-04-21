@@ -19,7 +19,7 @@ func EncryptHashPassword(password string) (string, error) {
 }
 
 // 패스워드 비교
-func PasswordCompare(hash, password string) (bool, error) {
+func PasswordCompare(hash, password string) (bool, error) {    
     err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
     if err != nil {
         log.Printf("[COMPARE] Compare Password Error: %v", err)
