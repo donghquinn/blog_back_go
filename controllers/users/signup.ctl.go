@@ -29,6 +29,8 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 	// 요청 회원가입 데이터 복호화 (패스워드는 암호화의 암호화된 상태로 전달됨)
 	decodedEmail, decodedName, decodedPassword, decodeErr := decodeSignupUserRequest(signupRequestBody)
 
+	log.Printf("[SIGNUP] decodedEmail: %s, decodedName: %s, decodedPassword: %s", decodedEmail, decodedName, decodedPassword)
+
 	if decodeErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Decode Received User Info", decodeErr)
 		return
@@ -49,6 +51,7 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	
+	log.Printf("[SIGNUP] userId: %s, encodedEmail: %s, encodedName: %s, encodedPassword: %s",userId, encodedEmail, encodedName, encodedPassword)
 	// 새로운 유저 데이터 입력
 	_, insertErr := database.InsertQuery(connect, queries.InsertSignupUser, userId, encodedEmail, encodedPassword, encodedName)
 
@@ -62,25 +65,25 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 }
 
 func decodeSignupUserRequest(signupRequest types.UserSignupRequest) (string, string, string, error) {
-	decodedEmail, encodeEmailErr := crypto.DecryptString(signupRequest.Email)
+	decodedEmail, decodeEmailErr := crypto.DecryptString(signupRequest.Email)
 
-	if encodeEmailErr != nil {
-		log.Printf("[SIGNUP] Decode Email Error: %v", encodeEmailErr)
-		return "","","",encodeEmailErr
+	if decodeEmailErr != nil {
+		log.Printf("[SIGNUP] Decode Email Error: %v", decodeEmailErr)
+		return "","","",decodeEmailErr
 	}
 
-	decodedName, encodeNameErr := crypto.EncryptString(signupRequest.Name)
+	decodedName, decodeNameErr := crypto.DecryptString(signupRequest.Name)
 
-	if encodeNameErr != nil {
-		log.Printf("[SIGNUP] Decode Name Error: %v", encodeNameErr)
-		return "","","",encodeNameErr
+	if decodeNameErr != nil {
+		log.Printf("[SIGNUP] Decode Name Error: %v", decodeNameErr)
+		return "","","",decodeNameErr
 	}
 
-	decodedPassword, encodePasswordErr := crypto.DecryptString(signupRequest.Password)
+	decodedPassword, decodePasswordErr := crypto.DecryptString(signupRequest.Password)
 
-	if encodePasswordErr != nil {
-		log.Printf("[SIGNUP] Decode Password Error: %v", encodePasswordErr)
-		return "","","",encodePasswordErr
+	if decodePasswordErr != nil {
+		log.Printf("[SIGNUP] Decode Password Error: %v", decodePasswordErr)
+		return "","","",decodePasswordErr
 	}
 
 	return decodedEmail, decodedName, decodedPassword, nil
