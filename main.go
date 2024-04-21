@@ -18,10 +18,8 @@ func main() {
 	if envErr != nil {
 		log.Printf("[ENV] Load Env Error")
 	}
-
-	configs.SetGlobalConfig()
-	configs.SetDatabaseConfig()
-	configs.SetMinioConfig()
+	
+	setConfigs()
 
 	checkErr := database.CheckConnection()
 
@@ -29,21 +27,34 @@ func main() {
 		log.Printf("[START] Databae Connection Check Error")
 	}
 
-	server := http.NewServeMux()
-	
-	middlewares.CorsMiddlewares(server)
-	routers.DefaultRouter(server)
-
-	serving := &http.Server {
-		Handler: server,
-		Addr: configs.GlobalConfig.AppHost,
-		WriteTimeout: 30 * time.Second,
-		ReadTimeout:  30 * time.Second,
-	}
+	serving := openServer()
 
 	log.Printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+	log.Printf("[DEBUG] App Host %s", configs.GlobalConfig.AppHost)
 	log.Printf("[START] Server Listening On: %s", configs.GlobalConfig.AppPort)
 	log.Printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
 	serving.ListenAndServe()
+}
+
+func openServer() *http.Server{
+	server := http.NewServeMux()
+
+	middlewares.CorsMiddlewares(server)
+	routers.DefaultRouter(server)
+
+	serving := &http.Server{
+		Handler: 		server,
+		Addr: 			configs.GlobalConfig.AppHost,
+		WriteTimeout: 	30 * time.Second,
+		ReadTimeout:  	30 * time.Second,
+	}
+
+	return serving
+}
+
+func setConfigs() {
+	configs.SetGlobalConfig()
+	configs.SetDatabaseConfig()
+	configs.SetMinioConfig()
 }
