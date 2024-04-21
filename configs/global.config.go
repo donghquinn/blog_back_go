@@ -30,7 +30,7 @@ type MinioConfigStruct struct {
 	AccessKey string
 	SecretKey string
 	HostUrl string
-	VideoBucket string
+	BlogBucket string
 }
 
 func SetGlobalConfig(){
@@ -54,5 +54,5 @@ func SetMinioConfig() {
 	MinioConfig.AccessKey = os.Getenv("MINIO_ACCESSKEY")
 	MinioConfig.HostUrl = os.Getenv("MINIO_URL")
 	MinioConfig.SecretKey = os.Getenv("MINIO_SECRET")
-	MinioConfig.VideoBucket = os.Getenv("MINIO_BLOG_BUCKET")
+	MinioConfig.BlogBucket = os.Getenv("MINIO_BLOG_BUCKET")
 }
