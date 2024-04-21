@@ -87,7 +87,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-		// 요청으로부터 이미지 파일 가져오기
+	// 요청으로부터 이미지 파일 가져오기
 	file, handler, fileErr := image.GetImagefileFromRequest(res, req)
 
 	if fileErr != nil {
@@ -108,7 +108,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	contentType := handler.Header["Content-Type"][0]
 
 	// 이미지 업로드 - minio
-	imageInfo, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
+	imageInfo, uploadErr := database.UploadVideo(handler.Filename, tempFile.Name(), contentType)
 
 	if uploadErr != nil {
 		dto.SetErrorResponse(res, 405, "05", "Upload Image Error", uploadErr)
@@ -126,6 +126,8 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		// USER ID from JWT
 		contentType,
 		userId,
+		// post_seq
+		"123124",
 		"post_table",
 		strconv.Itoa(int(handler.Size)),
 		versionId)
