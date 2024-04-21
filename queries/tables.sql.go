@@ -19,7 +19,7 @@ var CreateUserTable = `
 	CREATE TABLE IF NOT EXISTS user_table (
 		user_id 		VARCHAR(50)			NOT NULL	PRIMARY KEY,
 		user_email 		VARCHAR(100)		NOT NULL	UNIQUE,
-		user_password 	VARCHAR(150)		NOT NULL,
+		user_password 	VARCHAR(200)		NOT NULL,
 		user_name 		VARCHAR(50)			NOT NULL,
 		user_status		TINYINT(1)			NOT NULL 	DEFAULT 1 COMMENT '0: 비활성, 1: 활성, 2: 탈퇴',
 		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP,

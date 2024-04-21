@@ -8,7 +8,7 @@ import (
 )
 
 func DefaultRouter(server *http.ServeMux) {
-	server.HandleFunc("GET /", controllers.DefaultController)
+	server.HandleFunc("GET /api", controllers.DefaultController)
 
 	routers.UserRouter(server)
 }

@@ -22,22 +22,27 @@ func DecryptString(encodedString string) (string, error) {
 
 	// Validate input string
     if len(encodedString)%2 != 0 {
+        log.Printf("invalid input length")
         return "", errors.New("invalid input length")
     }
+
     for _, char := range encodedString {
         if (char < '0' || char > '9') && (char < 'a' || char > 'f') && (char < 'A' || char > 'F') {
+            log.Printf("invalid hexadecimal character: %c", char)
             return "", fmt.Errorf("invalid hexadecimal character: %c", char)
         }
     }
 
     // Decode hexadecimal encoded ciphertext
     cipherText, err := hex.DecodeString(encodedString)
+
     if err != nil {
         log.Printf("Decoding Error: %v", err)
         return "", err
     }
 
     block, err := aes.NewCipher([]byte(globalConfig.AesKey))
+
     if err != nil {
         log.Printf("Creating Cipher Error: %v", err)
         return "", err

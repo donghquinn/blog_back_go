@@ -1,14 +1,14 @@
 package types
 
 type UserSignupRequest struct {
-	UserEmail string `json:"userEmail"`
-	UserPassword string `json:"userPassword"`
-	UserName string `json:"userName"`
+	Email string `json:"email"`
+	Password string `json:"password"`
+	Name string `json:"name"`
  }
 
  type UserLoginRequest struct {
-	UserEmail string `json:"userEmail"`
-	UserPassword string `json:"userPassword"`
+	Email string `json:"email"`
+	Password string `json:"password"`
  }
 
  type UserLoginQueryResult struct {

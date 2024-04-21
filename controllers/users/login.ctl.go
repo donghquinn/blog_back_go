@@ -72,14 +72,14 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 }
 
 func decodeLoginRequest(loginRequest types.UserLoginRequest) (string, string, error) {
-	decodeEmail, decodeEmailErr := crypto.DecryptString(loginRequest.UserEmail)
+	decodeEmail, decodeEmailErr := crypto.DecryptString(loginRequest.Email)
 
 	if decodeEmailErr != nil {
 		log.Printf("[LOGIN] Decode Email Err: %v", decodeEmailErr)
 		return "", "", decodeEmailErr
 	}
 
-	decodePassword, decodePassErr := crypto.DecryptString(loginRequest.UserPassword)
+	decodePassword, decodePassErr := crypto.DecryptString(loginRequest.Password)
 
 	if decodePassErr!= nil {
 		log.Printf("[LOGIN] Decode Password Err: %v", decodePassErr)

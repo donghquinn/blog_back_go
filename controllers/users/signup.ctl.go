@@ -62,21 +62,24 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 }
 
 func decodeSignupUserRequest(signupRequest types.UserSignupRequest) (string, string, string, error) {
-	decodedEmail, encodeEmailErr := crypto.DecryptString(signupRequest.UserEmail)
+	decodedEmail, encodeEmailErr := crypto.DecryptString(signupRequest.Email)
 
 	if encodeEmailErr != nil {
+		log.Printf("[SIGNUP] Decode Email Error: %v", encodeEmailErr)
 		return "","","",encodeEmailErr
 	}
 
-	decodedName, encodeNameErr := crypto.EncryptString(signupRequest.UserName)
+	decodedName, encodeNameErr := crypto.EncryptString(signupRequest.Name)
 
 	if encodeNameErr != nil {
+		log.Printf("[SIGNUP] Decode Name Error: %v", encodeNameErr)
 		return "","","",encodeNameErr
 	}
 
-	decodedPassword, encodePasswordErr := crypto.DecryptString(signupRequest.UserPassword)
+	decodedPassword, encodePasswordErr := crypto.DecryptString(signupRequest.Password)
 
 	if encodePasswordErr != nil {
+		log.Printf("[SIGNUP] Decode Password Error: %v", encodePasswordErr)
 		return "","","",encodePasswordErr
 	}
 
