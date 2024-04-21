@@ -56,7 +56,7 @@ func CheckConnection() error {
 		return  pingErr
 	}
 
-	_, createUserErr := connect.Exec(queries.CreateUserTable)
+	_, createUserErr := connect.Query(queries.CreateUserTable)
 
 	if createUserErr != nil {
 		log.Printf("[DATABASE] Create User Table Err: %v", createUserErr)
@@ -64,13 +64,15 @@ func CheckConnection() error {
 		return createUserErr
 	}
 
-	_, createPostErr := connect.Exec(queries.CreatePostTable)
+	_, createPostErr := connect.Query(queries.CreatePostTable)
 
 	if createPostErr != nil {
 		log.Printf("[DATABASE] Create Post Table Error: %v", createPostErr)
 
 		return createPostErr
 	}
+	
+	defer connect.Close()
 
 	return nil
 }
@@ -110,6 +112,7 @@ func InsertQuery(connect *sql.DB, queryString string, args ...string) (int64, er
 		return -99999, insertErr
 	}
 
+	// Insert ID
 	insertId, insertIdErr := insertResult.LastInsertId()
 
 	if insertIdErr != nil {
