@@ -39,18 +39,18 @@ services:
     depends_on: 
       - redis
       - db
-    # image: ${REGISTRY_URL}
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${REGISTRY_URL}
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     container_name: dong_ian_back
     restart: unless-stopped
     env_file:
       - .env
     ports:
-      - 9482:9482
-    volumes:
-      - ./logs:/home/node/logs
+      - ${APP_PORT}:${APP_PORT}
+    # volumes:
+    #   - ./logs:/home/node/logs
     networks:
       - proxy
     
