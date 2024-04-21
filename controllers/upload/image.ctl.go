@@ -1,7 +1,9 @@
 package upload
 
 import (
+	"log"
 	"net/http"
+	"os"
 	"strconv"
 
 	"github.com/donghquinn/blog_back_go/auth"
@@ -72,6 +74,15 @@ func UploadProfileImageController(res http.ResponseWriter, req *http.Request) {
 
 	defer connect.Close()
 
+	removeErr := os.Remove(tempFile.Name())
+	
+	if removeErr != nil {
+		log.Printf("[UPLOAD] Remove Saved Image Error: %v", removeErr)
+
+		dto.SetErrorResponse(res, 407, "07", "Remove Image Error", removeErr)
+		return
+	}
+	
 	dto.SetResponseWithMessage(res, 200, "01", "Successfully Image Uploaded")
 
 	return
@@ -139,6 +150,15 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
     }
 
 	defer connect.Close()
+
+	removeErr := os.Remove(tempFile.Name())
+
+	if removeErr != nil {
+		log.Printf("[UPLOAD] Remove Saved Image Error: %v", removeErr)
+
+		dto.SetErrorResponse(res, 407, "07", "Remove Image Error", removeErr)
+		return
+	}
 
 	dto.SetResponseWithMessage(res, 200, "01", "Successfully Image Uploaded")
 
