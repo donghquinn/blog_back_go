@@ -1,4 +1,4 @@
-package users
+package queries
 
 var InsertSignupUser = `
 	INSERT INTO user_table

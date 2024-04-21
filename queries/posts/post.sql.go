@@ -1,4 +1,4 @@
-package quries
+package queries
 
 
 var GetAllPosts = `
