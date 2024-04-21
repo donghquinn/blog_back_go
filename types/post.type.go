@@ -1,9 +1,14 @@
 package types
 
 type SelectAllPostData struct {
-	Post_title string `json:"postTitle"`
-	Post_contents string `json:"postContents"`
-	User_id string `json:"user_id"`
-	Reg_date string `json:"regDate"`
-	Mod_date string `json:"modDate"`
+	PostTitle string `json:"postTitle"`
+	PostContents string `json:"postContents"`
+	UserId string `json:"user_id"`
+	RegDate string `json:"regDate"`
+	ModDate string `json:"modDate"`
+}
+
+type RegisterPostRequest struct {
+	PostTitle string `json:"postTitle"`
+	PostContents string `json:"postContents"`
 }
