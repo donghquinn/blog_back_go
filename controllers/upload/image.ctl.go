@@ -11,6 +11,7 @@ import (
 	queries "github.com/donghquinn/blog_back_go/queries/upload"
 )
 
+// 프로필 이미지 업로드
 func UploadProfileImageController(res http.ResponseWriter, req *http.Request) {
 	userId, _, _, err := auth.ValidateJwtToken(req)
 
@@ -76,6 +77,7 @@ func UploadProfileImageController(res http.ResponseWriter, req *http.Request) {
 	return
 }
 
+// 게시글 이미지 업로드
 func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	userId, _, _, err := auth.ValidateJwtToken(req)
 
@@ -120,11 +122,11 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	// 데이터 입력 - DB
 	_, insertErr := database.InsertQuery(
 		connect, 
-		queries.InsertProfileImageData,
+		queries.InsertPostImageData,
 		// USER ID from JWT
 		contentType,
 		userId,
-		"user_table",
+		"post_table",
 		strconv.Itoa(int(handler.Size)),
 		versionId)
     
