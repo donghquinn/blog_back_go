@@ -41,7 +41,7 @@ func InitDatabaseConnection() (*sql.DB, error) {
 // 테이블 생성
 func CheckConnection() error {
 	log.Printf("Waiting for Database Connection,,,")
-	time.Sleep(time.Second * 5)
+	time.Sleep(time.Second * 10)
 	
 	connect, dbErr := InitDatabaseConnection()
 
