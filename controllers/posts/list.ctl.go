@@ -24,15 +24,13 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Printf("[LIST] Request URL PAth - page: %s, size: %s", req.URL.Query().Get("page"), req.URL.Query().Get("size"))
-
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
 	queryResult, queryErr := QueryAllPostData(connect, page, size)
 
 	if queryErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Query Post Data Error", queryErr)
+		dto.SetErrorResponse(res, 402, "02", "Query Post Data Error", queryErr)
 
 		return
 	}
