@@ -13,7 +13,7 @@ import (
 )
 
 // 전체 포스트 가져오기 - 페이징
-func GetPost(req *http.Request, res http.ResponseWriter) {
+func GetPostController(req *http.Request, res http.ResponseWriter) {
 	// parseBodyErr :=utils.DecodeBody(&req.Body)
 	connect, dbErr := database.InitDatabaseConnection()
 

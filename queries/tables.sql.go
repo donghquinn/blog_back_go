@@ -6,7 +6,7 @@ var CreatePostTable = `
 		post_seq 		INT(20)		    NOT NULL AUTO_INCREMENT PRIMARY KEY,
 		user_id 		VARCHAR(50)		NOT NULL REFERENCES user_table(user_id),
 		post_title 		VARCHAR(50)		NOT NULL,
-		post_contents 	VARCHAR(5000)	NOT NULL,
+		post_contents 	TEXT			NOT NULL,
 		post_status		TINYINT(1)		NOT NULL DEFAULT 1	COMMENT '0: 비활성, 1: 활성, 2: 삭제',
 		reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		mod_date		DATETIME	    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -26,4 +26,17 @@ var CreateUserTable = `
 		mod_date		DATETIME		    NULL 		DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 	);
 `
+
+var CreateFileTable = `
+	CREATE TABLE IF NOT EXISTS file_table (
+		file_seq 		BIGINT(20) 			NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		file_type		TINYINT(1)			NOT NULL COMMENT '1 - 이미지, 2 - 비디오',
+		target_seq 		INT(20)				NULL	 COMMENT '이미지 타겟 포스트 시퀀스',
+		target_id		VARCHAR(50)			NULL	 COMMENT '이미지 타겟 유저 id - 프로필',
+		target_table 	VARCHAR(20)			NOT NULL,
+		version_id 		VARCHAR(50)			NOT NULL,
+		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP
+	)
+`
+
 //	mod_date    DATETIME        NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

@@ -72,6 +72,7 @@ func CheckConnection() error {
 		return createPostErr
 	}
 	
+	
 	defer connect.Close()
 
 	return nil
