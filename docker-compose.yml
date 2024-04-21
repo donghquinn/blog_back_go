@@ -49,13 +49,11 @@ services:
       - .env
     ports:
       - ${APP_PORT}:${APP_PORT}
-    # volumes:
-    #   - ./logs:/home/node/logs
+    volumes:
+      - ./.env:/home/node/.env
     networks:
       - proxy
-    
-volumes:
-  blog_minio_storage: {}
+
 networks:
   proxy:
     external: true
