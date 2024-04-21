@@ -14,6 +14,13 @@ func SetResponse(res http.ResponseWriter, statusCode int, code string) {
 	res.Write(responseObject)
 }
 
+func SetTokenResponse(res http.ResponseWriter, statusCode int, code string, token string) {
+	responseObject, _ := json.Marshal(types.ResponseTokenType{Code: code, Status: true, Token: token})
+
+	res.WriteHeader(200)
+	res.Write(responseObject)
+}
+
 func SetPostListResponse(res http.ResponseWriter, statusCode int, code string, data []types.SelectAllPostData) {
 	responseObject, _ := json.Marshal(types.ResponsePostListType{Code: code, Status: true, Result: data})
 
