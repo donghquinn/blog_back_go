@@ -7,3 +7,8 @@ type SelectAllPostData struct {
 	RegDate string `json:"regDate"`
 	ModDate string `json:"modDate"`
 }
+
+type RegisterPostRequest struct {
+	PostTitle string `json:"postTitle"`
+	PostContents string `json:"postContents"`
+}

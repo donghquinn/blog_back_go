@@ -4,9 +4,7 @@ import (
 	"database/sql"
 	"log"
 	"net/http"
-	"net/url"
 
-	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	quries "github.com/donghquinn/blog_back_go/queries/posts"
@@ -14,15 +12,7 @@ import (
 )
 
 // 전체 포스트 가져오기 - 페이징
-func GetPostController(req *http.Request, res http.ResponseWriter) {
-	_, _, _, err := auth.ValidateJwtToken(req)
-
-	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
-
-		return
-	}
-
+func GetPostController(res http.ResponseWriter, req *http.Request) {
 	// parseBodyErr :=utils.DecodeBody(&req.Body)
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -32,19 +22,9 @@ func GetPostController(req *http.Request, res http.ResponseWriter) {
 		return
 	}
 
-	parameters, parseErr := url.ParseQuery(req.URL.Path)
+	log.Printf("[LIST] Request URL PAth - page: %s, size: %s", req.URL.Query().Get("page"), req.URL.Query().Get("size"))
 
-	if parseErr != nil {
-		log.Printf("[POST] Get Post Parse Parameters Error: %v", parseErr)
-
-		dto.SetErrorResponse(res, 402, "02", "Parse Parameter Error", parseErr)
-
-		return
-	}
-
-	log.Printf("[POST] Got URL Paramter: %s", parameters.Encode())
-
-	queryResult, queryErr := QueryAllPostData(connect, parameters)
+	queryResult, queryErr := QueryAllPostData(connect, req.URL.Query().Get("page"), req.URL.Query().Get("size"))
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Query Post Data Error", queryErr)
@@ -55,10 +35,10 @@ func GetPostController(req *http.Request, res http.ResponseWriter) {
 	dto.SetPostListResponse(res, 200, "01", queryResult)
 }
 
-// 포스트들 가져오기
-func QueryAllPostData(connect *sql.DB, parameters url.Values) ([]types.SelectAllPostData, error) {
+// 포스트들 가져오기 - 모듈함수
+func QueryAllPostData(connect *sql.DB, page string, size string) ([]types.SelectAllPostData, error) {
 	// 페이징 파라미터 파싱
-	result, queryErr := database.Query(connect, quries.GetAllPosts, parameters.Get("page"), parameters.Get("size"))
+	result, queryErr := database.Query(connect, quries.GetAllPosts, page, size)
 
 	if queryErr != nil {
 		log.Printf("[POST] Get Post Data Error: %v", queryErr)

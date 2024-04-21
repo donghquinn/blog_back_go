@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/donghquinn/blog_back_go/controllers"
+	postRouters "github.com/donghquinn/blog_back_go/routers/posts"
 	uploadRouters "github.com/donghquinn/blog_back_go/routers/upload"
 	userRouters "github.com/donghquinn/blog_back_go/routers/users"
 )
@@ -13,4 +14,5 @@ func DefaultRouter(server *http.ServeMux) {
 
 	userRouters.UserRouter(server)
 	uploadRouters.UploadImageController(server)
+	postRouters.PostRouter(server)
 }
