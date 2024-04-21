@@ -45,6 +45,8 @@ func CheckConnection() error {
 	if dbErr != nil {
 		return dbErr
 	}
+
+	time.Sleep(time.Second * 5)
 	
 	pingErr := connect.Ping()
 
