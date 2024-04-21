@@ -47,7 +47,7 @@ func UploadProfileImageController(res http.ResponseWriter, req *http.Request) {
 	imageInfo, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
 
 	if uploadErr != nil {
-		dto.SetErrorResponse(res, 405, "05", "Upload Image Error", uploadErr)
+		dto.SetErrorResponse(res, 404, "04", "Upload Image Error", uploadErr)
 		return
 	}
 
@@ -60,14 +60,14 @@ func UploadProfileImageController(res http.ResponseWriter, req *http.Request) {
 		connect, 
 		queries.InsertProfileImageData,
 		// USER ID from JWT
-		contentType,
+		"1",
 		userId,
 		"user_table",
 		strconv.Itoa(int(handler.Size)),
 		versionId)
     
 	if insertErr != nil {
- 		dto.SetErrorResponse(res, 406, "06", "Insert Image Info Error", insertErr)
+ 		dto.SetErrorResponse(res, 405, "05", "Insert Image Info Error", insertErr)
 
 		return
     }
@@ -79,10 +79,10 @@ func UploadProfileImageController(res http.ResponseWriter, req *http.Request) {
 	if removeErr != nil {
 		log.Printf("[UPLOAD] Remove Saved Image Error: %v", removeErr)
 
-		dto.SetErrorResponse(res, 407, "07", "Remove Image Error", removeErr)
+		dto.SetErrorResponse(res, 406, "06", "Remove Image Error", removeErr)
 		return
 	}
-	
+
 	dto.SetResponseWithMessage(res, 200, "01", "Successfully Image Uploaded")
 
 	return

@@ -18,9 +18,13 @@ func main() {
 	if envErr != nil {
 		log.Printf("[ENV] Load Env Error")
 	}
-	
-	setConfigs()
 
+	setConfigs()
+	minioErr := database.MinioConnect()
+	if minioErr != nil {
+		log.Printf("[START] Minio Connection Check Error: %v", minioErr)
+	}
+	
 	checkErr := database.CheckConnection()
 
 	if checkErr != nil {

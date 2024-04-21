@@ -7,5 +7,5 @@ import (
 )
 
 func UploadImageController(server *http.ServeMux) {
-	server.HandleFunc("POST /upload/image", upload.UploadProfileImageController)
+	server.HandleFunc("POST /upload/image/profile", upload.UploadProfileImageController)
 }
