@@ -28,7 +28,7 @@ func SetTokenResponse(res http.ResponseWriter, statusCode int, code string, toke
 	res.Write(responseObject)
 }
 
-func SetPostListResponse(res http.ResponseWriter, statusCode int, code string, data []types.SelectAllPostData) {
+func SetPostListResponse(res http.ResponseWriter, statusCode int, code string, data []types.SelectAllPostDataResult) {
 	responseObject, _ := json.Marshal(types.ResponsePostListType{Code: code, Status: true, Result: data})
 
 	res.WriteHeader(200)

@@ -8,7 +8,7 @@ type ResponseType struct {
 type ResponsePostListType struct {
 	Code string `json:"code"`
 	Status bool `json:"status"`
-	Result []SelectAllPostData `json:"result"`
+	Result []SelectAllPostDataResult `json:"result"`
 }
 
 

@@ -11,6 +11,7 @@ import (
 	"github.com/donghquinn/blog_back_go/utils"
 )
 
+// 게시글 등록
 func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 	userId, _, _, err := auth.ValidateJwtToken(req)
 
@@ -36,6 +37,7 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// 데이터 입력
 	_, queryErr := database.InsertQuery(connect, queries.InsertPost, userId, registerPostRequest.PostTitle, registerPostRequest.PostContents)
 
 	if queryErr != nil {
