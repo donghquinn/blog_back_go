@@ -41,8 +41,8 @@ services:
       - db
     image: ${REGISTRY_URL}
     # build:
-    #   context: .
-    #   dockerfile: Dockerfile
+      # context: .
+      # dockerfile: Dockerfile
     container_name: dong_ian_back
     restart: unless-stopped
     env_file:

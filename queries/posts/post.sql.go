@@ -10,7 +10,7 @@ var SelectAllPosts = `
 	WHERE
 		p.post_status = 1
 	ORDER BY
-		reg_date ASC
+		reg_date DESC
 	LIMIT ?
 	OFFSET ?
 `
