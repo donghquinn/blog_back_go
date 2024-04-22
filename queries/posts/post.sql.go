@@ -21,15 +21,8 @@ var InsertPost = `
 `
 
 var InsertUpdatePostImage = `
-	INSERT INTO file_table (target_seq)
-	VALUES (?)
-	ON DUPLICATE UPDATE
-		file_seq = VALUES(file_seq),
-		file_type = VALUES(file_type),
-		target_seq = VALUES(target_seq),
-		target_id = VALUES(target_id),
-		target_table = VALUES(target_table),
-		file_size = VALUES(file_size),
-		version_id = VALUES(version_id),
-		reg_date = VALUES(reg_date)
+	UPDATE file_table SET 
+		target_seq = ?
+	WHERE
+		file_seq = ?
 `

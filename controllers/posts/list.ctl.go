@@ -70,5 +70,7 @@ func QueryAllPostData(connect *sql.DB, page int, size int) ([]types.SelectAllPos
 		queryResult = append(queryResult, row)
 	}
 
+	defer connect.Close()
+
 	return queryResult, nil
 }

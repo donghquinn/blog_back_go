@@ -3,6 +3,7 @@ package posts
 import (
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
@@ -39,10 +40,12 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// 데이터 입력
-	_, queryErr := database.InsertQuery(connect, queries.InsertPost, userId, registerPostRequest.PostTitle, registerPostRequest.PostContents)
-
+	insertId, queryErr := database.InsertQuery(connect, queries.InsertPost, userId, registerPostRequest.PostTitle, registerPostRequest.PostContents)
+	postSeq := strconv.Itoa(int(insertId))
+	
 	for _, seq := range(registerPostRequest.ImageSeqs) {
-		_, insertUpdateRr := database.InsertQuery(connect, queries.InsertUpdatePostImage, seq)
+
+		_, insertUpdateRr := database.InsertQuery(connect, queries.InsertUpdatePostImage, seq, postSeq)
 
 		if insertUpdateRr != nil {
 			log.Printf("[REGISTER] Insert Update File Data Error: %v", insertUpdateRr)
@@ -50,6 +53,8 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 	}
+
+	defer connect.Close()
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 404, "04", "Data Insert Error", queryErr)

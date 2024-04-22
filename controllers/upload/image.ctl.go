@@ -136,7 +136,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		connect, 
 		queries.InsertPostImageData,
 		// USER ID from JWT
-		contentType,
+		"1",
 		userId,
 		// post_seq
 		"post_table",
