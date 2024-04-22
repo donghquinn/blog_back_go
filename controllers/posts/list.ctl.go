@@ -8,6 +8,7 @@ import (
 	"strconv"
 
 	"github.com/donghquinn/blog_back_go/dto"
+	"github.com/donghquinn/blog_back_go/libraries/crypto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	quries "github.com/donghquinn/blog_back_go/queries/posts"
 	"github.com/donghquinn/blog_back_go/types"
@@ -35,7 +36,30 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	dto.SetPostListResponse(res, 200, "01", queryResult)
+	var returnDecodedData []types.SelectAllPostDataResult
+
+	// 이름 디코딩 위해
+	for _, data := range(queryResult){
+		decodedName, decodeErr := crypto.DecryptString(data.UserName)
+
+		if decodeErr != nil {
+			log.Printf("[LIST] Decoding User Name Error: %v", decodeErr)
+			dto.SetErrorResponse(res, 403,"03", "Decode Name Error", decodeErr)
+			return
+		}
+
+		returnDecodedData = append(returnDecodedData, types.SelectAllPostDataResult{
+			PostSeq: data.PostSeq,
+			PostTitle: data.PostTitle,
+			PostContents: data.PostContents,
+			UserId: data.UserId,
+			UserName: decodedName,
+			RegDate: data.RegDate,
+			ModDate: data.ModDate,
+		})
+	}
+
+	dto.SetPostListResponse(res, 200, "01", returnDecodedData)
 }
 
 // 포스트들 가져오기 - 모듈함수
@@ -59,6 +83,7 @@ func QueryAllPostData(connect *sql.DB, page int, size int) ([]types.SelectAllPos
 			&row.PostTitle,
 			&row.PostContents,
 			&row.UserId,
+			&row.UserName,
 			&row.RegDate,
 			&row.ModDate)
 
