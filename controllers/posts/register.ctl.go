@@ -63,9 +63,10 @@ func insertPostData(registerPostRequest types.RegisterPostRequest, userId string
 		log.Printf("[REGISTER] Insert Post Data Error: %v", queryErr)
 		return queryErr
 	}
+	postSeq := strconv.Itoa(int(insertId))
 
 	for _, t := range(registerPostRequest.Tags) {
-		_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, strconv.Itoa(int(insertId)), t)
+		_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, t)
 
 		if tagQueryErr != nil {
 			log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
@@ -73,8 +74,6 @@ func insertPostData(registerPostRequest types.RegisterPostRequest, userId string
 			return tagQueryErr
 		}
 	}
-
-	postSeq := strconv.Itoa(int(insertId))
 
 	for _, seq := range(registerPostRequest.ImageSeqs) {
 		// 파일 데이터 업데이트

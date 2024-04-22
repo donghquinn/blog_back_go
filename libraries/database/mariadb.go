@@ -88,6 +88,12 @@ func CheckConnection() error {
 		return createCommentErr
 	}
 	
+	_, createTagErr := connect.Query(queries.CreateTagTable)
+	if createTagErr != nil {
+		log.Printf("[DATABASE] Create Tag Table Error: %v", createTagErr)
+		return createTagErr
+	}
+
 	defer connect.Close()
 
 	return nil

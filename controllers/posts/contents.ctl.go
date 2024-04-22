@@ -89,7 +89,8 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 	}
 
 	// 특정 게시글 조회
-	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq)
+	// TODO 한번에 태그 배열까지 쿼리
+	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq, postSeq)
 
 	if queryErr != nil {
 		log.Printf("[CONTENTS] Query A Post Contents Error: %v", queryErr)
@@ -105,13 +106,15 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 		&queryResult.PostTitle, 
 		&queryResult.PostContents, 
 		&queryResult.PostStatus,
-		&queryResult.TagName,
 		&queryResult.UserId, 
 		&queryResult.UserName,
 		&queryResult.Viewed,
 		&queryResult.IsPinned,
 		&queryResult.RegDate,
-		&queryResult.ModDate)
+		&queryResult.ModDate,
+		&queryResult.TagName)
+
+	log.Printf("[CONTENTS] data: %v", queryResult)
 
 	return queryResult, nil
 }
