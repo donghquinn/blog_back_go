@@ -39,9 +39,9 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 }
 
 // 포스트들 가져오기 - 모듈함수
-func QueryAllPostData(connect *sql.DB, page int, size int) ([]types.SelectAllPostData, error) {
+func QueryAllPostData(connect *sql.DB, page int, size int) ([]types.SelectAllPostDataResult, error) {
 	// 페이징 파라미터 파싱
-	result, queryErr := database.Query(connect, quries.GetAllPosts,  fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	result, queryErr := database.Query(connect, quries.SelectAllPosts,  fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get Post Data Error: %v", queryErr)
@@ -49,12 +49,13 @@ func QueryAllPostData(connect *sql.DB, page int, size int) ([]types.SelectAllPos
 		return nil, queryErr
 	}
 
-	var queryResult = []types.SelectAllPostData{}
+	var queryResult = []types.SelectAllPostDataResult{}
 
 	for result.Next() {
-		var row types.SelectAllPostData
+		var row types.SelectAllPostDataResult
 
 		scanErr := result.Scan(
+			&row.PostSeq,
 			&row.PostTitle,
 			&row.PostContents,
 			&row.UserId,
@@ -69,6 +70,8 @@ func QueryAllPostData(connect *sql.DB, page int, size int) ([]types.SelectAllPos
 
 		queryResult = append(queryResult, row)
 	}
+
+	defer connect.Close()
 
 	return queryResult, nil
 }

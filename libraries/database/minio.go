@@ -3,6 +3,8 @@ package database
 import (
 	"context"
 	"log"
+	"net/url"
+	"time"
 
 	"github.com/donghquinn/blog_back_go/configs"
 	"github.com/minio/minio-go/v7"
@@ -109,6 +111,31 @@ func GetVideo(objectName string) (*minio.Object, error) {
 	}
 
 	video, getErr := minioClient.GetObject(context.Background(), minioConfig.BlogBucket, objectName, minio.GetObjectOptions{} )
+
+	if getErr != nil {
+		log.Printf("[STREAM] Get Video Error: %v", getErr)
+
+		return nil, getErr
+	}
+
+	// https://stackoverflow.com/questions/73669999/golang-minio-client-can-put-and-remove-but-not-stat-or-get-objects
+	return video, nil
+}
+
+func GetImageUrl(objectName string, imageType string) (*url.URL, error) {
+	minioConfig := configs.MinioConfig
+	minioClient, minioErr := MinioInstance()
+
+		if minioErr != nil {
+		log.Printf("[STREAM] Connect Minio Error: %v", minioErr)
+
+		return nil, minioErr
+	}
+
+	reqParams := make(url.Values)
+	reqParams.Set("response-content-type", imageType)
+
+	video, getErr := minioClient.PresignedGetObject(context.Background(), minioConfig.BlogBucket, objectName, time.Minute * 10, reqParams)
 
 	if getErr != nil {
 		log.Printf("[STREAM] Get Video Error: %v", getErr)
