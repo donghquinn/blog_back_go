@@ -28,6 +28,20 @@ func SetTokenResponse(res http.ResponseWriter, statusCode int, code string, toke
 	res.Write(responseObject)
 }
 
+func SetEmailResponse(res http.ResponseWriter, statusCode int, code string, email string) {
+	responseObject, _ := json.Marshal(types.ResponseFoundEmailType{Code: code, Status: true, Email: email})
+
+	res.WriteHeader(200)
+	res.Write(responseObject)
+}
+
+func SetPasswordResponse(res http.ResponseWriter, statusCode int, code string, password string) {
+	responseObject, _ := json.Marshal(types.ResponseFoundPasswordType{Code: code, Status: true, Password: password})
+
+	res.WriteHeader(200)
+	res.Write(responseObject)
+}
+
 func SetPostListResponse(res http.ResponseWriter, statusCode int, code string, data []types.SelectAllPostDataResult) {
 	responseObject, _ := json.Marshal(types.ResponsePostListType{Code: code, Status: true, Result: data})
 
