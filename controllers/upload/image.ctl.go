@@ -139,7 +139,6 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		contentType,
 		userId,
 		// post_seq
-		"123124",
 		"post_table",
 		strconv.Itoa(int(handler.Size)),
 		versionId)

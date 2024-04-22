@@ -1,6 +1,7 @@
 package posts
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/donghquinn/blog_back_go/auth"
@@ -40,8 +41,18 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 	// 데이터 입력
 	_, queryErr := database.InsertQuery(connect, queries.InsertPost, userId, registerPostRequest.PostTitle, registerPostRequest.PostContents)
 
+	for _, seq := range(registerPostRequest.ImageSeqs) {
+		_, insertUpdateRr := database.InsertQuery(connect, queries.InsertUpdatePostImage, seq)
+
+		if insertUpdateRr != nil {
+			log.Printf("[REGISTER] Insert Update File Data Error: %v", insertUpdateRr)
+			dto.SetErrorResponse(res, 403, "03", "Insert Update File Data Error", insertUpdateRr)
+			return
+		}
+	}
+
 	if queryErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Data Insert Error", queryErr)
+		dto.SetErrorResponse(res, 404, "04", "Data Insert Error", queryErr)
 		return
 	}
 

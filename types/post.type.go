@@ -13,4 +13,5 @@ type SelectAllPostDataResult struct {
 type RegisterPostRequest struct {
 	PostTitle string `json:"postTitle"`
 	PostContents string `json:"postContents"`
+	ImageSeqs  []string `json:"imageSeqs"`
 }

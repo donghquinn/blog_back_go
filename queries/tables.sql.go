@@ -38,7 +38,7 @@ var CreateFileTable = `
 		version_id 		VARCHAR(50)			NOT NULL,
 		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP,
 
-		INDEX target_idx(target_table)
+		INDEX target_idx(target_table, target_id)
 	)
 `
 
