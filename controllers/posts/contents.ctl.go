@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/donghquinn/blog_back_go/dto"
+	"github.com/donghquinn/blog_back_go/libraries/crypto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	queries "github.com/donghquinn/blog_back_go/queries/posts"
 	"github.com/donghquinn/blog_back_go/types"
@@ -55,13 +56,15 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		urlArray = append(urlArray, url.String())
 	}
 
+	userName, _ := crypto.DecryptString(queryResult.UserName)
+
 	// 게시글 컨텐츠 데이터
 	postContentsData := types.ViewSpecificPostContentsResponse{
 		PostSeq: queryResult.PostSeq,
 		PostTitle: queryResult.PostTitle,
 		PostContents: queryResult.PostContents,
 		UserId: queryResult.UserId,
-		UserName: queryResult.UserName,
+		UserName: userName,
 		Urls: urlArray,
 		RegDate: queryResult.RegDate,
 		ModDate: queryResult.ModDate,
