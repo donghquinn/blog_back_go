@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"strings"
 
 	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
@@ -33,11 +32,22 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	insertErr := insertPostData(registerPostRequest, userId)
+
+	if insertErr != nil {
+		dto.SetErrorResponse(res, 402, "02", "Insert Post Data Error", insertErr)
+		return
+	}
+
+	dto.SetResponse(res, 200, "01")
+}
+
+// 게시글 데이터 입력
+func insertPostData(registerPostRequest types.RegisterPostRequest, userId string) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Database Connection", dbErr)
-		return
+		return dbErr
 	}
 
 	// 데이터 입력
@@ -46,29 +56,37 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 		queries.InsertPost, 
 		userId, 
 		registerPostRequest.PostTitle, 
-		registerPostRequest.PostContents, 
-		strings.Join(registerPostRequest.Tags, ","), 
+		registerPostRequest.PostContents,
 		registerPostRequest.IsPinned)
-		
+
+	if queryErr != nil {
+		log.Printf("[REGISTER] Insert Post Data Error: %v", queryErr)
+		return queryErr
+	}
+
+	for _, t := range(registerPostRequest.Tags) {
+		_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, strconv.Itoa(int(insertId)), t)
+
+		if tagQueryErr != nil {
+			log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
+
+			return tagQueryErr
+		}
+	}
+
 	postSeq := strconv.Itoa(int(insertId))
 
 	for _, seq := range(registerPostRequest.ImageSeqs) {
 		// 파일 데이터 업데이트
-		_, insertUpdateRr := database.Query(connect, queries.InsertUpdatePostImage, postSeq, seq)
+		_, insertUpdateErr := database.Query(connect, queries.InsertUpdatePostImage, postSeq, seq)
 
-		if insertUpdateRr != nil {
-			log.Printf("[REGISTER] Insert Update File Data Error: %v", insertUpdateRr)
-			dto.SetErrorResponse(res, 403, "03", "Insert Update File Data Error", insertUpdateRr)
-			return
+		if insertUpdateErr != nil {
+			log.Printf("[REGISTER] Insert Update File Data Error: %v", insertUpdateErr)
+			return insertUpdateErr
 		}
 	}
 
 	defer connect.Close()
 
-	if queryErr != nil {
-		dto.SetErrorResponse(res, 404, "04", "Data Insert Error", queryErr)
-		return
-	}
-
-	dto.SetResponse(res, 200, "01")
+	return nil
 }

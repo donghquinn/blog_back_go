@@ -3,7 +3,6 @@ package posts
 import (
 	"log"
 	"net/http"
-	"strings"
 
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/crypto"
@@ -59,7 +58,7 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 	postContentsData := types.ViewSpecificPostContentsResponse{
 		PostSeq: queryResult.PostSeq,
 		PostTitle: queryResult.PostTitle,
-		Tags: strings.Split(queryResult.Tags, ","),
+		Tags: queryResult.TagName,
 		PostContents: queryResult.PostContents,
 		UserId: queryResult.UserId,
 		UserName: userName,
@@ -81,6 +80,7 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 		return types.SelectSpecificPostDataResult{}, connectErr
 	}
 
+	// 조회수 업데이트
 	_, updateErr := database.InsertQuery(connect, queries.UpdateViewCount, postSeq)
 
 	if updateErr != nil {
@@ -88,6 +88,7 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 		return types.SelectSpecificPostDataResult{}, updateErr
 	}
 
+	// 특정 게시글 조회
 	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq)
 
 	if queryErr != nil {
@@ -104,7 +105,7 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 		&queryResult.PostTitle, 
 		&queryResult.PostContents, 
 		&queryResult.PostStatus,
-		&queryResult.Tags,
+		&queryResult.TagName,
 		&queryResult.UserId, 
 		&queryResult.UserName,
 		&queryResult.Viewed,

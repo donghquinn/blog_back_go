@@ -7,6 +7,8 @@ type SelectAllPostDataResult struct {
 	PostContents string
 	UserId string
 	UserName string
+	IsPinned string
+	Viewed string
 	RegDate string
 	ModDate string
 	// VersionId []string
@@ -17,7 +19,7 @@ type SelectSpecificPostDataResult struct {
 	PostTitle string
 	PostContents string
 	PostStatus string
-	Tags string
+	TagName []string
 	UserId string
 	UserName string
 	Viewed string

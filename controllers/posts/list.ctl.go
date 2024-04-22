@@ -54,6 +54,8 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 			PostContents: data.PostContents,
 			UserId: data.UserId,
 			UserName: decodedName,
+			IsPinned: data.IsPinned,
+			Viewed: data.Viewed,
 			RegDate: data.RegDate,
 			ModDate: data.ModDate,
 		})
@@ -84,6 +86,8 @@ func QueryAllPostData(connect *sql.DB, page int, size int) ([]types.SelectAllPos
 			&row.PostContents,
 			&row.UserId,
 			&row.UserName,
+			&row.IsPinned,
+			&row.Viewed,
 			&row.RegDate,
 			&row.ModDate)
 

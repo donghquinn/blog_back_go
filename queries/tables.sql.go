@@ -5,7 +5,7 @@ var CreateUserTable = `
 		user_id 		VARCHAR(50)			NOT NULL	PRIMARY KEY,
 		user_email 		VARCHAR(100)		NOT NULL	UNIQUE,
 		user_password 	VARCHAR(200)		NOT NULL,
-		user_name 		VARCHAR(50)		NOT NULL,
+		user_name 		VARCHAR(50)			NOT NULL,
 		user_status		TINYINT(1)			NOT NULL 	DEFAULT 1 COMMENT '0: 비활성, 1: 활성, 2: 탈퇴',
 		profile_seq		BIGINT(20)			NULL,
 		background_seq  BIGINT(20)			NULL,
@@ -16,7 +16,9 @@ var CreateUserTable = `
 		personal_url	VARCHAR(100)		NULL,
 		memo			VARCHAR(200)		NULL,
 		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP,
-		mod_date		DATETIME		    NULL 		DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+		mod_date		DATETIME		    NULL 		DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+		INDEX  user_idx(user_status)
 	);
 `
 
@@ -27,13 +29,22 @@ var CreatePostTable = `
 		post_title 		VARCHAR(50)		NOT NULL,
 		post_contents 	TEXT			NOT NULL,
 		post_status		TINYINT(1)		NOT NULL DEFAULT 1	COMMENT '0: 비활성, 1: 활성, 2: 삭제',
-		tags			VARCHAR(150)	NULL,
 		viewed			INT(20)			NOT NULL DEFAULT 0,
 		is_pinned		TINYINT(1)		NOT NULL DEFAULT 1 COMMENT '0 - 비고정, 1 - 고정',
 		reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		mod_date		DATETIME	    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-		INDEX post_idx(post_status)
+		INDEX post_idx(post_status, user_id)
+	);
+`
+
+var CreateTagTable = `
+	CREATE TABLE IF NOT EXISTS tag_table (
+		tag_seq  INT(20)	NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		post_seq INT(20)	NOT NULL	REFERENCES post_table(post_seq),
+		tag_name	VARCHAR(10)	NOT NULL,
+
+		INDEX tag_idx(tag_name, post_seq)
 	);
 `
 
@@ -58,10 +69,12 @@ var CreateCommentTable = `
 			comment_seq		INT(20)			NOT NULL AUTO_INCREMENT PRIMARY KEY,
 			post_seq		INT(20)			NOT NULL REFERENCES post_table(post_seq),
 			user_id			VARCHAR(20)		NOT NULL REFERENCES user_table(user_id),
-			COMMENT			TEXT			NOT NULL,
+			comment			TEXT			NOT NULL,
 			reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
 			mod_date		DATETIME	    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-		)
+
+			INDEX comment_idx(post_seq, user_id)
+		);
 `
 
 //	mod_date    DATETIME        NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
