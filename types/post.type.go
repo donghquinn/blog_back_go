@@ -17,8 +17,11 @@ type SelectSpecificPostDataResult struct {
 	PostTitle string
 	PostContents string
 	PostStatus string
+	Tags string
 	UserId string
 	UserName string
+	Viewed string
+	IsPinned string
 	RegDate string
 	ModDate string
 }
@@ -33,8 +36,11 @@ type ViewSpecificPostContentsResponse struct {
 	PostSeq string `json:"postSeq"`
 	PostTitle string `json:"postTitle"`
 	PostContents string `json:"postContents"`
+	Tags []string `json:"tags"`
 	UserId string `json:"userId"`
 	UserName string `json:"userName"`
+	Viewed string `json:"viewed"`
+	IsPinned string `json:"isPinned"`
 	Urls []string `json:"urls"`
 	RegDate string `json:"regDate"`
 	ModDate string `json:"modDate"`

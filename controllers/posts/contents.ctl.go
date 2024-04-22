@@ -3,6 +3,7 @@ package posts
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/crypto"
@@ -58,10 +59,13 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 	postContentsData := types.ViewSpecificPostContentsResponse{
 		PostSeq: queryResult.PostSeq,
 		PostTitle: queryResult.PostTitle,
+		Tags: strings.Split(queryResult.Tags, ","),
 		PostContents: queryResult.PostContents,
 		UserId: queryResult.UserId,
 		UserName: userName,
 		Urls: urlArray,
+		Viewed: queryResult.Viewed,
+		IsPinned: queryResult.IsPinned,
 		RegDate: queryResult.RegDate,
 		ModDate: queryResult.ModDate,
 	}
@@ -75,6 +79,13 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 	if connectErr != nil {
 		log.Printf("[CONTENTS] Init Database Connection Error for Post Data: %v", connectErr)
 		return types.SelectSpecificPostDataResult{}, connectErr
+	}
+
+	_, updateErr := database.InsertQuery(connect, queries.UpdateViewCount, postSeq)
+
+	if updateErr != nil {
+		log.Printf("[CONTENTS] Update View Count Error: %v", updateErr)
+		return types.SelectSpecificPostDataResult{}, updateErr
 	}
 
 	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq)
@@ -93,8 +104,11 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 		&queryResult.PostTitle, 
 		&queryResult.PostContents, 
 		&queryResult.PostStatus,
+		&queryResult.Tags,
 		&queryResult.UserId, 
 		&queryResult.UserName,
+		&queryResult.Viewed,
+		&queryResult.IsPinned,
 		&queryResult.RegDate,
 		&queryResult.ModDate)
 
