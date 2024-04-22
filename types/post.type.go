@@ -6,6 +6,7 @@ type SelectAllPostDataResult struct {
 	PostTitle string
 	PostContents string
 	UserId string
+	UserName string
 	RegDate string
 	ModDate string
 	// VersionId []string

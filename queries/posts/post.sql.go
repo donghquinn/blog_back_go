@@ -3,11 +3,12 @@ package queries
 
 var SelectAllPosts = `
 	SELECT
-		post_seq, post_title, post_contents, user_id, reg_date, mod_date
+		p.post_seq, p.post_title, p.post_contents, u.user_id, u.user_name, p.reg_date, p.mod_date
 	FROM
-		post_table
+		post_table AS p
+	LEFT JOIN user_table AS u ON u.user_id = p.user_id
 	WHERE
-		post_status = 1
+		p.post_status = 1
 	ORDER BY
 		reg_date ASC
 	LIMIT ?
