@@ -39,10 +39,10 @@ services:
     depends_on: 
       - redis
       - db
-    # image: ${REGISTRY_URL}
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ${REGISTRY_URL}
+    # build:
+      # context: .
+      # dockerfile: Dockerfile
     container_name: dong_ian_back
     restart: unless-stopped
     env_file:
