@@ -16,22 +16,23 @@ var SelectAllPosts = `
 
 var SelectSpecificPostContents = `
 	SELECT
-		p.post_seq, p.post_title, p.post_contents, p.post_status, u.user_id, u.user_name, f.*, p.reg_date, p.mod_date
+		p.post_seq, p.post_title, p.post_contents, p.post_status, u.user_id, u.user_name, p.reg_date, p.mod_date
 	FROM
-		(
-			SELECT
-				object_name, file_format, target_seq
-			FROM
-				file_table
-			WHERE
-				target_seq = ?
-		) AS f
-	LEFT JOIN post_table AS p ON p.post_seq = f.target_seq
+		post_table AS p
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id
 	WHERE
 		p.post_status = 1 AND
 		p.post_seq = ?
 	;
+`
+
+var SelectImageData = `
+	SELECT
+		object_name, file_format, target_seq
+	FROM
+		file_table
+	WHERE
+		target_seq = ?
 `
 
 var InsertPost = `

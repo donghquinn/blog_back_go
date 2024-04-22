@@ -18,11 +18,14 @@ type SelectSpecificPostDataResult struct {
 	PostStatus string
 	UserId string
 	UserName string
-	ObjectName []string
-	FileFormat []string
-	TargetSeq []string
 	RegDate string
 	ModDate string
+}
+
+type SelectPostImageData struct {
+	ObjectName string
+	FileFormat string
+	TargetSeq string
 }
 
 type ViewSpecificPostContentsResponse struct {

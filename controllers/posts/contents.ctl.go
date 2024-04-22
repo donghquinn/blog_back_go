@@ -23,7 +23,7 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	log.Printf("[CONTENTS] Post Seq: %s", postContentsRequest.PostSeq)
-	
+
 	// 게시글 쿼리
 	queryResult, queryErr := GetPostData(postContentsRequest.PostSeq)
 
@@ -34,11 +34,18 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 
 	log.Printf("[CONTENTS] Post Contents Data: %v",queryResult)
 
+	imageData, imageErr := GetImageData(postContentsRequest.PostSeq)
+
+	if imageErr != nil {
+		dto.SetErrorResponse(res, 403, "03", "Image Data Error", imageErr)
+		return
+	}
+
 	var urlArray []string
 
 	// 게시글 URL 배열 만들기
-	for idx, objectName := range(queryResult.ObjectName) {
-		url, getErr := database.GetImageUrl(objectName, queryResult.FileFormat[idx])
+	for _, data := range(imageData) {
+		url, getErr := database.GetImageUrl(data.ObjectName, data.FileFormat)
 
 		if getErr != nil {
 			dto.SetErrorResponse(res, 404, "04", "Get Presigned URL Error", getErr)
@@ -70,11 +77,13 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 		return types.SelectSpecificPostDataResult{}, connectErr
 	}
 
-	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq, postSeq)
+	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq)
 
 	if queryErr != nil {
 		return types.SelectSpecificPostDataResult{}, queryErr
 	}
+
+	defer connect.Close()
 
 	var queryResult types.SelectSpecificPostDataResult
 
@@ -84,12 +93,41 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 		&queryResult.PostContents, 
 		&queryResult.PostStatus,
 		&queryResult.UserId, 
-		&queryResult.UserName, 
-		&queryResult.ObjectName,
-		&queryResult.FileFormat,
-		&queryResult.TargetSeq,
+		&queryResult.UserName,
 		&queryResult.RegDate,
 		&queryResult.ModDate)
 
 	return queryResult, nil
+}
+
+// 게시글 번호에 맞는 file 데이터 전부 가져오기
+func GetImageData(postSeq string) ([]types.SelectPostImageData, error){
+	var returnImageDate []types.SelectPostImageData
+
+	connect, connectErr := database.InitDatabaseConnection()
+
+	if connectErr != nil {
+		log.Printf("[CONTENTS] Init Database Connection Error for Image Data: %v", connectErr)
+		return []types.SelectPostImageData{}, connectErr
+	}
+
+	result, queryErr := database.Query(connect, queries.SelectImageData, postSeq)
+
+	if queryErr != nil {
+		log.Printf("[CONTENTS] Query Image Data Error: %v", queryErr)
+		return []types.SelectPostImageData{}, queryErr
+	}
+
+	for result.Next() {
+		var row types.SelectPostImageData
+
+		result.Scan(
+			&row.ObjectName,
+			&row.FileFormat,
+			&row.TargetSeq)
+
+		returnImageDate = append(returnImageDate, row)
+	}
+
+	return returnImageDate, nil
 }
