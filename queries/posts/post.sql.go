@@ -64,7 +64,10 @@ var InsertPost = `
 	SET
 		user_id = ?,
 		post_title = ?,
-		post_contents = ?;
+		post_contents = ?,
+		tags = ?,
+		is_pinned = ?
+		;
 `
 
 var InsertUpdatePostImage = `

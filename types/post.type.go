@@ -51,6 +51,8 @@ type RegisterPostRequest struct {
 	PostTitle string `json:"postTitle"`
 	PostContents string `json:"postContents"`
 	ImageSeqs  []string `json:"imageSeqs"`
+	Tags []string `json:"tags"`
+	IsPinned string `json:"isPinned"`
 }
 
 type ViewPostContents struct {

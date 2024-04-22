@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
@@ -40,7 +41,15 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// 데이터 입력
-	insertId, queryErr := database.InsertQuery(connect, queries.InsertPost, userId, registerPostRequest.PostTitle, registerPostRequest.PostContents)
+	insertId, queryErr := database.InsertQuery(
+		connect, 
+		queries.InsertPost, 
+		userId, 
+		registerPostRequest.PostTitle, 
+		registerPostRequest.PostContents, 
+		strings.Join(registerPostRequest.Tags, ","), 
+		registerPostRequest.IsPinned)
+		
 	postSeq := strconv.Itoa(int(insertId))
 
 	for _, seq := range(registerPostRequest.ImageSeqs) {
