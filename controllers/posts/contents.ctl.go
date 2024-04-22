@@ -23,8 +23,6 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	log.Printf("[CONTENTS] Post Seq: %s", postContentsRequest.PostSeq)
-
 	// 게시글 쿼리
 	queryResult, queryErr := GetPostData(postContentsRequest.PostSeq)
 
@@ -32,8 +30,6 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		dto.SetErrorResponse(res, 402, "02", "Query Specific Contents Error", queryErr)
 		return
 	}
-
-	log.Printf("[CONTENTS] Post Contents Data: %v",queryResult)
 
 	imageData, imageErr := GetImageData(postContentsRequest.PostSeq)
 
@@ -77,12 +73,14 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 	connect, connectErr := database.InitDatabaseConnection()
 
 	if connectErr != nil {
+		log.Printf("[CONTENTS] Init Database Connection Error for Post Data: %v", connectErr)
 		return types.SelectSpecificPostDataResult{}, connectErr
 	}
 
 	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq)
 
 	if queryErr != nil {
+		log.Printf("[CONTENTS] Query A Post Contents Error: %v", queryErr)
 		return types.SelectSpecificPostDataResult{}, queryErr
 	}
 
