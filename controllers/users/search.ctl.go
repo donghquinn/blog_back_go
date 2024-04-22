@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/donghquinn/blog_back_go/dto"
+	"github.com/donghquinn/blog_back_go/libraries/crypto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	queries "github.com/donghquinn/blog_back_go/queries/users"
 	"github.com/donghquinn/blog_back_go/types"
@@ -28,7 +29,14 @@ func SearchEmailController(res http.ResponseWriter, req *http.Request){
 		return
 	}
 
-	dto.SetEmailResponse(res, 200, "01", foundUserEmail.UserEmail)
+	decodedEmail, decodedErr := crypto.DecryptString(foundUserEmail.UserEmail)
+
+	if decodedErr != nil {
+		dto.SetErrorResponse(res, 403, "03", "Decoding Queried Email Error", decodedErr)
+		return
+	}
+
+	dto.SetEmailResponse(res, 200, "01", decodedEmail)
 }
 
 func getUserEmail(userName string) (types.SelectUserSearchEmailResult, error) {
