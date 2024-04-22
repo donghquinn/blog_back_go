@@ -22,6 +22,7 @@ func SearchEmailController(res http.ResponseWriter, req *http.Request){
 		return
 	}
 
+	// 이메일 쿼리
 	foundUserEmail, findErr := getUserEmail(findEmailRequest.Name)
 
 	if findErr != nil {
@@ -29,6 +30,7 @@ func SearchEmailController(res http.ResponseWriter, req *http.Request){
 		return
 	}
 
+	// 이메일 복호화
 	decodedEmail, decodedErr := crypto.DecryptString(foundUserEmail.UserEmail)
 
 	if decodedErr != nil {
@@ -71,6 +73,7 @@ func SearchPasswordController(res http.ResponseWriter, req *http.Request){
 		return
 	}
 
+	// 패스워드 쿼리
 	foundUserPassword, findErr := getUserPassword(findEmailRequest.Email, findEmailRequest.Name)
 
 	if findErr != nil {
