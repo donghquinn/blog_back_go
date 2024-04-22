@@ -40,7 +40,7 @@ var CreateFileTable = `
 		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP,
 
 		INDEX target_idx(target_table, target_id)
-	)
+	);
 `
 
 //	mod_date    DATETIME        NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

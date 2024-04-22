@@ -1,6 +1,7 @@
 package posts
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/donghquinn/blog_back_go/dto"
@@ -10,6 +11,7 @@ import (
 	"github.com/donghquinn/blog_back_go/utils"
 )
 
+// 게시글 컨텐츠 컨트롤러
 func PostContentsController(res http.ResponseWriter, req *http.Request) {
 	var postContentsRequest types.ViewPostContents
 
@@ -20,6 +22,7 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// 게시글 쿼리
 	queryResult, queryErr := GetPostData(postContentsRequest.PostSeq)
 
 	if queryErr != nil {
@@ -29,6 +32,7 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 
 	var urlArray []string
 
+	// 게시글 URL 배열 만들기
 	for idx, objectName := range(queryResult.ObjectName) {
 		url, getErr := database.GetImageUrl(objectName, queryResult.FileFormat[idx])
 
@@ -51,6 +55,8 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		ModDate: queryResult.ModDate,
 	}
 
+	log.Printf("[CONTENTS] Post Contents Data: %v",postContentsData)
+	
 	dto.SetPostContentsResponse(res, 200, "01", postContentsData)
 }
 
@@ -61,7 +67,7 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 		return types.SelectSpecificPostDataResult{}, connectErr
 	}
 
-	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq)
+	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq, postSeq)
 
 	if queryErr != nil {
 		return types.SelectSpecificPostDataResult{}, queryErr
@@ -70,12 +76,15 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 	var queryResult types.SelectSpecificPostDataResult
 
 	result.Scan(
+		&queryResult.PostSeq,
 		&queryResult.PostTitle, 
 		&queryResult.PostContents, 
+		&queryResult.PostStatus,
 		&queryResult.UserId, 
 		&queryResult.UserName, 
 		&queryResult.ObjectName,
 		&queryResult.FileFormat, 
+		&queryResult.TargetSeq,
 		&queryResult.RegDate,
 		&queryResult.ModDate)
 

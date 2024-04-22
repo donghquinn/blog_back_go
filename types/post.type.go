@@ -11,12 +11,15 @@ type SelectAllPostDataResult struct {
 }
 
 type SelectSpecificPostDataResult struct {
+	PostSeq string
 	PostTitle string
 	PostContents string
+	PostStatus string
 	UserId string
 	UserName string
 	ObjectName []string
 	FileFormat []string
+	TargetSeq []string
 	RegDate string
 	ModDate string
 }
