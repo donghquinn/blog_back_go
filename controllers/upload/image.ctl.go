@@ -45,14 +45,12 @@ func UploadProfileImageController(res http.ResponseWriter, req *http.Request) {
 	contentType := handler.Header["Content-Type"][0]
 
 	// 이미지 업로드 - minio
-	imageInfo, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
+	_, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
 
 	if uploadErr != nil {
 		dto.SetErrorResponse(res, 404, "04", "Upload Image Error", uploadErr)
 		return
 	}
-
-	versionId := imageInfo.VersionID
 
 	connect, _ := database.InitDatabaseConnection()
 
@@ -65,7 +63,8 @@ func UploadProfileImageController(res http.ResponseWriter, req *http.Request) {
 		userId,
 		"user_table",
 		strconv.Itoa(int(handler.Size)),
-		versionId)
+		handler.Filename, 
+		contentType)
     
 	if insertErr != nil {
  		dto.SetErrorResponse(res, 405, "05", "Insert Image Info Error", insertErr)
@@ -120,14 +119,12 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	contentType := handler.Header["Content-Type"][0]
 
 	// 이미지 업로드 - minio
-	imageInfo, uploadErr := database.UploadVideo(handler.Filename, tempFile.Name(), contentType)
+	_, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
 
 	if uploadErr != nil {
 		dto.SetErrorResponse(res, 405, "05", "Upload Image Error", uploadErr)
 		return
 	}
-
-	versionId := imageInfo.VersionID
 
 	connect, _ := database.InitDatabaseConnection()
 
@@ -141,7 +138,8 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		// post_seq
 		"post_table",
 		strconv.Itoa(int(handler.Size)),
-		versionId)
+		handler.Filename, 
+		contentType)
     
 	if insertErr != nil {
  		dto.SetErrorResponse(res, 406, "06", "Insert Image Info Error", insertErr)

@@ -14,6 +14,13 @@ type ResponseInsertIdType struct {
 }
 
 // 게시글 리스트 응답 구조체
+type ResponsePostContentsType struct {
+	Code string `json:"code"`
+	Status bool `json:"status"`
+	Posts ViewSpecificPostContentsResponse `json:"posts"`
+}
+
+// 게시글 리스트 응답 구조체
 type ResponsePostListType struct {
 	Code string `json:"code"`
 	Status bool `json:"status"`
