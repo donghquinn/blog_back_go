@@ -1,6 +1,7 @@
 package upload
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -131,7 +132,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	connect, _ := database.InitDatabaseConnection()
 
 	// 데이터 입력 - DB
-	_, insertErr := database.InsertQuery(
+	insertId, insertErr := database.InsertQuery(
 		connect, 
 		queries.InsertPostImageData,
 		// USER ID from JWT
@@ -145,7 +146,6 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
     
 	if insertErr != nil {
  		dto.SetErrorResponse(res, 406, "06", "Insert Image Info Error", insertErr)
-
 		return
     }
 
@@ -160,7 +160,5 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	dto.SetResponseWithMessage(res, 200, "01", "Successfully Image Uploaded")
-
-	return
+	dto.SetFileInsertIdResponse(res, 200, "01", fmt.Sprintf("%d", insertId))
 }
