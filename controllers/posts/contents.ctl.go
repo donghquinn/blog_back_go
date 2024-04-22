@@ -22,6 +22,8 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	log.Printf("[CONTENTS] Post Seq: %s", postContentsRequest.PostSeq)
+	
 	// 게시글 쿼리
 	queryResult, queryErr := GetPostData(postContentsRequest.PostSeq)
 
@@ -29,6 +31,8 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		dto.SetErrorResponse(res, 402, "02", "Query Specific Contents Error", queryErr)
 		return
 	}
+
+	log.Printf("[CONTENTS] Post Contents Data: %v",queryResult)
 
 	var urlArray []string
 
@@ -46,6 +50,7 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 
 	// 게시글 컨텐츠 데이터
 	postContentsData := types.ViewSpecificPostContentsResponse{
+		PostSeq: queryResult.PostSeq,
 		PostTitle: queryResult.PostTitle,
 		PostContents: queryResult.PostContents,
 		UserId: queryResult.UserId,
@@ -54,8 +59,6 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		RegDate: queryResult.RegDate,
 		ModDate: queryResult.ModDate,
 	}
-
-	log.Printf("[CONTENTS] Post Contents Data: %v",postContentsData)
 	
 	dto.SetPostContentsResponse(res, 200, "01", postContentsData)
 }
@@ -83,7 +86,7 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 		&queryResult.UserId, 
 		&queryResult.UserName, 
 		&queryResult.ObjectName,
-		&queryResult.FileFormat, 
+		&queryResult.FileFormat,
 		&queryResult.TargetSeq,
 		&queryResult.RegDate,
 		&queryResult.ModDate)

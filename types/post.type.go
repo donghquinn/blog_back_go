@@ -2,6 +2,7 @@ package types
 
 // 게시글 전체 가져오기 쿼리 결과 타입
 type SelectAllPostDataResult struct {
+	PostSeq string
 	PostTitle string
 	PostContents string
 	UserId string
@@ -25,6 +26,7 @@ type SelectSpecificPostDataResult struct {
 }
 
 type ViewSpecificPostContentsResponse struct {
+	PostSeq string `json:"postSeq"`
 	PostTitle string `json:"postTitle"`
 	PostContents string `json:"postContents"`
 	UserId string `json:"userId"`

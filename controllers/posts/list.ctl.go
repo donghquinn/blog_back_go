@@ -55,6 +55,7 @@ func QueryAllPostData(connect *sql.DB, page int, size int) ([]types.SelectAllPos
 		var row types.SelectAllPostDataResult
 
 		scanErr := result.Scan(
+			&row.PostSeq,
 			&row.PostTitle,
 			&row.PostContents,
 			&row.UserId,

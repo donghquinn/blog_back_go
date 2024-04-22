@@ -3,7 +3,7 @@ package queries
 
 var SelectAllPosts = `
 	SELECT
-		post_title, post_contents, user_id, reg_date, mod_date
+		post_seq, post_title, post_contents, user_id, reg_date, mod_date
 	FROM
 		post_table
 	WHERE
@@ -26,7 +26,7 @@ var SelectSpecificPostContents = `
 			WHERE
 				target_seq = ?
 		) AS f
-	JOIN post_table AS p ON p.post_seq = f.target_seq
+	LEFT JOIN post_table AS p ON p.post_seq = f.target_seq
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id
 	WHERE
 		p.post_status = 1 AND

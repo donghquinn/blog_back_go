@@ -45,7 +45,7 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 
 	for _, seq := range(registerPostRequest.ImageSeqs) {
 		// 파일 데이터 업데이트
-		_, insertUpdateRr := database.Query(connect, queries.InsertUpdatePostImage, seq, postSeq)
+		_, insertUpdateRr := database.Query(connect, queries.InsertUpdatePostImage, postSeq, seq)
 
 		if insertUpdateRr != nil {
 			log.Printf("[REGISTER] Insert Update File Data Error: %v", insertUpdateRr)
