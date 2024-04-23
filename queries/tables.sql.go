@@ -1,5 +1,26 @@
 package queries
 
+var CreateUserTable = `
+	CREATE TABLE IF NOT EXISTS user_table (
+		user_id 		VARCHAR(50)			NOT NULL	PRIMARY KEY,
+		user_email 		VARCHAR(100)		NOT NULL	UNIQUE,
+		user_password 	VARCHAR(200)		NOT NULL,
+		user_name 		VARCHAR(50)			NOT NULL,
+		user_status		TINYINT(1)			NOT NULL 	DEFAULT 1 COMMENT '0: 비활성, 1: 활성, 2: 탈퇴',
+		profile_seq		BIGINT(20)			NULL,
+		background_seq  BIGINT(20)			NULL,
+		preferred_color	VARCHAR(10)			NOT NULL DEFAULT "#000",
+		title			VARCHAR(50)			NOT NULL DEFAULT "Archive",
+		sns_instagram	VARCHAR(100)		NULL,
+		github_url		VARCHAR(100)		NULL,
+		personal_url	VARCHAR(100)		NULL,
+		memo			VARCHAR(200)		NULL,
+		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP,
+		mod_date		DATETIME		    NULL 		DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+		INDEX  user_idx(user_status)
+	);
+`
 
 var CreatePostTable = `
 	CREATE TABLE IF NOT EXISTS post_table (
@@ -8,22 +29,22 @@ var CreatePostTable = `
 		post_title 		VARCHAR(50)		NOT NULL,
 		post_contents 	TEXT			NOT NULL,
 		post_status		TINYINT(1)		NOT NULL DEFAULT 1	COMMENT '0: 비활성, 1: 활성, 2: 삭제',
+		viewed			INT(20)			NOT NULL DEFAULT 0,
+		is_pinned		TINYINT(1)		NOT NULL DEFAULT 1 COMMENT '0 - 비고정, 1 - 고정',
 		reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		mod_date		DATETIME	    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-		INDEX post_idx(post_status)
+		INDEX post_idx(post_status, user_id)
 	);
 `
 
-var CreateUserTable = `
-	CREATE TABLE IF NOT EXISTS user_table (
-		user_id 		VARCHAR(50)			NOT NULL	PRIMARY KEY,
-		user_email 		VARCHAR(100)		NOT NULL	UNIQUE,
-		user_password 	VARCHAR(200)		NOT NULL,
-		user_name 		VARCHAR(50)		NOT NULL,
-		user_status		TINYINT(1)			NOT NULL 	DEFAULT 1 COMMENT '0: 비활성, 1: 활성, 2: 탈퇴',
-		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP,
-		mod_date		DATETIME		    NULL 		DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+var CreateTagTable = `
+	CREATE TABLE IF NOT EXISTS tag_table (
+		tag_seq  INT(20)	NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		post_seq INT(20)	NOT NULL	REFERENCES post_table(post_seq),
+		tag_name	VARCHAR(10)	NOT NULL,
+
+		INDEX tag_idx(tag_name, post_seq)
 	);
 `
 
@@ -41,6 +62,19 @@ var CreateFileTable = `
 
 		INDEX target_idx(target_table, target_id)
 	);
+`
+
+var CreateCommentTable = `
+		CREATE TABLE IF NOT EXISTS comment_table (
+			comment_seq		INT(20)			NOT NULL AUTO_INCREMENT PRIMARY KEY,
+			post_seq		INT(20)			NOT NULL REFERENCES post_table(post_seq),
+			user_id			VARCHAR(20)		NOT NULL REFERENCES user_table(user_id),
+			comment			TEXT			NOT NULL,
+			reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+			mod_date		DATETIME	    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+			INDEX comment_idx(post_seq, user_id)
+		);
 `
 
 //	mod_date    DATETIME        NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

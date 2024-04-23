@@ -80,7 +80,20 @@ func CheckConnection() error {
 
 		return createFileErr
 	}
+
+	_, createCommentErr := connect.Query(queries.CreateCommentTable)
+
+	if createCommentErr != nil {
+		log.Printf("[DATABASE] Create Comment Table Error: %v", createCommentErr)
+		return createCommentErr
+	}
 	
+	_, createTagErr := connect.Query(queries.CreateTagTable)
+	if createTagErr != nil {
+		log.Printf("[DATABASE] Create Tag Table Error: %v", createTagErr)
+		return createTagErr
+	}
+
 	defer connect.Close()
 
 	return nil

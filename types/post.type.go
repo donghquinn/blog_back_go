@@ -7,6 +7,8 @@ type SelectAllPostDataResult struct {
 	PostContents string
 	UserId string
 	UserName string
+	IsPinned string
+	Viewed string
 	RegDate string
 	ModDate string
 	// VersionId []string
@@ -19,9 +21,16 @@ type SelectSpecificPostDataResult struct {
 	PostStatus string
 	UserId string
 	UserName string
+	Viewed string
+	IsPinned string
 	RegDate string
 	ModDate string
 }
+
+type SelectSpeicificPostTagDataResult struct {
+	TagName string
+}
+
 
 type SelectPostImageData struct {
 	ObjectName string
@@ -33,8 +42,11 @@ type ViewSpecificPostContentsResponse struct {
 	PostSeq string `json:"postSeq"`
 	PostTitle string `json:"postTitle"`
 	PostContents string `json:"postContents"`
+	Tags []string `json:"tags"`
 	UserId string `json:"userId"`
 	UserName string `json:"userName"`
+	Viewed string `json:"viewed"`
+	IsPinned string `json:"isPinned"`
 	Urls []string `json:"urls"`
 	RegDate string `json:"regDate"`
 	ModDate string `json:"modDate"`
@@ -45,6 +57,8 @@ type RegisterPostRequest struct {
 	PostTitle string `json:"postTitle"`
 	PostContents string `json:"postContents"`
 	ImageSeqs  []string `json:"imageSeqs"`
+	Tags []string `json:"tags"`
+	IsPinned string `json:"isPinned"`
 }
 
 type ViewPostContents struct {
