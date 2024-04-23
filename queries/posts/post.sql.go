@@ -35,25 +35,23 @@ var SelectSpecificPostContents = `
 		p.viewed, 
 		p.is_pinned, 
 		p.reg_date, 
-		p.mod_date,
-		t.*
+		p.mod_date
 	FROM
-	(	
-		SELECT
-			tag_name, post_seq
-		FROM
-			tag_table
-		WHERE
-			post_seq = ?
-	) as t
-	LEFT JOIN post_table AS p ON p.post_seq = t.post_seq
+		post_table AS p
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id
 	WHERE
 		p.post_status = 1 AND
 		p.post_seq = ?
 	;
 `
-
+var SelectPostTags =`
+		SELECT
+			tag_name
+		FROM
+			tag_table
+		WHERE
+			post_seq = ?
+`
 // 조회수 업데이트
 var UpdateViewCount = `
 	UPDATE post_table SET

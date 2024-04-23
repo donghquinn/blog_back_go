@@ -19,7 +19,6 @@ type SelectSpecificPostDataResult struct {
 	PostTitle string
 	PostContents string
 	PostStatus string
-	TagName []string
 	UserId string
 	UserName string
 	Viewed string
@@ -27,6 +26,11 @@ type SelectSpecificPostDataResult struct {
 	RegDate string
 	ModDate string
 }
+
+type SelectSpeicificPostTagDataResult struct {
+	TagName string
+}
+
 
 type SelectPostImageData struct {
 	ObjectName string
