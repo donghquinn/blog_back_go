@@ -15,6 +15,15 @@ func SetResponse(res http.ResponseWriter, statusCode int, code string) {
 	res.Write(responseObject)
 }
 
+// 기본 응답
+func SetProfileResponse(res http.ResponseWriter, statusCode int, code string, profile types.SelectUserProfileQueryResult) {
+	responseObject, _ := json.Marshal(types.ResponseProfileType{Code: code, Status: true, Result: profile})
+
+	res.WriteHeader(200)
+	res.Write(responseObject)
+}
+
+
 // 메세지 담은 응답
 func SetResponseWithMessage(res http.ResponseWriter, statusCode int, code string, message string) {
 	responseObject, _ := json.Marshal(types.ResponseMessageType{Code: code, Status: true, Message: message})

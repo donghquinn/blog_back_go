@@ -12,6 +12,10 @@ type UserSignupRequest struct {
 	Email string 		`json:"email" binding:"required"`
 	Password string 	`json:"password" binding:"required"`
  }
+ 
+type UserProfileRequest struct {
+	UserId string `json:"userId"`
+}
 
  // 이메일 찾기 요청
  type UserSearchEmailRequest struct {
@@ -70,4 +74,28 @@ type UserSignupRequest struct {
  // 유저 패스워드 찾기 쿼리 결과
  type SelectUserSearchPasswordResult struct {
 	UserPassword string
+ }
+
+ type SelectUserProfileQueryResult struct {
+	UserId string
+	UserEmail string
+	UserName string
+	ProfileSeq string
+	BackgroundSeq string
+	Color string
+	Title string
+	GithubUrl string
+	PersonalUrl string
+	Memo string
+	FileFormat string
+	FileType string
+	TargetId string
+	ObjectName string
+ }
+ 
+ type SelectFileQueryResult struct {
+	FileFormat string
+	FileType string
+	TargetId string
+	ObjectName string
  }

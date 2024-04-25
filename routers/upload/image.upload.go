@@ -8,5 +8,7 @@ import (
 
 func UploadImageController(server *http.ServeMux) {
 	server.HandleFunc("POST /upload/image/profile", upload.UploadProfileImageController)
+	server.HandleFunc("POST /upload/image/background", upload.UploadBackgroundImageController)
+	
 	server.HandleFunc("POST /upload/image/post", upload.UploadPostImageController)
 }

@@ -7,8 +7,6 @@ var CreateUserTable = `
 		user_password 	VARCHAR(200)		NOT NULL,
 		user_name 		VARCHAR(50)			NOT NULL,
 		user_status		TINYINT(1)			NOT NULL 	DEFAULT 1 COMMENT '0: 비활성, 1: 활성, 2: 탈퇴',
-		profile_seq		BIGINT(20)			NULL,
-		background_seq  BIGINT(20)			NULL,
 		preferred_color	VARCHAR(10)			NOT NULL DEFAULT "#000",
 		title			VARCHAR(50)			NOT NULL DEFAULT "Archive",
 		sns_instagram	VARCHAR(100)		NULL,
@@ -56,11 +54,12 @@ var CreateFileTable = `
 		target_seq 		INT(20)				NULL	 	COMMENT '이미지 타겟 포스트 시퀀스' REFERENCES post_table(post_seq),
 		target_id		VARCHAR(50)			NOT NULL	COMMENT '이미지 타겟 유저 id - 프로필 / 업로드 유저' REFERENCES user_table(user_id),
 		target_table 	VARCHAR(20)			NOT NULL,
+		target_purpose  VARCHAR(20)			NOT NULL,
 		file_size		INT(20)				NOT NULL,
 		object_name 	VARCHAR(200)		NOT NULL,
 		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP,
 
-		INDEX target_idx(target_table, target_id)
+		INDEX target_idx(target_table, target_id, target_seq)
 	);
 `
 
