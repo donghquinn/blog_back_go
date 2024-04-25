@@ -18,7 +18,7 @@ var SelectAllPosts = `
 	WHERE
 		p.post_status = 1
 	ORDER BY
-		p.reg_date DESC, p.is_pinned DESC
+		p.is_pinned DESC, p.reg_date DESC
 	LIMIT ?
 	OFFSET ?;
 `
