@@ -6,6 +6,14 @@ type ResponseType struct {
 	Status bool `json:"status"`
 }
 
+
+// 기본 응답 구조체
+type ResponseProfileType struct {
+	Code string `json:"code"`
+	Status bool `json:"status"`
+	Result UserProfileDataResponseType `json:"result"`
+}
+
 // 게시글 리스트 응답 구조체
 type ResponseInsertIdType struct {
 	Code string `json:"code"`

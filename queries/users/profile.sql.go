@@ -40,3 +40,33 @@ var UpdateTitle = `
 		WHERE
 			user_id = ?
 `
+
+var SelectUserProfile = `
+	SELECT
+		user_id,
+		user_email,
+		user_name,
+		preferred_color as color,
+		title,
+		github_url,
+		personal_url,
+		memo
+	FROM user_table
+	WHERE
+		user_status = 1 AND
+		user_id = ?
+	;
+`
+
+var SelectUserProfileProfileAndBackground = `
+	SELECT
+		file_format,
+		file_type,
+		target_purpose,
+		target_id,
+		object_name
+	FROM file_table
+	WHERE
+		target_id = ? AND
+		target_purpose IN ( ?, ? )
+`

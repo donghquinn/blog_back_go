@@ -65,11 +65,13 @@ var UpdateViewCount = `
 // 전체 이미지 데이터
 var SelectImageData = `
 	SELECT
-		object_name, file_format, target_seq
+		object_name, file_format, target_purpose, target_seq
 	FROM
 		file_table
 	WHERE
-		target_seq = ?;
+		target_seq = ? AND
+		target_purpose = ?
+	;
 `
 
 // 게시글 등록
