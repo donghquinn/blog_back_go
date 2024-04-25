@@ -24,3 +24,11 @@ var InsertUpdateProfileInfo = `
 		personal_url = VALUES(personal_url),
 		memo = VALUES(memo);
 `
+
+var UpdateProfileColor = `
+		UPDATE user_table
+		SET
+			preferred_color = ?
+		WHERE
+			user_id = ?;
+`
