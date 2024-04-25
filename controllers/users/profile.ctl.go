@@ -33,7 +33,7 @@ func UpdateProfileController(res http.ResponseWriter, req *http.Request) {
 	updateErr := profile.ChangeProfile(updateProfile, userId)
 
 	if updateErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Insert Update Error", updateErr)
+		dto.SetErrorResponse(res, 403, "03", "Insert Profile Update Error", updateErr)
 		return
 	}
 
@@ -69,7 +69,7 @@ func UpdateColorController(res http.ResponseWriter, req *http.Request) {
 	dto.SetResponse(res, 200, "01")
 }
 
-// 색상 변경 컨트롤러
+// 블로그 타이틀 변경 컨트롤러
 func UpdateTitleController(res http.ResponseWriter, req *http.Request) {
 	userId, _, _, err := auth.ValidateJwtToken(req)
 
