@@ -113,12 +113,14 @@ func DeletePost(data types.DeletePostRequest, userId string) error {
 		return dbErr
 	}
 
-	_, deleteErr := database.InsertQuery(connect, queries.DeletePost, "0", data.PostSeq, userId)
+	_, deleteErr := database.InsertQuery(connect, queries.DeletePost, "0", data.PostSeq)
 
 	if deleteErr != nil {
 		log.Printf("[DELETE] Delete Post Error: %v", deleteErr)
 		return deleteErr
 	}
+
+	defer connect.Close()
 
 	return nil
 }
@@ -130,12 +132,14 @@ func UpdatePinPost(data types.UpdatePinRequest, userId string) error {
 		return dbErr
 	}
 
-	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "1", data.PostSeq, userId)
+	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "1", data.PostSeq)
 
 	if updateErr != nil {
 		log.Printf("[PIN] Update Pin Post Error: %v", updateErr)
 		return updateErr
 	}
+
+	defer connect.Close()
 
 	return nil
 }
@@ -154,6 +158,8 @@ func UpdateUnPinPost(data types.UpdatePinRequest, userId string) error {
 		return updateErr
 	}
 
+	defer connect.Close()
+
 	return nil
 }
 
@@ -171,6 +177,8 @@ func GetPostTag(data types.GetPostsByTagRequest, page int, size int) ([]types.Se
 		return []types.SelectPostsByTags{}, selectErr
 	}
 
+	defer connect.Close()
+	
 	var postsData []types.SelectPostsByTags
 
 	for posts.Next() {

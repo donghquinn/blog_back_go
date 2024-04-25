@@ -18,7 +18,7 @@ var SelectAllPosts = `
 	WHERE
 		p.post_status = 1
 	ORDER BY
-		reg_date ASC
+		p.reg_date DESC, p.is_pinned DESC
 	LIMIT ?
 	OFFSET ?;
 `
@@ -87,17 +87,15 @@ var DeletePost = `
 	SET
 		post_status = ?
 	WHERE
-		post_seq = ? AND
-		user_id = ?
+		post_seq = ?
 `
 
 var UpdatePinPost = `
 	UPDATE post_table
 	SET
 		is_pinned = ?
-	HWERE
-		post_seq = ? AND
-		user_id = ?
+	WHERE
+		post_seq = ?
 `
 
 // 게시글 태그 등록
@@ -120,7 +118,7 @@ var SelectPostByTags = `
 	SELECT
 		t.tag_name,
 		p.post_seq,
-		p.post_tile,
+		p.post_title,
 		p.viewed,
 		p.reg_date,
 		p.mod_date
