@@ -106,7 +106,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 	return nil
 }
 
-func DeletePost(data types.DeletePostRequest, userId string) error {
+func DeletePost(data types.DeletePostRequest) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
@@ -125,7 +125,7 @@ func DeletePost(data types.DeletePostRequest, userId string) error {
 	return nil
 }
 
-func UpdatePinPost(data types.UpdatePinRequest, userId string) error {
+func UpdatePinPost(data types.UpdatePinRequest) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
@@ -144,14 +144,14 @@ func UpdatePinPost(data types.UpdatePinRequest, userId string) error {
 	return nil
 }
 
-func UpdateUnPinPost(data types.UpdatePinRequest, userId string) error {
+func UpdateUnPinPost(data types.UpdatePinRequest) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
 		return dbErr
 	}
 
-	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "0", data.PostSeq, userId)
+	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "0", data.PostSeq)
 
 	if updateErr != nil {
 		log.Printf("[PIN] Update Un-Pin Post Error: %v", updateErr)
@@ -178,7 +178,7 @@ func GetPostTag(data types.GetPostsByTagRequest, page int, size int) ([]types.Se
 	}
 
 	defer connect.Close()
-	
+
 	var postsData []types.SelectPostsByTags
 
 	for posts.Next() {
