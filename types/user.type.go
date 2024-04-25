@@ -27,7 +27,6 @@ type UserSignupRequest struct {
  // 프로필 색 변경 요청
  type UserUpdateProfileColorRequest struct {
 	Color string `json:"color" binding:"required"`
-	Email string `json:"email" binding:"required"`
  }
 
 // 유저 패스워드 변경 요청

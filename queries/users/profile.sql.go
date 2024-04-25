@@ -32,3 +32,11 @@ var UpdateProfileColor = `
 		WHERE
 			user_id = ?;
 `
+
+var UpdateTitle = `
+		UPDATE user_table
+		SET
+			title = ?
+		WHERE
+			user_id = ?
+`

@@ -26,14 +26,14 @@ func UpdateProfileController(res http.ResponseWriter, req *http.Request) {
 
 	if parseErr != nil {
 		log.Printf("[PROFILE] Change Profile Request Error: %v", parseErr)
-		dto.SetErrorResponse(res, 401, "01", "Change Profile Request Error", parseErr)
+		dto.SetErrorResponse(res, 402, "02", "Change Profile Request Error", parseErr)
 		return
 	}
 
 	updateErr := profile.ChangeProfile(updateProfile, userId)
 
 	if updateErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Insert Update Error", updateErr)
+		dto.SetErrorResponse(res, 403, "03", "Insert Update Error", updateErr)
 		return
 	}
 
@@ -55,14 +55,14 @@ func UpdateColorController(res http.ResponseWriter, req *http.Request) {
 
 	if parseErr != nil {
 		log.Printf("[COLOR] Change Color Request Error: %v", parseErr)
-		dto.SetErrorResponse(res, 201, "01", "Change Color Request Error", parseErr)
+		dto.SetErrorResponse(res, 402, "02", "Change Color Request Error", parseErr)
 		return
 	}
 
 	changeColorErr := profile.ChangeColor(changeColorRequest, userId)
 
 	if changeColorErr != nil {
-		dto.SetErrorResponse(res, 202, "02", "Change Color Error", changeColorErr)
+		dto.SetErrorResponse(res, 403, "03", "Change Color Error", changeColorErr)
 		return 
 	}
 
