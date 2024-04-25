@@ -3,12 +3,10 @@ package posts
 import (
 	"log"
 	"net/http"
-	"strconv"
 
 	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
-	"github.com/donghquinn/blog_back_go/libraries/database"
-	queries "github.com/donghquinn/blog_back_go/queries/posts"
+	"github.com/donghquinn/blog_back_go/libraries/postlib"
 	"github.com/donghquinn/blog_back_go/types"
 	"github.com/donghquinn/blog_back_go/utils"
 )
@@ -32,7 +30,7 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	insertErr := insertPostData(registerPostRequest, userId)
+	insertErr := postlib.InsertPostData(registerPostRequest, userId)
 
 	if insertErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Insert Post Data Error", insertErr)
@@ -42,50 +40,92 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 	dto.SetResponse(res, 200, "01")
 }
 
-// 게시글 데이터 입력
-func insertPostData(registerPostRequest types.RegisterPostRequest, userId string) error {
-	connect, dbErr := database.InitDatabaseConnection()
 
-	if dbErr != nil {
-		return dbErr
+func DeletePostController(res http.ResponseWriter, req *http.Request) {
+	userId, _, _, err := auth.ValidateJwtToken(req)
+
+	if err != nil {
+		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+
+		return
 	}
 
-	// 데이터 입력
-	insertId, queryErr := database.InsertQuery(
-		connect, 
-		queries.InsertPost, 
-		userId, 
-		registerPostRequest.PostTitle, 
-		registerPostRequest.PostContents,
-		registerPostRequest.IsPinned)
+	var deleteRequest types.DeletePostRequest
 
-	if queryErr != nil {
-		log.Printf("[REGISTER] Insert Post Data Error: %v", queryErr)
-		return queryErr
-	}
-	postSeq := strconv.Itoa(int(insertId))
+	parseErr := utils.DecodeBody(req, &deleteRequest)
 
-	for _, t := range(registerPostRequest.Tags) {
-		_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, t)
-
-		if tagQueryErr != nil {
-			log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
-
-			return tagQueryErr
-		}
+	if parseErr != nil {
+		log.Printf("[DELETE] Parse Delete Request Error: %v", parseErr)
+		dto.SetErrorResponse(res, 402, "02", "Delete Post Error", parseErr)
+		return
 	}
 
-	for _, seq := range(registerPostRequest.ImageSeqs) {
-		// 파일 데이터 업데이트
-		_, insertUpdateErr := database.Query(connect, queries.InsertUpdatePostImage, postSeq, seq)
+	deleteErr := postlib.DeletePost(deleteRequest, userId)
 
-		if insertUpdateErr != nil {
-			log.Printf("[REGISTER] Insert Update File Data Error: %v", insertUpdateErr)
-			return insertUpdateErr
-		}
+	if deleteErr != nil {
+		dto.SetErrorResponse(res, 402, "02", "Delete Post Error", deleteErr)
+		return
 	}
 
-	defer connect.Close()
+	dto.SetResponse(res, 200, "01")
+}
 
-	return nil
+// 고정 게시글 데이터 업데이트
+func UpdatePinPostController(res http.ResponseWriter, req *http.Request ) {
+		userId, _, _, err := auth.ValidateJwtToken(req)
+
+	if err != nil {
+		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+
+		return
+	}
+
+	var updatePinRequest types.UpdatePinRequest
+
+	parseErr := utils.DecodeBody(req, &updatePinRequest)
+
+	if parseErr != nil {
+		log.Printf("[PIN] Parse Pin Request Error: %v", parseErr)
+		dto.SetErrorResponse(res, 402, "02", "Update Pin Error", parseErr)
+		return
+	}
+
+	updateErr := postlib.UpdatePinPost(updatePinRequest, userId)
+
+	if updateErr != nil {
+		dto.SetErrorResponse(res, 402, "02", "Update Pin Error", updateErr)
+		return
+	}
+
+	dto.SetResponse(res, 200, "01")
+}
+
+// 고정 게시글 해제 데이터 업데이트
+func UpdateUnPinPostController(res http.ResponseWriter, req *http.Request ) {
+		userId, _, _, err := auth.ValidateJwtToken(req)
+
+	if err != nil {
+		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+
+		return
+	}
+
+	var updateUnPinRequest types.UpdatePinRequest
+
+	parseErr := utils.DecodeBody(req, &updateUnPinRequest)
+
+	if parseErr != nil {
+		log.Printf("[PIN] Parse Un-Pin Request Error: %v", parseErr)
+		dto.SetErrorResponse(res, 402, "02", "Update Un-Pin Error", parseErr)
+		return
+	}
+
+	updateErr := postlib.UpdateUnPinPost(updateUnPinRequest, userId)
+
+	if updateErr != nil {
+		dto.SetErrorResponse(res, 402, "02", "Update Un-Pin Error", updateErr)
+		return
+	}
+
+	dto.SetResponse(res, 200, "01")
 }
