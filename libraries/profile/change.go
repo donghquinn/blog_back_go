@@ -19,7 +19,7 @@ func ChangeProfile(data types.UserChangeProfileRequest) error {
 		connect, 
 		queries.InsertUpdateProfileInfo,
 		data.ProfileImage,
-		data.BackgrounImage,
+		data.BackgroundImage,
 		data.Color,
 		data.Title,
 		data.Instagram,
