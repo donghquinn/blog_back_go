@@ -45,15 +45,15 @@ type GetPostsByTagRequest struct {
 
 // 게시글 전체 가져오기 쿼리 결과 타입
 type SelectAllPostDataResult struct {
-	PostSeq string
-	PostTitle string
-	PostContents string
-	UserId string
-	UserName string
-	IsPinned string
-	Viewed string
-	RegDate string
-	ModDate string
+	PostSeq string	`json:"postSeq"`
+	PostTitle string	`json:"postTitle"`
+	PostContents string	`json:"postContents"`
+	UserId string	`json:"userId"`
+	UserName string	`json:"userName"`
+	IsPinned string	`json:"isPinned"`
+	Viewed string	`json:"viewed"`
+	RegDate string	`json:"regDate"`
+	ModDate string	`json:"modDate"`
 	// VersionId []string
 }
 
@@ -75,16 +75,17 @@ type SelectSpeicificPostTagDataResult struct {
 }
 
 type SelectPostsByTags struct {
-	Tag_name string
-	Post_seq string
-	Post_title string
-	Viewed string
-	Reg_date string
-	Mod_date string
+	Tag_name string		`json:"tagName"`
+	Post_seq string		`json:"postSeq"`
+	Post_title string	`json:"postTitle"`
+	Viewed string	`json:"viewed"`
+	Reg_date string	`json:"regDate"`
+	Mod_date string	`json:"modDate"`
 }
 
 type SelectPostImageData struct {
 	ObjectName string
 	FileFormat string
+	TargetPurpose string
 	TargetSeq string
 }

@@ -16,6 +16,5 @@ func DefaultController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	dto.SetResponseWithMessage(res, 200, "01", "Hello World")
-	return 
+	dto.SetResponseWithMessage(res, 200, "01", "Hello World") 
 }

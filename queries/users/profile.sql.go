@@ -42,35 +42,31 @@ var UpdateTitle = `
 `
 
 var SelectUserProfile = `
-		SELECT
-			f.*,
-			u.user_id,
-			u.user_email,
-			u.user_name,
-			u.profile_seq,
-			u.background_seq,
-			u.preferred_color as color,
-			u.title,
-			u.github_url,
-			u.personal_url,
-			u.memo
-		FROM (
-			SELECT
-				file_format,
-				file_type,
-				target_purpose,
-				target_id,
-				object_name
-			FROM file_table
-			WHERE
-				target_id = ? AND
-				target_purpose = ( ?, ? )
-		) f
-		LEFT JOIN user_table u ON u.user_id = f.target_id
-		WHERE
-			user_status = 1 AND
-			user_id = ?
-		GROUP BY u.user_id
-		;
+	SELECT
+		user_id,
+		user_email,
+		user_name,
+		preferred_color as color,
+		title,
+		github_url,
+		personal_url,
+		memo
+	FROM user_table
+	WHERE
+		user_status = 1 AND
+		user_id = ?
+	;
+`
 
+var SelectUserProfileProfileAndBackground = `
+	SELECT
+		file_format,
+		file_type,
+		target_purpose,
+		target_id,
+		object_name
+	FROM file_table
+	WHERE
+		target_id = ? AND
+		target_purpose IN ( ?, ? )
 `

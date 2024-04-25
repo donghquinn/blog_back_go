@@ -11,7 +11,7 @@ type ResponseType struct {
 type ResponseProfileType struct {
 	Code string `json:"code"`
 	Status bool `json:"status"`
-	Result SelectUserProfileQueryResult `json:"result"`
+	Result UserProfileDataResponseType `json:"result"`
 }
 
 // 게시글 리스트 응답 구조체

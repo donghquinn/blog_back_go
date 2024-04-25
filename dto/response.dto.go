@@ -16,7 +16,7 @@ func SetResponse(res http.ResponseWriter, statusCode int, code string) {
 }
 
 // 기본 응답
-func SetProfileResponse(res http.ResponseWriter, statusCode int, code string, profile types.SelectUserProfileQueryResult) {
+func SetProfileResponse(res http.ResponseWriter, statusCode int, code string, profile types.UserProfileDataResponseType) {
 	responseObject, _ := json.Marshal(types.ResponseProfileType{Code: code, Status: true, Result: profile})
 
 	res.WriteHeader(200)

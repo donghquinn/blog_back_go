@@ -161,7 +161,7 @@ func GetImageData(postSeq string) ([]types.SelectPostImageData, error){
 		return []types.SelectPostImageData{}, connectErr
 	}
 
-	result, queryErr := database.Query(connect, queries.SelectImageData, postSeq)
+	result, queryErr := database.Query(connect, queries.SelectImageData, postSeq, "POST_IMAGE")
 
 	if queryErr != nil {
 		log.Printf("[CONTENTS] Query Image Data Error: %v", queryErr)
@@ -174,6 +174,7 @@ func GetImageData(postSeq string) ([]types.SelectPostImageData, error){
 		result.Scan(
 			&row.ObjectName,
 			&row.FileFormat,
+			&row.TargetPurpose,
 			&row.TargetSeq)
 
 		returnImageDate = append(returnImageDate, row)
