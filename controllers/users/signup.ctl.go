@@ -61,7 +61,6 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	dto.SetResponse(res, 200, "01")
-	return
 }
 
 func decodeSignupUserRequest(signupRequest types.UserSignupRequest) (string, string, string, error) {

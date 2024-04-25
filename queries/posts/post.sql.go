@@ -80,6 +80,24 @@ var InsertPost = `
 		is_pinned = ?;
 `
 
+var DeletePost = `
+	UPDATE post_table
+	SET
+		post_status = ?
+	WHERE
+		post_seq = ? AND
+		user_id = ?
+`
+
+var UpdatePinPost = `
+	UPDATE post_table
+	SET
+		is_pinned = ?
+	HWERE
+		post_seq = ? AND
+		user_id = ?
+`
+
 // 게시글 태그 등록
 var InsertTag = `
 	INSERT INTO tag_table
