@@ -68,3 +68,32 @@ func UpdateColorController(res http.ResponseWriter, req *http.Request) {
 
 	dto.SetResponse(res, 200, "01")
 }
+
+// 색상 변경 컨트롤러
+func UpdateTitleController(res http.ResponseWriter, req *http.Request) {
+	userId, _, _, err := auth.ValidateJwtToken(req)
+
+	if err != nil {
+		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+		return
+	}
+
+	var changeTitleRequest types.UserUpdateBlogTitleRequest
+
+	parseErr := utils.DecodeBody(req, &changeTitleRequest)
+
+	if parseErr != nil {
+		log.Printf("[TITLE] Change Title Request Error: %v", parseErr)
+		dto.SetErrorResponse(res, 402, "02", "Change Title Request Error", parseErr)
+		return
+	}
+
+	changeTitleErr := profile.ChangeBlogTitle(changeTitleRequest, userId)
+
+	if changeTitleErr != nil {
+		dto.SetErrorResponse(res, 403, "03", "Change Title Error", changeTitleErr)
+		return 
+	}
+
+	dto.SetResponse(res, 200, "01")
+}
