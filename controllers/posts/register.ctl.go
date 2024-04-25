@@ -42,7 +42,7 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 
 
 func DeletePostController(res http.ResponseWriter, req *http.Request) {
-	userId, _, _, err := auth.ValidateJwtToken(req)
+	_, _, _, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -60,7 +60,7 @@ func DeletePostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	deleteErr := postlib.DeletePost(deleteRequest, userId)
+	deleteErr := postlib.DeletePost(deleteRequest)
 
 	if deleteErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Delete Post Error", deleteErr)
@@ -72,7 +72,7 @@ func DeletePostController(res http.ResponseWriter, req *http.Request) {
 
 // 고정 게시글 데이터 업데이트
 func UpdatePinPostController(res http.ResponseWriter, req *http.Request ) {
-		userId, _, _, err := auth.ValidateJwtToken(req)
+	_, _, _, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -90,7 +90,7 @@ func UpdatePinPostController(res http.ResponseWriter, req *http.Request ) {
 		return
 	}
 
-	updateErr := postlib.UpdatePinPost(updatePinRequest, userId)
+	updateErr := postlib.UpdatePinPost(updatePinRequest)
 
 	if updateErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Update Pin Error", updateErr)
@@ -102,7 +102,7 @@ func UpdatePinPostController(res http.ResponseWriter, req *http.Request ) {
 
 // 고정 게시글 해제 데이터 업데이트
 func UpdateUnPinPostController(res http.ResponseWriter, req *http.Request ) {
-		userId, _, _, err := auth.ValidateJwtToken(req)
+	_, _, _, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -120,7 +120,7 @@ func UpdateUnPinPostController(res http.ResponseWriter, req *http.Request ) {
 		return
 	}
 
-	updateErr := postlib.UpdateUnPinPost(updateUnPinRequest, userId)
+	updateErr := postlib.UpdateUnPinPost(updateUnPinRequest)
 
 	if updateErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Update Un-Pin Error", updateErr)

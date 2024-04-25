@@ -15,4 +15,6 @@ func PostRouter(server *http.ServeMux) {
 
 	server.HandleFunc("POST /post/update/pin", posts.UpdatePinPostController)
 	server.HandleFunc("POST /post/update/unpin", posts.UpdateUnPinPostController)
+
+	server.HandleFunc("POST /post/list/tag", posts.GetPostsByTagController)
 }

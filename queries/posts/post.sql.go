@@ -18,7 +18,7 @@ var SelectAllPosts = `
 	WHERE
 		p.post_status = 1
 	ORDER BY
-		reg_date ASC
+		p.is_pinned DESC, p.reg_date DESC
 	LIMIT ?
 	OFFSET ?;
 `
@@ -44,6 +44,7 @@ var SelectSpecificPostContents = `
 		p.post_seq = ?
 	;
 `
+
 var SelectPostTags =`
 		SELECT
 			tag_name
@@ -52,6 +53,7 @@ var SelectPostTags =`
 		WHERE
 			post_seq = ?
 `
+
 // 조회수 업데이트
 var UpdateViewCount = `
 	UPDATE post_table SET
@@ -85,17 +87,15 @@ var DeletePost = `
 	SET
 		post_status = ?
 	WHERE
-		post_seq = ? AND
-		user_id = ?
+		post_seq = ?
 `
 
 var UpdatePinPost = `
 	UPDATE post_table
 	SET
 		is_pinned = ?
-	HWERE
-		post_seq = ? AND
-		user_id = ?
+	WHERE
+		post_seq = ?
 `
 
 // 게시글 태그 등록
@@ -112,4 +112,23 @@ var InsertUpdatePostImage = `
 		target_seq = ?
 	WHERE
 		file_seq = ?;
+`
+
+var SelectPostByTags = `
+	SELECT
+		t.tag_name,
+		p.post_seq,
+		p.post_title,
+		p.viewed,
+		p.reg_date,
+		p.mod_date
+	FROM
+		post_table p
+	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
+	WHERE
+		t.tag_name = ? AND
+		p.post_status = 1
+	ORDER BY reg_date DESC
+	LIMIT ?
+	OFFSET ?;
 `
