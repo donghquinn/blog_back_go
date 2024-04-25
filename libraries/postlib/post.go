@@ -1,6 +1,7 @@
 package postlib
 
 import (
+	"fmt"
 	"log"
 	"strconv"
 
@@ -8,6 +9,54 @@ import (
 	queries "github.com/donghquinn/blog_back_go/queries/posts"
 	"github.com/donghquinn/blog_back_go/types"
 )
+
+// 포스트들 가져오기 - 모듈함수
+func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResult, error) {
+		// parseBodyErr :=utils.DecodeBody(&req.Body)
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return nil, dbErr
+	}
+
+	// 페이징 파라미터 파싱
+	result, queryErr := database.Query(connect, queries.SelectAllPosts,  fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+
+	if queryErr != nil {
+		log.Printf("[LIST] Get Post Data Error: %v", queryErr)
+
+		return nil, queryErr
+	}
+
+	var queryResult = []types.SelectAllPostDataResult{}
+
+	for result.Next() {
+		var row types.SelectAllPostDataResult
+
+		scanErr := result.Scan(
+			&row.PostSeq,
+			&row.PostTitle,
+			&row.PostContents,
+			&row.UserId,
+			&row.UserName,
+			&row.IsPinned,
+			&row.Viewed,
+			&row.RegDate,
+			&row.ModDate)
+
+		if scanErr != nil {
+			log.Printf("[LIST] Scan and Assign Query Result Error: %v", scanErr)
+
+			return nil, scanErr
+		}
+
+		queryResult = append(queryResult, row)
+	}
+
+	defer connect.Close()
+
+	return queryResult, nil
+}
 
 // 게시글 데이터 입력
 func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string) error {
@@ -108,14 +157,14 @@ func UpdateUnPinPost(data types.UpdatePinRequest, userId string) error {
 	return nil
 }
 
-func GetPostTag(data types.GetPostsByTagRequest) ([]types.SelectPostsByTags, error) {
+func GetPostTag(data types.GetPostsByTagRequest, page int, size int) ([]types.SelectPostsByTags, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
 		return []types.SelectPostsByTags{}, dbErr
 	}
 
-	posts, selectErr := database.Query(connect, queries.SelectPostByTags, data.TagName)
+	posts, selectErr := database.Query(connect, queries.SelectPostByTags, data.TagName, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if selectErr != nil {
 		log.Printf("[POST_TAG] GEt Post by TagName Error: %v", selectErr)

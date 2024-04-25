@@ -130,4 +130,7 @@ var SelectPostByTags = `
 	WHERE
 		t.tag_name = ? AND
 		p.post_status = 1
+	ORDER BY reg_date DESC
+	LIMIT ?
+	OFFSET ?;
 `
