@@ -39,6 +39,10 @@ type UpdatePinRequest struct {
 	PostSeq string `json:"postSeq" binding:"required"`
 }
 
+type GetPostsByTagRequest struct {
+	TagName string `json:"tag" binding:"required"`
+}
+
 // 게시글 전체 가져오기 쿼리 결과 타입
 type SelectAllPostDataResult struct {
 	PostSeq string
@@ -70,6 +74,14 @@ type SelectSpeicificPostTagDataResult struct {
 	TagName string
 }
 
+type SelectPostsByTags struct {
+	Tag_name string
+	Post_seq string
+	Post_title string
+	Viewed string
+	Reg_date string
+	Mod_date string
+}
 
 type SelectPostImageData struct {
 	ObjectName string

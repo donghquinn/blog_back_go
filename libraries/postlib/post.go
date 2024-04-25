@@ -107,3 +107,41 @@ func UpdateUnPinPost(data types.UpdatePinRequest, userId string) error {
 
 	return nil
 }
+
+func GetPostTag(data types.GetPostsByTagRequest) ([]types.SelectPostsByTags, error) {
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return []types.SelectPostsByTags{}, dbErr
+	}
+
+	posts, selectErr := database.Query(connect, queries.SelectPostByTags, data.TagName)
+
+	if selectErr != nil {
+		log.Printf("[POST_TAG] GEt Post by TagName Error: %v", selectErr)
+		return []types.SelectPostsByTags{}, selectErr
+	}
+
+	var postsData []types.SelectPostsByTags
+
+	for posts.Next() {
+		var row types.SelectPostsByTags
+
+		scanErr := posts.Scan(
+			&row.Tag_name,
+			&row.Post_seq,
+			&row.Post_title,
+			&row.Viewed,
+			&row.Reg_date,
+			&row.Mod_date)
+		
+		if scanErr != nil {
+			log.Printf("[POST_TAG] Scan Query Result Error: %v", scanErr)
+			return []types.SelectPostsByTags{}, scanErr
+		}
+
+		postsData = append(postsData, row)
+	}
+
+	return postsData, nil
+}
