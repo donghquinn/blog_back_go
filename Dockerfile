@@ -21,10 +21,6 @@ FROM golang:alpine3.19 as release
 
 WORKDIR /home/node
 
-RUN mkdir ./assets
-RUN mkdir ./assets/image
-RUN mkdir ./assets/video
-
 COPY --from=builder /app/backend ./backend
 
 EXPOSE $APP_PORT
