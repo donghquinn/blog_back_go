@@ -55,7 +55,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 	// 패스워드 일치하지 않을 때
 	if !isMatch {
 		log.Printf("[LOGIN] Password Does Not Match: %v", isMatch)
-		dto.SetErrorResponse(res, 405, "05", "Password Does not Match", fmt.Errorf("Password Does not match"))
+		dto.SetErrorResponse(res, 405, "05", "Password Does not Match", fmt.Errorf("password does not match"))
 		return
 	}
 
@@ -68,7 +68,6 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	dto.SetTokenResponse(res, 200, "01", token)
-	return
 }
 
 func decodeLoginRequest(loginRequest types.UserLoginRequest) (string, string, error) {
