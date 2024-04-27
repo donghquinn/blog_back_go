@@ -6,8 +6,8 @@ import (
 	"strconv"
 
 	"github.com/donghquinn/blog_back_go/libraries/database"
-	queries "github.com/donghquinn/blog_back_go/queries/posts"
-	types "github.com/donghquinn/blog_back_go/types/admin"
+	queries "github.com/donghquinn/blog_back_go/queries/admin/posts"
+	types "github.com/donghquinn/blog_back_go/types/admin/posts"
 )
 
 // 게시글 데이터 입력
@@ -18,6 +18,19 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 		return dbErr
 	}
 
+	var categorySeq string
+	
+	if registerPostRequest.Category != "" {
+		categoryId, categoryErr := database.InsertQuery(connect, queries.InsertCategory, registerPostRequest.Category)
+
+		if categoryErr != nil {
+			log.Printf("[REGISTER] Insert category data Error: %v", categoryErr)
+			return categoryErr
+		}
+
+		categorySeq = strconv.Itoa(int(categoryId))
+	}
+
 	// 데이터 입력
 	insertId, queryErr := database.InsertQuery(
 		connect, 
@@ -25,7 +38,8 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 		userId, 
 		registerPostRequest.PostTitle, 
 		registerPostRequest.PostContents,
-		registerPostRequest.IsPinned)
+		registerPostRequest.IsPinned,
+		categorySeq)
 
 	if queryErr != nil {
 		log.Printf("[REGISTER] Insert Post Data Error: %v", queryErr)

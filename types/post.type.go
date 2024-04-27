@@ -31,6 +31,8 @@ type SelectAllPostDataResult struct {
 	PostSeq string	`json:"postSeq"`
 	PostTitle string	`json:"postTitle"`
 	PostContents string	`json:"postContents"`
+	CategoryName string `json:"categoryName"`
+	CategorySeq string `json:"categorySeq"`
 	UserId string	`json:"userId"`
 	UserName string	`json:"userName"`
 	IsPinned string	`json:"isPinned"`

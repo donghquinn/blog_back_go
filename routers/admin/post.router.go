@@ -8,6 +8,8 @@ import (
 
 func AdminPostRouter(server *http.ServeMux) {
 	server.HandleFunc("POST /admin/post/register", posts.RegisterPostController)
+	server.HandleFunc("POST /admin/post/edit", posts.EditPostController)
+	
 	server.HandleFunc("POST /admin/post/delete", posts.DeletePostController)
 
 	server.HandleFunc("POST /admin/post/update/pin", posts.UpdatePinPostController)

@@ -1,9 +1,11 @@
 package users
 
 import (
+	"log"
 	"net/http"
 
 	"github.com/donghquinn/blog_back_go/dto"
+	"github.com/donghquinn/blog_back_go/libraries/crypto"
 	"github.com/donghquinn/blog_back_go/libraries/profile"
 	"github.com/donghquinn/blog_back_go/types"
 	"github.com/donghquinn/blog_back_go/utils"
@@ -25,6 +27,24 @@ func GetUserProfileController(res http.ResponseWriter, req *http.Request) {
 		dto.SetErrorResponse(res, 402, "02", "Profile query Error", querErr)
 		return
 	}
+
+	decodedName, nameErr := crypto.DecryptString(profile.UserName)
+
+	if nameErr != nil {
+		log.Printf("[PROFILE] Decode User Name: %v", nameErr)
+		dto.SetErrorResponse(res, 403, "03", "Decode User Name Error", nameErr)
+		return
+	}
+
+	decodedEmail, emailErr := crypto.DecryptString(profile.UserEmail)
+
+	if emailErr != nil {
+		log.Printf("[PROFILE] Decode User Email: %v", emailErr)
+		dto.SetErrorResponse(res, 404, "04", "Decode User Email Error", emailErr)
+		return
+	}
+	profile.UserName = decodedName
+	profile.UserEmail = decodedEmail
 
 	dto.SetProfileResponse(res, 200, "01", profile)
 }

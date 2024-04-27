@@ -5,13 +5,7 @@ package types
 	Color string `json:"color" binding:"required"`
  }
 
-// 유저 패스워드 변경 요청
- type UserChangePasswordRequest struct {
-	Password string `json:"password" binding:"required"`
-	NewPassword string `json:"newPassword" binding:"required"`
- }
-
-// 블로그 타이틀 변경 요청
+ // 블로그 타이틀 변경 요청
  type UserUpdateBlogTitleRequest struct {
 	Title string `json:"title" binding:"required"`
  }

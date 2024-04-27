@@ -7,7 +7,7 @@ import (
 	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/profile"
-	types "github.com/donghquinn/blog_back_go/types/admin"
+	types "github.com/donghquinn/blog_back_go/types/admin/users"
 	"github.com/donghquinn/blog_back_go/utils"
 )
 

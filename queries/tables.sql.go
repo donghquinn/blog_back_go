@@ -27,7 +27,7 @@ var CreatePostTable = `
 		post_title 		VARCHAR(50)		NOT NULL,
 		post_contents 	TEXT			NOT NULL,
 		post_status		TINYINT(1)		NOT NULL DEFAULT 1	COMMENT '0: 비활성, 1: 활성, 2: 삭제',
-		category_seq    INT(20)			NULL 	 REFERENCES category_table(category_seq),
+		category_seq    INT(20)			NOT NULL DEFAULT 1  REFERENCES category_table(category_seq),
 		viewed			INT(20)			NOT NULL DEFAULT 0,
 		is_pinned		TINYINT(1)		NOT NULL DEFAULT 1 COMMENT '0 - 비고정, 1 - 고정',
 		reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -40,7 +40,7 @@ var CreatePostTable = `
 var CreateCategoryTable = `
 	CREATE TABLE IF NOT EXISTS category_table (
 		category_seq 	INT(20)			NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		category_name 	VARCHAR(10)		NOT NULL,
+		category_name 	VARCHAR(10)		NOT NULL DEFAULT,
 
 		INDEX category_idx(category_name)
 	);
@@ -68,7 +68,8 @@ var CreateFileTable = `
 		file_size		INT(20)				NOT NULL,
 		object_name 	VARCHAR(200)		NOT NULL,
 		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP,
-
+		mod_date		DATETIME			NULL	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+		
 		INDEX target_idx(target_table, target_id, target_seq)
 	);
 `

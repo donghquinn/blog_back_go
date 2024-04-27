@@ -5,7 +5,7 @@ import (
 
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	queries "github.com/donghquinn/blog_back_go/queries/users"
-	types "github.com/donghquinn/blog_back_go/types/admin"
+	types "github.com/donghquinn/blog_back_go/types/admin/users"
 )
 
 // 프로필 전체 변경

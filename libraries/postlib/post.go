@@ -37,6 +37,8 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResult, erro
 			&row.PostSeq,
 			&row.PostTitle,
 			&row.PostContents,
+			&row.CategoryName,
+			&row.CategorySeq,
 			&row.UserId,
 			&row.UserName,
 			&row.IsPinned,

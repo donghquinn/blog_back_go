@@ -7,7 +7,7 @@ import (
 	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
 	postlib "github.com/donghquinn/blog_back_go/libraries/postlib/admin"
-	types "github.com/donghquinn/blog_back_go/types/admin"
+	types "github.com/donghquinn/blog_back_go/types/admin/posts"
 	"github.com/donghquinn/blog_back_go/utils"
 )
 
