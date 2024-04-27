@@ -71,7 +71,7 @@ func GetPostsByTagController(res http.ResponseWriter, req *http.Request ) {
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	postList, postErr := postlib.GetPostTag(getPostByTagRequest, page, size)
+	postList, postErr := postlib.GetPostByTag(getPostByTagRequest, page, size)
 
 	if postErr != nil {
 		dto.SetErrorResponse(res, 202, "02", "Get Post List By Tag Error", postErr)

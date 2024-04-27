@@ -39,7 +39,7 @@ type ResponsePostListType struct {
 type ResponsePostByTagListType struct {
 	Code string `json:"code"`
 	Status bool `json:"status"`
-	Result []SelectPostsByTags `json:"result"`
+	Result []PostsByTagsResponse `json:"result"`
 }
 
 // 메세지를 담은 응답

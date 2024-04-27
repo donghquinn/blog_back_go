@@ -1,6 +1,7 @@
 package posts
 
 import (
+	"encoding/json"
 	"log"
 	"net/http"
 
@@ -54,11 +55,19 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 
 	userName, _ := crypto.DecryptString(queryResult.UserName)
 
-	tagsArray := make([]string, 0)
+	// 특정 게시글 태그 배열 가공해서 담아 응답
+	var tagsArray []string
 
 	for _, t := range(tagResults) {
-		tagsArray = append(tagsArray, t.TagName)
+		jsonErr := json.Unmarshal([]byte(t.TagName), &tagsArray)
+
+		if jsonErr != nil {
+			log.Printf("[CONTENTS] JSON Unmarsh tag array Error: %v", jsonErr)
+			dto.SetErrorResponse(res, 405, "05", "Unmarshing Tags Error", jsonErr)
+			return
+		}
 	} 
+
 	// 게시글 컨텐츠 데이터
 	postContentsData := types.ViewSpecificPostContentsResponse{
 		PostSeq: queryResult.PostSeq,

@@ -1,6 +1,7 @@
 package postlib
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"strconv"
@@ -79,16 +80,18 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 		log.Printf("[REGISTER] Insert Post Data Error: %v", queryErr)
 		return queryErr
 	}
+
 	postSeq := strconv.Itoa(int(insertId))
 
-	for _, t := range(registerPostRequest.Tags) {
-		_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, t)
+	// Array https://www.infracody.com/2023/08/how-to-deal-with-array-data-in-mysql.html
+	arrays, _ := json.Marshal(registerPostRequest.Tags)
 
-		if tagQueryErr != nil {
-			log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
+	_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(arrays))
 
-			return tagQueryErr
-		}
+	if tagQueryErr != nil {
+		log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
+
+		return tagQueryErr
 	}
 
 	for _, seq := range(registerPostRequest.ImageSeqs) {
@@ -106,6 +109,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 	return nil
 }
 
+// 게시글 삭제
 func DeletePost(data types.DeletePostRequest) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -125,6 +129,7 @@ func DeletePost(data types.DeletePostRequest) error {
 	return nil
 }
 
+// 고정 게시글 업데이트
 func UpdatePinPost(data types.UpdatePinRequest) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -144,6 +149,7 @@ func UpdatePinPost(data types.UpdatePinRequest) error {
 	return nil
 }
 
+// 고정 게시글 해제
 func UpdateUnPinPost(data types.UpdatePinRequest) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -163,24 +169,28 @@ func UpdateUnPinPost(data types.UpdatePinRequest) error {
 	return nil
 }
 
-func GetPostTag(data types.GetPostsByTagRequest, page int, size int) ([]types.SelectPostsByTags, error) {
+// 게시글 태그
+func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.PostsByTagsResponse, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
-		return []types.SelectPostsByTags{}, dbErr
+		return []types.PostsByTagsResponse{}, dbErr
 	}
 
-	posts, selectErr := database.Query(connect, queries.SelectPostByTags, data.TagName, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	tagArray, _ := json.Marshal(data.TagName)
+
+	posts, selectErr := database.Query(connect, queries.SelectPostByTags, "%"+string(tagArray)+"%", fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if selectErr != nil {
-		log.Printf("[POST_TAG] GEt Post by TagName Error: %v", selectErr)
-		return []types.SelectPostsByTags{}, selectErr
+		log.Printf("[POST_TAG] GET Post by TagName Error: %v", selectErr)
+		return []types.PostsByTagsResponse{}, selectErr
 	}
 
 	defer connect.Close()
 
 	var postsData []types.SelectPostsByTags
 
+	// Array https://stackoverflow.com/questions/14477941/read-select-columns-into-string-in-go
 	for posts.Next() {
 		var row types.SelectPostsByTags
 
@@ -194,11 +204,35 @@ func GetPostTag(data types.GetPostsByTagRequest, page int, size int) ([]types.Se
 		
 		if scanErr != nil {
 			log.Printf("[POST_TAG] Scan Query Result Error: %v", scanErr)
-			return []types.SelectPostsByTags{}, scanErr
+			return []types.PostsByTagsResponse{}, scanErr
 		}
 
 		postsData = append(postsData, row)
 	}
 
-	return postsData, nil
+	// stringify된 array를 array로
+	var postByTagsList []types.PostsByTagsResponse
+
+	for _, d := range(postsData) {
+		var tempTag []string
+
+		jsonErr :=  json.Unmarshal([]byte(d.Tag_name), &tempTag)
+
+		if jsonErr != nil {
+			log.Printf("[POST_TAG] Unmarshing Array Error: %v", jsonErr)
+			return []types.PostsByTagsResponse{}, jsonErr
+		}
+
+		data := types.PostsByTagsResponse{
+			Tag_name: tempTag,
+			Post_title: d.Post_title,
+			Post_seq: d.Post_seq,
+			Viewed: d.Viewed,
+			Reg_date: d.Reg_date,
+			Mod_date: d.Mod_date,}
+
+		postByTagsList = append(postByTagsList, data)
+	}
+
+	return postByTagsList, nil
 }

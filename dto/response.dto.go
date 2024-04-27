@@ -80,7 +80,7 @@ func SetFileInsertIdResponse(res http.ResponseWriter, statusCode int, code strin
 }
 
 // 게시글 리스트 담음 응답
-func SetPostByTagResponse(res http.ResponseWriter, statusCode int, code string, posts []types.SelectPostsByTags) {
+func SetPostByTagResponse(res http.ResponseWriter, statusCode int, code string, posts []types.PostsByTagsResponse) {
 	responseObject, _ := json.Marshal(types.ResponsePostByTagListType{Code: code, Status: true, Result: posts})
 
 	res.WriteHeader(200)

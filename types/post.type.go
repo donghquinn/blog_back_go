@@ -75,7 +75,16 @@ type SelectSpeicificPostTagDataResult struct {
 }
 
 type SelectPostsByTags struct {
-	Tag_name string		`json:"tagName"`
+	Tag_name string		
+	Post_seq string		
+	Post_title string	
+	Viewed string	
+	Reg_date string	
+	Mod_date string 
+}
+
+type PostsByTagsResponse struct {
+	Tag_name []string		`json:"tagName"`
 	Post_seq string		`json:"postSeq"`
 	Post_title string	`json:"postTitle"`
 	Viewed string	`json:"viewed"`

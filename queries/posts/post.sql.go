@@ -45,9 +45,10 @@ var SelectSpecificPostContents = `
 	;
 `
 
+// 게시글의 태그 쿼리
 var SelectPostTags =`
 		SELECT
-			tag_name
+			tags
 		FROM
 			tag_table
 		WHERE
@@ -84,6 +85,7 @@ var InsertPost = `
 		is_pinned = ?;
 `
 
+// 게글 삭제
 var DeletePost = `
 	UPDATE post_table
 	SET
@@ -92,6 +94,7 @@ var DeletePost = `
 		post_seq = ?
 `
 
+// 고정 게시글 여부 업데이트
 var UpdatePinPost = `
 	UPDATE post_table
 	SET
@@ -105,7 +108,14 @@ var InsertTag = `
 	INSERT INTO tag_table
 	SET
 		post_seq = ?,
-		tag_name = ?
+		tags = ?
+`
+
+var InsertCategory  = `
+	INSERT INTO category_table
+	SET
+		post_seq = ?,
+		categories = ?
 `
 
 // 게시글 이미지 등록
@@ -116,9 +126,10 @@ var InsertUpdatePostImage = `
 		file_seq = ?;
 `
 
+// 태그 이름을 통해 게시글 가져오기
 var SelectPostByTags = `
 	SELECT
-		t.tag_name,
+		t.tags as tags,
 		p.post_seq,
 		p.post_title,
 		p.viewed,
@@ -128,9 +139,12 @@ var SelectPostByTags = `
 		post_table p
 	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
 	WHERE
-		t.tag_name = ? AND
+		tags LIKE ? AND
 		p.post_status = 1
 	ORDER BY reg_date DESC
 	LIMIT ?
 	OFFSET ?;
 `
+
+	// WHERE
+	// 	tags LIKE ? AND
