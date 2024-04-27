@@ -15,30 +15,13 @@ type ViewSpecificPostContentsResponse struct {
 	ModDate string `json:"modDate"`
 }
 
-// 게시글 등록 요청
-type RegisterPostRequest struct {
-	PostTitle string `json:"postTitle" binding:"required"`
-	PostContents string `json:"postContents" binding:"required"`
-	ImageSeqs  []string `json:"imageSeqs" binding:"required"`
-	Tags []string `json:"tags" binding:"required"`
-	IsPinned string `json:"isPinned" binding:"required"`
-}
 
 // 상세 포스트 조회 요청
 type ViewPostContents struct {
 	PostSeq string `json:"postSeq" binding:"required"`
 }
 
-// 게시글 삭제 요청
-type DeletePostRequest struct {
-	PostSeq string `json:"postSeq" binding:"required"`
-}
-
-// 고정 요청
-type UpdatePinRequest struct {
-	PostSeq string `json:"postSeq" binding:"required"`
-}
-
+// 태그로 특정 게시글 조희 요청
 type GetPostsByTagRequest struct {
 	TagName string `json:"tag" binding:"required"`
 }
@@ -57,6 +40,7 @@ type SelectAllPostDataResult struct {
 	// VersionId []string
 }
 
+// 특정 게시글 데이터 쿼리 결과
 type SelectSpecificPostDataResult struct {
 	PostSeq string
 	PostTitle string
@@ -70,10 +54,12 @@ type SelectSpecificPostDataResult struct {
 	ModDate string
 }
 
+// 특정 게시글 태그 데이터 쿼리 결과
 type SelectSpeicificPostTagDataResult struct {
 	TagName string
 }
 
+// 태그로 특정 게시글 쿼리
 type SelectPostsByTags struct {
 	Tag_name string		
 	Post_seq string		
@@ -83,6 +69,7 @@ type SelectPostsByTags struct {
 	Mod_date string 
 }
 
+// 태그로 특정 게시글 조회 응답
 type PostsByTagsResponse struct {
 	Tag_name []string		`json:"tagName"`
 	Post_seq string		`json:"postSeq"`
@@ -92,6 +79,7 @@ type PostsByTagsResponse struct {
 	Mod_date string	`json:"modDate"`
 }
 
+// 이미지 데이터 가져오기
 type SelectPostImageData struct {
 	ObjectName string
 	FileFormat string

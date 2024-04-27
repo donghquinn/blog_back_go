@@ -1,4 +1,4 @@
-package posts
+package admin
 
 import (
 	"log"
@@ -6,8 +6,8 @@ import (
 
 	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
-	"github.com/donghquinn/blog_back_go/libraries/postlib"
-	"github.com/donghquinn/blog_back_go/types"
+	postlib "github.com/donghquinn/blog_back_go/libraries/postlib/admin"
+	types "github.com/donghquinn/blog_back_go/types/admin"
 	"github.com/donghquinn/blog_back_go/utils"
 )
 

@@ -13,6 +13,7 @@ type UserSignupRequest struct {
 	Password string 	`json:"password" binding:"required"`
  }
  
+// 유저 프로필 조회 요청
 type UserProfileRequest struct {
 	UserId string `json:"userId"`
 }
@@ -26,35 +27,6 @@ type UserProfileRequest struct {
  type UserSearchPasswordRequest struct {
 	Email string `json:"email" binding:"required"`
 	Name string `json:"name" binding:"required"`
- }
-
- // 프로필 색 변경 요청
- type UserUpdateProfileColorRequest struct {
-	Color string `json:"color" binding:"required"`
- }
-
-// 유저 패스워드 변경 요청
- type UserChangePasswordRequest struct {
-	Password string `json:"password" binding:"required"`
-	NewPassword string `json:"newPassword" binding:"required"`
- }
-
-// 블로그 타이틀 변경 요청
- type UserUpdateBlogTitleRequest struct {
-	Title string `json:"title" binding:"required"`
- }
-
- // 프로필 수정
- type UserChangeProfileRequest struct {
-	Name string `json:"name" binding:"optional"`
-	Color string `json:"color" binding:"optional"`
-	Title string `json:"title" binding:"optional"`
-	BackgroundImage string `json:"backgroundImage" binding:"optional"`
-	ProfileImage string `json:"profileImage" binding:"optional"`
-	Memo string `json:"memo" binding:"optional"`
-	Instagram string `json:"instagram" binding:"optional"`
-	GithubUrls string `json:"githubUrls" binding:"optional"`
-	PersonalUrls string `json:"personalUrls" binding:"optional"`
  }
 
 
@@ -75,6 +47,8 @@ type UserProfileRequest struct {
 	UserPassword string
  }
 
+
+ // 유저 프로필 쿼리 결과
  type SelectUserProfileQueryResult struct {
 	UserId string
 	UserEmail string
@@ -86,6 +60,7 @@ type UserProfileRequest struct {
 	Memo string
  }
  
+ // 파일 데이터 쿼리 결과
  type SelectFileQueryResult struct {
 	FileFormat string
 	FileType string
@@ -94,11 +69,13 @@ type UserProfileRequest struct {
 	ObjectName string
  }
 
+ // 유저 프로필 이미지 파일 응답
  type UserImageFileData struct {
 	ProfileImage string	`json:"profileImage"`
 	BackgroundImage string	`json:"backgroundImage"`
  }
 
+ // 우저 프로필 데이터 응답
  type UserProfileDataResponseType struct {
 	UserId string		`json:"userId"`
 	UserEmail string	`json:"userEmail"`
