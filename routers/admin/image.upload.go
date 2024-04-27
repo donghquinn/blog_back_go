@@ -3,7 +3,7 @@ package routers
 import (
 	"net/http"
 
-	"github.com/donghquinn/blog_back_go/controllers/upload"
+	upload "github.com/donghquinn/blog_back_go/controllers/admin/upload"
 )
 
 func UploadImageController(server *http.ServeMux) {
