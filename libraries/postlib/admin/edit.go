@@ -28,11 +28,19 @@ func EditPost(data types.EditPostRequest, userId string) error {
 			log.Printf("[EDIT] INSERT/UPDATE category data Error: %v", categoryErr)
 			return categoryErr
 		}
+	} else {
+		// 요청에 태그 데이터가 없다면 기존 카테고리 제거
+		_, deleteCategoryErr := database.InsertQuery(connect, queries.DeletePostCategory, data.PostSeq)
+
+		if deleteCategoryErr != nil {
+			log.Printf("[EDIT] DELETE category data Error: %v", deleteCategoryErr)
+			return deleteCategoryErr
+		}
 	}
 
 	tags := data.Tags
 
-	if len(tags) >0 {
+	if len(tags) > 0 {
 		tagArray, _ := json.Marshal(data.Tags)
 
 		_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, data.PostSeq, string(tagArray))
@@ -41,6 +49,14 @@ func EditPost(data types.EditPostRequest, userId string) error {
 			log.Printf("[EDIT] Insert Tag Data Error: %v", tagQueryErr)
 
 			return tagQueryErr
+		}
+	} else {
+		// 요청에 태그 데이터가 없다면 기존 태그 제거
+		_, deleteTagErr := database.InsertQuery(connect, queries.DeletePostTag, data.PostSeq)
+
+		if deleteTagErr != nil {
+			log.Printf("[EDIT] DELETE Tag data Error: %v", deleteTagErr)
+			return deleteTagErr
 		}
 	}
 
@@ -60,7 +76,8 @@ func EditPost(data types.EditPostRequest, userId string) error {
 		queries.UpdateEditPost, 
 		data.PostTitle, 
 		data.PostContents,
-		data.IsPinned)
+		data.IsPinned,
+		data.PostSeq)
 	
 	if resultErr != nil {
 		log.Printf("[EDIT] INSERT/UPDATE post Error: %v", resultErr)
