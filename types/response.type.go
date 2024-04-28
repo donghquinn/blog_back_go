@@ -6,46 +6,11 @@ type ResponseType struct {
 	Status bool `json:"status"`
 }
 
-
-// 기본 응답 구조체
+// 유저 프로필 응답 구조체
 type ResponseProfileType struct {
 	Code string `json:"code"`
 	Status bool `json:"status"`
 	Result UserProfileDataResponseType `json:"result"`
-}
-
-// 게시글 리스트 응답 구조체
-type ResponseInsertIdType struct {
-	Code string `json:"code"`
-	Status bool `json:"status"`
-	InsertId string `json:"insertId"`
-}
-
-// 게시글 리스트 응답 구조체
-type ResponsePostContentsType struct {
-	Code string `json:"code"`
-	Status bool `json:"status"`
-	Posts ViewSpecificPostContentsResponse `json:"posts"`
-}
-
-// 게시글 리스트 응답 구조체
-type ResponsePostListType struct {
-	Code string `json:"code"`
-	Status bool `json:"status"`
-	Result []SelectAllPostDataResult `json:"result"`
-}
-
-// 게시글 리스트 응답 구조체
-type ResponsePostByTagListType struct {
-	Code string `json:"code"`
-	Status bool `json:"status"`
-	Result []PostsByTagsResponse `json:"result"`
-}
-
-type ResponsePostByCategoryListType struct {
-	Code string `json:"code"`
-	Status bool `json:"status"`
-	Result []PostByCategoryResponse `json:"result"`
 }
 
 
@@ -62,7 +27,6 @@ type ResponseFoundEmailType struct {
 	Status bool `json:"status"`
 	Email string	`json:"email"`
 }
-
 
 // 찾은 패스워드 담은 응답
 type ResponseFoundPasswordType struct {

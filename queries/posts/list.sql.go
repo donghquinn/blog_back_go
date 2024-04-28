@@ -19,7 +19,7 @@ var SelectAllPosts = `
 	WHERE
 		p.post_status = 1
 	ORDER BY
-		p.is_pinned DESC, p.reg_date DESC
+		p.is_pinned DESC, p.mod_date DESC
 	LIMIT ?
 	OFFSET ?;
 `
@@ -44,7 +44,7 @@ var SelectPostByTags = `
 	WHERE
 		tags LIKE ? AND
 		p.post_status = 1
-	ORDER BY p.reg_date DESC
+	ORDER BY p.mod_date DESC
 	LIMIT ?
 	OFFSET ?;
 `
@@ -67,9 +67,9 @@ var SelectPostByCategory = `
 	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
 	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	WHERE
-		c.category_name LIKE ? AND
+		category_name LIKE ? AND
 		p.post_status = 1
-	ORDER BY p.reg_date DESC
+	ORDER BY p.mod_date DESC
 	LIMIT ?
 	OFFSET ?;
 `

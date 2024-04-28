@@ -7,11 +7,11 @@ import (
 
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	queries "github.com/donghquinn/blog_back_go/queries/posts"
-	"github.com/donghquinn/blog_back_go/types"
+	types "github.com/donghquinn/blog_back_go/types/post"
 )
 
 // 포스트들 가져오기 - 모듈함수
-func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResult, error) {
+func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResponse, error) {
 		// parseBodyErr :=utils.DecodeBody(&req.Body)
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -28,10 +28,10 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResult, erro
 		return nil, queryErr
 	}
 
-	var queryResult = []types.SelectAllPostDataResult{}
+	var queryResult = []types.SelectAllPostDataResponse{}
 
 	for result.Next() {
-		var row types.SelectAllPostDataResult
+		var row types.SelectAllPostDataResponse
 
 		scanErr := result.Scan(
 			&row.PostSeq,
@@ -60,11 +60,11 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResult, erro
 
 
 // 게시글 태그로 조회
-func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.PostsByTagsResponse, error) {
+func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.PostsByTagsResponseType, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
-		return []types.PostsByTagsResponse{}, dbErr
+		return []types.PostsByTagsResponseType{}, dbErr
 	}
 
 	tagArray, _ := json.Marshal(data.TagName)
@@ -73,7 +73,7 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 
 	if selectErr != nil {
 		log.Printf("[POST_TAG] GET Post by TagName Error: %v", selectErr)
-		return []types.PostsByTagsResponse{}, selectErr
+		return []types.PostsByTagsResponseType{}, selectErr
 	}
 
 	defer connect.Close()
@@ -97,14 +97,14 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 		
 		if scanErr != nil {
 			log.Printf("[POST_TAG] Scan Query Result Error: %v", scanErr)
-			return []types.PostsByTagsResponse{}, scanErr
+			return []types.PostsByTagsResponseType{}, scanErr
 		}
 
 		postsData = append(postsData, row)
 	}
 
 	// stringify된 array를 array로
-	var postByTagsList []types.PostsByTagsResponse
+	var postByTagsList []types.PostsByTagsResponseType
 
 	for _, d := range(postsData) {
 		var tempTag []string
@@ -113,10 +113,10 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 
 		if jsonErr != nil {
 			log.Printf("[POST_TAG] Unmarshing Array Error: %v", jsonErr)
-			return []types.PostsByTagsResponse{}, jsonErr
+			return []types.PostsByTagsResponseType{}, jsonErr
 		}
 
-		data := types.PostsByTagsResponse{
+		data := types.PostsByTagsResponseType{
 			TagName: tempTag,
 			CategoryName: d.CategoryName,
 			PostTitle: d.PostTitle,
@@ -134,18 +134,18 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 
 
 // 게시글 카테고리로 조회
-func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int) ([]types.PostByCategoryResponse, error) {
+func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int) ([]types.PostByCategoryResponseType, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
-		return []types.PostByCategoryResponse{}, dbErr
+		return []types.PostByCategoryResponseType{}, dbErr
 	}
 
 	posts, selectErr := database.Query(connect, queries.SelectPostByCategory, "%"+data.CategoryName+"%", fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if selectErr != nil {
 		log.Printf("[POST_CATEGORY] GET Post by CategoryName Error: %v", selectErr)
-		return []types.PostByCategoryResponse{}, selectErr
+		return []types.PostByCategoryResponseType{}, selectErr
 	}
 
 	defer connect.Close()
@@ -169,14 +169,14 @@ func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int)
 		
 		if scanErr != nil {
 			log.Printf("[POST_CATEGORY] Scan Query Result Error: %v", scanErr)
-			return []types.PostByCategoryResponse{}, scanErr
+			return []types.PostByCategoryResponseType{}, scanErr
 		}
 
 		postsData = append(postsData, row)
 	}
 
 	// stringify된 array를 array로
-	var postByCategoryList []types.PostByCategoryResponse
+	var postByCategoryList []types.PostByCategoryResponseType
 
 	for _, d := range(postsData) {
 		var tempTag []string
@@ -185,10 +185,10 @@ func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int)
 
 		if jsonErr != nil {
 			log.Printf("[POST_CATEGORY] Unmarshing Array Error: %v", jsonErr)
-			return []types.PostByCategoryResponse{}, jsonErr
+			return []types.PostByCategoryResponseType{}, jsonErr
 		}
 
-		data := types.PostByCategoryResponse{
+		data := types.PostByCategoryResponseType{
 			TagName: tempTag,
 			CategoryName: d.CategoryName,
 			PostTitle: d.PostTitle,

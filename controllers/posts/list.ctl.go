@@ -8,7 +8,7 @@ import (
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/crypto"
 	"github.com/donghquinn/blog_back_go/libraries/postlib"
-	"github.com/donghquinn/blog_back_go/types"
+	types "github.com/donghquinn/blog_back_go/types/post"
 	"github.com/donghquinn/blog_back_go/utils"
 )
 
@@ -25,7 +25,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var returnDecodedData []types.SelectAllPostDataResult
+	var returnDecodedData []types.SelectAllPostDataResponse
 
 	// 이름 디코딩 위해
 	for _, data := range(queryResult){
@@ -37,7 +37,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		returnDecodedData = append(returnDecodedData, types.SelectAllPostDataResult{
+		returnDecodedData = append(returnDecodedData, types.SelectAllPostDataResponse{
 			PostSeq: data.PostSeq,
 			PostTitle: data.PostTitle,
 			PostContents: data.PostContents,
