@@ -8,7 +8,7 @@ var SelectSpecificPostContents = `
 		p.post_contents, 
 		p.post_status,
 		t.tags as tags,
-		IFNULL(c.category_name, 'NULL') as category_name
+		IFNULL(c.category_name, 'NULL') as category_name,
 		u.user_id, 
 		u.user_name,
 		p.viewed, 
