@@ -6,6 +6,8 @@ var UpdateEditPost = `
 		post_title = ?,
 		post_contents = ?,
 		is_pinned = ?
+	WHERE
+		post_seq = ?
 `
 
 var InsertUpdateImage = `
@@ -25,4 +27,16 @@ var InsertUpdateCategory = `
 		category_name = ?
 	ON DUPLICATE KEY UPDATE
 		category_name = VALUES(category_name)
+`
+
+var DeletePostCategory = `
+	DELETE 
+	FROM category_table
+	WHERE post_seq = ?
+`
+
+var DeletePostTag = `
+	DELETE
+	FROM tag_table
+	WHERE post_seq = ?
 `
