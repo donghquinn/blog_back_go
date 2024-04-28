@@ -72,6 +72,7 @@ type SelectPostsByTags struct {
 	UserName string
 	PostSeq string		
 	PostTitle string	
+	PostContents string
 	Viewed string	
 	RegDate string	
 	ModDate string 
@@ -82,6 +83,7 @@ type PostByCategoryResponse struct {
 	CategoryName string `json:"category"`
 	PostSeq string		`json:"postSeq"`
 	PostTitle string	`json:"postTitle"`
+	PostContents string `json:"postContents"`
 	Viewed string	`json:"viewed"`
 	RegDate string	`json:"regDate"`
 	ModDate string	`json:"modDate"`
@@ -93,6 +95,7 @@ type PostsByTagsResponse struct {
 	CategoryName string `json:"category"`
 	PostSeq string		`json:"postSeq"`
 	PostTitle string	`json:"postTitle"`
+	PostContents string  `json:"postContents"`
 	Viewed string	`json:"viewed"`
 	RegDate string	`json:"regDate"`
 	ModDate string	`json:"modDate"`

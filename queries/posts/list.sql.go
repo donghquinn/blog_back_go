@@ -32,6 +32,7 @@ var SelectPostByTags = `
 		IFNULL(u.user_name, 'unknown') as user_name,
 		p.post_seq,
 		p.post_title,
+		p.post_contents,
 		p.viewed,
 		p.reg_date,
 		p.mod_date
@@ -43,7 +44,7 @@ var SelectPostByTags = `
 	WHERE
 		tags LIKE ? AND
 		p.post_status = 1
-	ORDER BY reg_date DESC
+	ORDER BY p.reg_date DESC
 	LIMIT ?
 	OFFSET ?;
 `
@@ -56,17 +57,19 @@ var SelectPostByCategory = `
 		IFNULL(u.user_name, 'unknown') as user_name,
 		p.post_seq,
 		p.post_title,
+		p.post_contents,
 		p.viewed,
 		p.reg_date,
 		p.mod_date
 	FROM
 		post_table p
 	LEFT JOIN user_table u ON u.user_id = p.user_id
+	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
 	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	WHERE
 		c.category_name LIKE ? AND
 		p.post_status = 1
-	ORDER BY reg_date DESC
+	ORDER BY p.reg_date DESC
 	LIMIT ?
 	OFFSET ?;
 `

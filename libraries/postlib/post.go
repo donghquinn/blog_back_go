@@ -59,7 +59,7 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResult, erro
 }
 
 
-// 게시글 태그
+// 게시글 태그로 조회
 func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.PostsByTagsResponse, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -90,6 +90,7 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 			&row.UserName,
 			&row.PostSeq,
 			&row.PostTitle,
+			&row.PostContents,
 			&row.Viewed,
 			&row.RegDate,
 			&row.ModDate)
@@ -119,6 +120,7 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 			TagName: tempTag,
 			CategoryName: d.CategoryName,
 			PostTitle: d.PostTitle,
+			PostContents: d.PostContents,
 			PostSeq: d.PostSeq,
 			Viewed: d.Viewed,
 			RegDate: d.RegDate,
@@ -131,7 +133,7 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 }
 
 
-// 게시글 카테고리로
+// 게시글 카테고리로 조회
 func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int) ([]types.PostByCategoryResponse, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -160,6 +162,7 @@ func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int)
 			&row.UserName,
 			&row.PostSeq,
 			&row.PostTitle,
+			&row.PostContents,
 			&row.Viewed,
 			&row.RegDate,
 			&row.ModDate)
@@ -189,6 +192,7 @@ func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int)
 			TagName: tempTag,
 			CategoryName: d.CategoryName,
 			PostTitle: d.PostTitle,
+			PostContents: d.PostContents,
 			PostSeq: d.PostSeq,
 			Viewed: d.Viewed,
 			RegDate: d.RegDate,
