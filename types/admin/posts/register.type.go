@@ -4,8 +4,8 @@ package types
 type RegisterPostRequest struct {
 	PostTitle string `json:"postTitle" binding:"required"`
 	PostContents string `json:"postContents" binding:"required"`
-	ImageSeqs  []string `json:"imageSeqs" binding:"required"`
+	ImageSeqs  []string `json:"imageSeqs" binding:"optional"`
 	Category string `json:"category" binding:"optional"`
-	Tags []string `json:"tags" binding:"required"`
+	Tags []string `json:"tags" binding:"optional"`
 	IsPinned string `json:"isPinned" binding:"required"`
 }

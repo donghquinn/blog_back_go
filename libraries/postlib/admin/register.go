@@ -7,6 +7,7 @@ import (
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	queries "github.com/donghquinn/blog_back_go/queries/admin/posts"
 	types "github.com/donghquinn/blog_back_go/types/admin/posts"
+	"github.com/donghquinn/blog_back_go/utils"
 )
 
 func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string) error {
@@ -32,7 +33,9 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 
 	postSeq := strconv.Itoa(int(insertId))
 
-	if registerPostRequest.Category != "" {
+	isValidCategory := utils.ValidateRequestValue(registerPostRequest.Category)
+
+	if isValidCategory {
 		_, categoryErr := database.InsertQuery(connect, queries.InsertCategory, postSeq, registerPostRequest.Category)
 
 		if categoryErr != nil {
@@ -41,20 +44,23 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 		}
 	}
 
-	// Array https://www.infracody.com/2023/08/how-to-deal-with-array-data-in-mysql.html
-	arrays, _ := json.Marshal(registerPostRequest.Tags)
+	tags := registerPostRequest.Tags
+	if len(tags) > 0 {
+		// Array https://www.infracody.com/2023/08/how-to-deal-with-array-data-in-mysql.html
+		tagArray, _ := json.Marshal(tags)
 
-	_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(arrays))
+		_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(tagArray))
 
-	if tagQueryErr != nil {
-		log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
+		if tagQueryErr != nil {
+			log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
 
-		return tagQueryErr
+			return tagQueryErr
+		}
 	}
 
 	for _, seq := range(registerPostRequest.ImageSeqs) {
 		// 파일 데이터 업데이트
-		_, insertUpdateErr := database.Query(connect, queries.InsertUpdatePostImage, postSeq, seq)
+		_, insertUpdateErr := database.InsertQuery(connect, queries.InsertUpdatePostImage, postSeq, seq)
 
 		if insertUpdateErr != nil {
 			log.Printf("[REGISTER] Insert Update File Data Error: %v", insertUpdateErr)
