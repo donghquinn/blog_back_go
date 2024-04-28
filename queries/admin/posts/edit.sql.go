@@ -1,15 +1,11 @@
 package queries
 
-var InsertUpdatePost = `
-	INSERT INTO post_table
-	(post_title, post_contents, category_seq, is_pinned)
-	VALUES
-	(?, ?, ?, ?)
-	ON DUPLICATE KEY UPDATE 
-		post_title = VALUES(post_title),
-		post_contents = VALUES(post_contents),
-		category_seq = VALUES(category_seq),
-		is_pinned = VALUES(is_pinned)
+var UpdateEditPost = `
+	UPDATE post_table
+	SET
+		post_title = ?,
+		post_contents = ?,
+		is_pinned = ?
 `
 
 var InsertUpdateImage = `
