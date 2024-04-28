@@ -15,7 +15,4 @@ func UserRouter(server *http.ServeMux) {
 	server.HandleFunc("POST /user/search/password", users.SearchPasswordController)
 
 	server.HandleFunc("POST /user/profile", users.GetUserProfileController)
-	server.HandleFunc("POST /user/profile/update", users.UpdateProfileController)
-	server.HandleFunc("POST /user/profile/title", users.UpdateTitleController)
-	server.HandleFunc("POST /user/profile/color", users.UpdateColorController)
 }

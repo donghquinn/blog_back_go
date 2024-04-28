@@ -36,13 +36,23 @@ var CreatePostTable = `
 	);
 `
 
+var CreateCategoryTable = `
+	CREATE TABLE IF NOT EXISTS category_table (
+		category_seq 	INT(20)			NOT NULL 	AUTO_INCREMENT PRIMARY KEY,
+		post_seq 		INT(20)			NOT NULL	REFERENCES post_table(post_seq),
+		category_name 	VARCHAR(20)		NOT NULL 	DEFAULT 'default',
+
+		INDEX category_idx(post_seq, category_name)
+	);
+`
+
 var CreateTagTable = `
 	CREATE TABLE IF NOT EXISTS tag_table (
-		tag_seq  INT(20)	NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		tag_seq  INT(20)	NOT NULL	AUTO_INCREMENT PRIMARY KEY,
 		post_seq INT(20)	NOT NULL	REFERENCES post_table(post_seq),
-		tag_name	VARCHAR(10)	NOT NULL,
+		tags	 VARCHAR(255)		NOT NULL,
 
-		INDEX tag_idx(tag_name, post_seq)
+		INDEX tag_idx(post_seq)
 	);
 `
 
@@ -58,22 +68,23 @@ var CreateFileTable = `
 		file_size		INT(20)				NOT NULL,
 		object_name 	VARCHAR(200)		NOT NULL,
 		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP,
-
+		mod_date		DATETIME			NULL	DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+		
 		INDEX target_idx(target_table, target_id, target_seq)
 	);
 `
 
 var CreateCommentTable = `
-		CREATE TABLE IF NOT EXISTS comment_table (
-			comment_seq		INT(20)			NOT NULL AUTO_INCREMENT PRIMARY KEY,
-			post_seq		INT(20)			NOT NULL REFERENCES post_table(post_seq),
-			user_id			VARCHAR(20)		NOT NULL REFERENCES user_table(user_id),
-			comment			TEXT			NOT NULL,
-			reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			mod_date		DATETIME	    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	CREATE TABLE IF NOT EXISTS comment_table (
+		comment_seq		INT(20)			NOT NULL AUTO_INCREMENT PRIMARY KEY,
+		post_seq		INT(20)			NOT NULL REFERENCES post_table(post_seq),
+		user_id			VARCHAR(20)		NOT NULL REFERENCES user_table(user_id),
+		comment			TEXT			NOT NULL,
+		reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+		mod_date		DATETIME	    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-			INDEX comment_idx(post_seq, user_id)
-		);
+		INDEX comment_idx(post_seq, user_id)
+	);
 `
 
 //	mod_date    DATETIME        NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

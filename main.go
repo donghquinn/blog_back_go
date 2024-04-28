@@ -20,6 +20,7 @@ func main() {
 	}
 
 	setConfigs()
+
 	minioErr := database.MinioConnect()
 	if minioErr != nil {
 		log.Printf("[START] Minio Connection Check Error: %v", minioErr)
@@ -46,6 +47,7 @@ func openServer() *http.Server{
 
 	middlewares.CorsMiddlewares(server)
 	routers.DefaultRouter(server)
+	routers.AdminRouter(server)
 
 	serving := &http.Server{
 		Handler: 		server,

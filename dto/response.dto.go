@@ -55,39 +55,6 @@ func SetPasswordResponse(res http.ResponseWriter, statusCode int, code string, p
 	res.Write(responseObject)
 }
 
-// 게시글 리스트 담음 응답
-func SetPostListResponse(res http.ResponseWriter, statusCode int, code string, data []types.SelectAllPostDataResult) {
-	responseObject, _ := json.Marshal(types.ResponsePostListType{Code: code, Status: true, Result: data})
-
-	res.WriteHeader(200)
-	res.Write(responseObject)
-}
-
-// 게시글 리스트 담음 응답
-func SetPostContentsResponse(res http.ResponseWriter, statusCode int, code string, posts types.ViewSpecificPostContentsResponse) {
-	responseObject, _ := json.Marshal(types.ResponsePostContentsType{Code: code, Status: true, Posts: posts})
-
-	res.WriteHeader(200)
-	res.Write(responseObject)
-}
-
-// 게시글 리스트 담음 응답
-func SetFileInsertIdResponse(res http.ResponseWriter, statusCode int, code string, insertId string) {
-	responseObject, _ := json.Marshal(types.ResponseInsertIdType{Code: code, Status: true, InsertId: insertId})
-
-	res.WriteHeader(200)
-	res.Write(responseObject)
-}
-
-// 게시글 리스트 담음 응답
-func SetPostByTagResponse(res http.ResponseWriter, statusCode int, code string, posts []types.SelectPostsByTags) {
-	responseObject, _ := json.Marshal(types.ResponsePostByTagListType{Code: code, Status: true, Result: posts})
-
-	res.WriteHeader(200)
-	res.Write(responseObject)
-}
-
-
 // 에러 응답
 func SetErrorResponse(res http.ResponseWriter, statusCode int, code string, message string, err error ) {
 	responseObject, _ := json.Marshal(types.ErrorResponseType{Code: code, Status: false, Message: message})

@@ -1,17 +1,17 @@
 package postlib
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
-	"strconv"
 
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	queries "github.com/donghquinn/blog_back_go/queries/posts"
-	"github.com/donghquinn/blog_back_go/types"
+	types "github.com/donghquinn/blog_back_go/types/post"
 )
 
 // 포스트들 가져오기 - 모듈함수
-func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResult, error) {
+func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResponse, error) {
 		// parseBodyErr :=utils.DecodeBody(&req.Body)
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -28,16 +28,16 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResult, erro
 		return nil, queryErr
 	}
 
-	var queryResult = []types.SelectAllPostDataResult{}
+	var queryResult = []types.SelectAllPostDataResponse{}
 
 	for result.Next() {
-		var row types.SelectAllPostDataResult
+		var row types.SelectAllPostDataResponse
 
 		scanErr := result.Scan(
 			&row.PostSeq,
 			&row.PostTitle,
 			&row.PostContents,
-			&row.UserId,
+			&row.CategoryName,
 			&row.UserName,
 			&row.IsPinned,
 			&row.Viewed,
@@ -58,147 +58,148 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResult, erro
 	return queryResult, nil
 }
 
-// 게시글 데이터 입력
-func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string) error {
+
+// 게시글 태그로 조회
+func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.PostsByTagsResponseType, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
-		return dbErr
+		return []types.PostsByTagsResponseType{}, dbErr
 	}
 
-	// 데이터 입력
-	insertId, queryErr := database.InsertQuery(
-		connect, 
-		queries.InsertPost, 
-		userId, 
-		registerPostRequest.PostTitle, 
-		registerPostRequest.PostContents,
-		registerPostRequest.IsPinned)
+	tagArray, _ := json.Marshal(data.TagName)
 
-	if queryErr != nil {
-		log.Printf("[REGISTER] Insert Post Data Error: %v", queryErr)
-		return queryErr
-	}
-	postSeq := strconv.Itoa(int(insertId))
-
-	for _, t := range(registerPostRequest.Tags) {
-		_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, t)
-
-		if tagQueryErr != nil {
-			log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
-
-			return tagQueryErr
-		}
-	}
-
-	for _, seq := range(registerPostRequest.ImageSeqs) {
-		// 파일 데이터 업데이트
-		_, insertUpdateErr := database.Query(connect, queries.InsertUpdatePostImage, postSeq, seq)
-
-		if insertUpdateErr != nil {
-			log.Printf("[REGISTER] Insert Update File Data Error: %v", insertUpdateErr)
-			return insertUpdateErr
-		}
-	}
-
-	defer connect.Close()
-
-	return nil
-}
-
-func DeletePost(data types.DeletePostRequest) error {
-	connect, dbErr := database.InitDatabaseConnection()
-
-	if dbErr != nil {
-		return dbErr
-	}
-
-	_, deleteErr := database.InsertQuery(connect, queries.DeletePost, "0", data.PostSeq)
-
-	if deleteErr != nil {
-		log.Printf("[DELETE] Delete Post Error: %v", deleteErr)
-		return deleteErr
-	}
-
-	defer connect.Close()
-
-	return nil
-}
-
-func UpdatePinPost(data types.UpdatePinRequest) error {
-	connect, dbErr := database.InitDatabaseConnection()
-
-	if dbErr != nil {
-		return dbErr
-	}
-
-	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "1", data.PostSeq)
-
-	if updateErr != nil {
-		log.Printf("[PIN] Update Pin Post Error: %v", updateErr)
-		return updateErr
-	}
-
-	defer connect.Close()
-
-	return nil
-}
-
-func UpdateUnPinPost(data types.UpdatePinRequest) error {
-	connect, dbErr := database.InitDatabaseConnection()
-
-	if dbErr != nil {
-		return dbErr
-	}
-
-	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "0", data.PostSeq)
-
-	if updateErr != nil {
-		log.Printf("[PIN] Update Un-Pin Post Error: %v", updateErr)
-		return updateErr
-	}
-
-	defer connect.Close()
-
-	return nil
-}
-
-func GetPostTag(data types.GetPostsByTagRequest, page int, size int) ([]types.SelectPostsByTags, error) {
-	connect, dbErr := database.InitDatabaseConnection()
-
-	if dbErr != nil {
-		return []types.SelectPostsByTags{}, dbErr
-	}
-
-	posts, selectErr := database.Query(connect, queries.SelectPostByTags, data.TagName, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	posts, selectErr := database.Query(connect, queries.SelectPostByTags, "%"+string(tagArray)+"%", fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if selectErr != nil {
-		log.Printf("[POST_TAG] GEt Post by TagName Error: %v", selectErr)
-		return []types.SelectPostsByTags{}, selectErr
+		log.Printf("[POST_TAG] GET Post by TagName Error: %v", selectErr)
+		return []types.PostsByTagsResponseType{}, selectErr
 	}
 
 	defer connect.Close()
 
 	var postsData []types.SelectPostsByTags
 
+	// Array https://stackoverflow.com/questions/14477941/read-select-columns-into-string-in-go
 	for posts.Next() {
 		var row types.SelectPostsByTags
 
 		scanErr := posts.Scan(
-			&row.Tag_name,
-			&row.Post_seq,
-			&row.Post_title,
+			&row.TagName,
+			&row.CategoryName,
+			&row.UserName,
+			&row.PostSeq,
+			&row.PostTitle,
+			&row.PostContents,
 			&row.Viewed,
-			&row.Reg_date,
-			&row.Mod_date)
+			&row.RegDate,
+			&row.ModDate)
 		
 		if scanErr != nil {
 			log.Printf("[POST_TAG] Scan Query Result Error: %v", scanErr)
-			return []types.SelectPostsByTags{}, scanErr
+			return []types.PostsByTagsResponseType{}, scanErr
 		}
 
 		postsData = append(postsData, row)
 	}
 
-	return postsData, nil
+	// stringify된 array를 array로
+	var postByTagsList []types.PostsByTagsResponseType
+
+	for _, d := range(postsData) {
+		var tempTag []string
+
+		jsonErr :=  json.Unmarshal([]byte(d.TagName), &tempTag)
+
+		if jsonErr != nil {
+			log.Printf("[POST_TAG] Unmarshing Array Error: %v", jsonErr)
+			return []types.PostsByTagsResponseType{}, jsonErr
+		}
+
+		data := types.PostsByTagsResponseType{
+			TagName: tempTag,
+			CategoryName: d.CategoryName,
+			PostTitle: d.PostTitle,
+			PostContents: d.PostContents,
+			PostSeq: d.PostSeq,
+			Viewed: d.Viewed,
+			RegDate: d.RegDate,
+			ModDate: d.ModDate}
+
+		postByTagsList = append(postByTagsList, data)
+	}
+
+	return postByTagsList, nil
+}
+
+
+// 게시글 카테고리로 조회
+func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int) ([]types.PostByCategoryResponseType, error) {
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return []types.PostByCategoryResponseType{}, dbErr
+	}
+
+	posts, selectErr := database.Query(connect, queries.SelectPostByCategory, "%"+data.CategoryName+"%", fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+
+	if selectErr != nil {
+		log.Printf("[POST_CATEGORY] GET Post by CategoryName Error: %v", selectErr)
+		return []types.PostByCategoryResponseType{}, selectErr
+	}
+
+	defer connect.Close()
+
+	var postsData []types.SelectPostsByTags
+
+	// Array https://stackoverflow.com/questions/14477941/read-select-columns-into-string-in-go
+	for posts.Next() {
+		var row types.SelectPostsByTags
+
+		scanErr := posts.Scan(
+			&row.TagName,
+			&row.CategoryName,
+			&row.UserName,
+			&row.PostSeq,
+			&row.PostTitle,
+			&row.PostContents,
+			&row.Viewed,
+			&row.RegDate,
+			&row.ModDate)
+		
+		if scanErr != nil {
+			log.Printf("[POST_CATEGORY] Scan Query Result Error: %v", scanErr)
+			return []types.PostByCategoryResponseType{}, scanErr
+		}
+
+		postsData = append(postsData, row)
+	}
+
+	// stringify된 array를 array로
+	var postByCategoryList []types.PostByCategoryResponseType
+
+	for _, d := range(postsData) {
+		var tempTag []string
+
+		jsonErr :=  json.Unmarshal([]byte(d.TagName), &tempTag)
+
+		if jsonErr != nil {
+			log.Printf("[POST_CATEGORY] Unmarshing Array Error: %v", jsonErr)
+			return []types.PostByCategoryResponseType{}, jsonErr
+		}
+
+		data := types.PostByCategoryResponseType{
+			TagName: tempTag,
+			CategoryName: d.CategoryName,
+			PostTitle: d.PostTitle,
+			PostContents: d.PostContents,
+			PostSeq: d.PostSeq,
+			Viewed: d.Viewed,
+			RegDate: d.RegDate,
+			ModDate: d.ModDate}
+
+		postByCategoryList = append(postByCategoryList, data)
+	}
+
+	return postByCategoryList, nil
 }
