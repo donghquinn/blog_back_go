@@ -59,15 +59,13 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 	// 특정 게시글 태그 배열 가공해서 담아 응답
 	var tagsArray []string
 
-	for _, t := range(tagResults) {
-		jsonErr := json.Unmarshal([]byte(t.TagName), &tagsArray)
+	jsonErr := json.Unmarshal([]byte(tagResults.TagName), &tagsArray)
 
-		if jsonErr != nil {
-			log.Printf("[CONTENTS] JSON Unmarsh tag array Error: %v", jsonErr)
-			dto.SetErrorResponse(res, 405, "05", "Unmarshing Tags Error", jsonErr)
-			return
-		}
-	} 
+	if jsonErr != nil {
+		log.Printf("[CONTENTS] JSON Unmarsh tag array Error: %v", jsonErr)
+		dto.SetErrorResponse(res, 405, "05", "Unmarshing Tags Error", jsonErr)
+		return
+	}
 
 	// 게시글 컨텐츠 데이터
 	postContentsData := types.ViewSpecificPostContentsResponse{
