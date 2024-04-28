@@ -11,6 +11,7 @@ type ViewSpecificPostContentsResponse struct {
 	PostTitle string `json:"postTitle"`
 	PostContents string `json:"postContents"`
 	Tags []string `json:"tags"`
+	CategoryName string `json:"category"`
 	UserName string `json:"userName"`
 	Viewed string `json:"viewed"`
 	IsPinned string `json:"isPinned"`
