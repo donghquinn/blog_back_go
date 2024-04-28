@@ -11,7 +11,6 @@ type ViewSpecificPostContentsResponse struct {
 	PostTitle string `json:"postTitle"`
 	PostContents string `json:"postContents"`
 	Tags []string `json:"tags"`
-	UserId string `json:"userId"`
 	UserName string `json:"userName"`
 	Viewed string `json:"viewed"`
 	IsPinned string `json:"isPinned"`
@@ -33,7 +32,6 @@ type SelectSpecificPostDataResult struct {
 	PostStatus string
 	Tags string
 	CategoryName string
-	UserId string
 	UserName string
 	Viewed string
 	IsPinned string

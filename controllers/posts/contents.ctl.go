@@ -75,7 +75,6 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		PostTitle: queryResult.PostTitle,
 		Tags: tagsArray,
 		PostContents: queryResult.PostContents,
-		UserId: queryResult.UserId,
 		UserName: userName,
 		Urls: urlArray,
 		Viewed: queryResult.Viewed,
