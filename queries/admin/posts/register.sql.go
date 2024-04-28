@@ -7,8 +7,7 @@ var InsertPost = `
 		user_id = ?,
 		post_title = ?,
 		post_contents = ?,
-		is_pinned = ?,
-		category_seq = NULLIF(?, "");
+		is_pinned = ?;
 `
 
 // 게시글 태그 등록
@@ -22,7 +21,11 @@ var InsertTag = `
 var InsertCategory  = `
 	INSERT INTO category_table
 	SET
+		post_seq = ?,
 		category_name = ?
+	ON DUPLICATE KEY UPDATE
+		post_seq = VALUES(post_seq),
+		category_name = VALUES(category_name)
 `
 
 // 게시글 이미지 등록

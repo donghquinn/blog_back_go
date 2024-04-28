@@ -7,7 +7,7 @@ var SelectAllPosts = `
 		p.post_title, 
 		p.post_contents, 
 		c.category_name,
-		c.category_seq,
+		c.post_seq,
 		u.user_id, 
 		u.user_name,
 		p.is_pinned,
@@ -17,7 +17,7 @@ var SelectAllPosts = `
 	FROM
 		post_table AS p
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id
-	LEFT JOIN category_table AS c ON c.category_seq = p.category_seq
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	WHERE
 		p.post_status = 1
 	ORDER BY
@@ -30,6 +30,8 @@ var SelectAllPosts = `
 var SelectPostByTags = `
 	SELECT
 		t.tags as tags,
+		c.post_seq,
+		c.category_name,
 		p.post_seq,
 		p.post_title,
 		p.viewed,
@@ -38,6 +40,7 @@ var SelectPostByTags = `
 	FROM
 		post_table p
 	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	WHERE
 		tags LIKE ? AND
 		p.post_status = 1

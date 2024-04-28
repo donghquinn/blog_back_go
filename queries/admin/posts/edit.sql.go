@@ -4,7 +4,7 @@ var InsertUpdatePost = `
 	INSERT INTO post_table
 	(post_title, post_contents, category_seq, is_pinned)
 	VALUES
-	(?, ?, NULLIF(?, ""), ?)
+	(?, ?, ?, ?)
 	ON DUPLICATE KEY UPDATE 
 		post_title = VALUES(post_title),
 		post_contents = VALUES(post_contents),

@@ -27,22 +27,22 @@ var CreatePostTable = `
 		post_title 		VARCHAR(50)		NOT NULL,
 		post_contents 	TEXT			NOT NULL,
 		post_status		TINYINT(1)		NOT NULL DEFAULT 1	COMMENT '0: 비활성, 1: 활성, 2: 삭제',
-		category_seq    INT(20)			NOT NULL DEFAULT 1  REFERENCES category_table(category_seq),
 		viewed			INT(20)			NOT NULL DEFAULT 0,
 		is_pinned		TINYINT(1)		NOT NULL DEFAULT 1 COMMENT '0 - 비고정, 1 - 고정',
 		reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		mod_date		DATETIME	    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-		INDEX post_idx(post_seq, post_status, user_id)
+		INDEX post_idx(post_status, user_id)
 	);
 `
 
 var CreateCategoryTable = `
 	CREATE TABLE IF NOT EXISTS category_table (
-		category_seq 	INT(20)			NOT NULL AUTO_INCREMENT PRIMARY KEY,
-		category_name 	VARCHAR(10)		NOT NULL DEFAULT,
+		category_seq 	INT(20)			NOT NULL 	AUTO_INCREMENT PRIMARY KEY,
+		post_seq 		INT(20)			NOT NULL	REFERENCES post_table(post_seq),
+		category_name 	VARCHAR(10)		NOT NULL 	DEFAULT "default",
 
-		INDEX category_idx(category_name)
+		INDEX category_idx(post_seq, category_name)
 	);
 `
 
