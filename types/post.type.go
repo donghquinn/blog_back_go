@@ -26,14 +26,18 @@ type GetPostsByTagRequest struct {
 	TagName string `json:"tag" binding:"required"`
 }
 
+// 카테고리 이름으로 게시글 조회
+type GetPostsByCategoryRequest struct {
+	CategoryName string `json:"categoryName" binding:"required"`
+}
+
+
 // 게시글 전체 가져오기 쿼리 결과 타입
 type SelectAllPostDataResult struct {
 	PostSeq string	`json:"postSeq"`
 	PostTitle string	`json:"postTitle"`
 	PostContents string	`json:"postContents"`
 	CategoryName string `json:"categoryName"`
-	CategorySeq string `json:"categorySeq"`
-	UserId string	`json:"userId"`
 	UserName string	`json:"userName"`
 	IsPinned string	`json:"isPinned"`
 	Viewed string	`json:"viewed"`
@@ -63,22 +67,35 @@ type SelectSpeicificPostTagDataResult struct {
 
 // 태그로 특정 게시글 쿼리
 type SelectPostsByTags struct {
-	Tag_name string		
-	Post_seq string		
-	Post_title string	
+	TagName string		
+	CategoryName string
+	UserName string
+	PostSeq string		
+	PostTitle string	
 	Viewed string	
-	Reg_date string	
-	Mod_date string 
+	RegDate string	
+	ModDate string 
+}
+
+type PostByCategoryResponse struct {
+	TagName []string		`json:"tagName"`
+	CategoryName string `json:"category"`
+	PostSeq string		`json:"postSeq"`
+	PostTitle string	`json:"postTitle"`
+	Viewed string	`json:"viewed"`
+	RegDate string	`json:"regDate"`
+	ModDate string	`json:"modDate"`
 }
 
 // 태그로 특정 게시글 조회 응답
 type PostsByTagsResponse struct {
-	Tag_name []string		`json:"tagName"`
-	Post_seq string		`json:"postSeq"`
-	Post_title string	`json:"postTitle"`
+	TagName []string		`json:"tagName"`
+	CategoryName string `json:"category"`
+	PostSeq string		`json:"postSeq"`
+	PostTitle string	`json:"postTitle"`
 	Viewed string	`json:"viewed"`
-	Reg_date string	`json:"regDate"`
-	Mod_date string	`json:"modDate"`
+	RegDate string	`json:"regDate"`
+	ModDate string	`json:"modDate"`
 }
 
 // 이미지 데이터 가져오기

@@ -38,8 +38,6 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResult, erro
 			&row.PostTitle,
 			&row.PostContents,
 			&row.CategoryName,
-			&row.CategorySeq,
-			&row.UserId,
 			&row.UserName,
 			&row.IsPinned,
 			&row.Viewed,
@@ -87,12 +85,14 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 		var row types.SelectPostsByTags
 
 		scanErr := posts.Scan(
-			&row.Tag_name,
-			&row.Post_seq,
-			&row.Post_title,
+			&row.TagName,
+			&row.CategoryName,
+			&row.UserName,
+			&row.PostSeq,
+			&row.PostTitle,
 			&row.Viewed,
-			&row.Reg_date,
-			&row.Mod_date)
+			&row.RegDate,
+			&row.ModDate)
 		
 		if scanErr != nil {
 			log.Printf("[POST_TAG] Scan Query Result Error: %v", scanErr)
@@ -108,7 +108,7 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 	for _, d := range(postsData) {
 		var tempTag []string
 
-		jsonErr :=  json.Unmarshal([]byte(d.Tag_name), &tempTag)
+		jsonErr :=  json.Unmarshal([]byte(d.TagName), &tempTag)
 
 		if jsonErr != nil {
 			log.Printf("[POST_TAG] Unmarshing Array Error: %v", jsonErr)
@@ -116,15 +116,86 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 		}
 
 		data := types.PostsByTagsResponse{
-			Tag_name: tempTag,
-			Post_title: d.Post_title,
-			Post_seq: d.Post_seq,
+			TagName: tempTag,
+			CategoryName: d.CategoryName,
+			PostTitle: d.PostTitle,
+			PostSeq: d.PostSeq,
 			Viewed: d.Viewed,
-			Reg_date: d.Reg_date,
-			Mod_date: d.Mod_date,}
+			RegDate: d.RegDate,
+			ModDate: d.ModDate}
 
 		postByTagsList = append(postByTagsList, data)
 	}
 
 	return postByTagsList, nil
+}
+
+
+// 게시글 카테고리로
+func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int) ([]types.PostByCategoryResponse, error) {
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return []types.PostByCategoryResponse{}, dbErr
+	}
+
+	posts, selectErr := database.Query(connect, queries.SelectPostByCategory, "%"+data.CategoryName+"%", fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+
+	if selectErr != nil {
+		log.Printf("[POST_CATEGORY] GET Post by CategoryName Error: %v", selectErr)
+		return []types.PostByCategoryResponse{}, selectErr
+	}
+
+	defer connect.Close()
+
+	var postsData []types.SelectPostsByTags
+
+	// Array https://stackoverflow.com/questions/14477941/read-select-columns-into-string-in-go
+	for posts.Next() {
+		var row types.SelectPostsByTags
+
+		scanErr := posts.Scan(
+			&row.TagName,
+			&row.CategoryName,
+			&row.UserName,
+			&row.PostSeq,
+			&row.PostTitle,
+			&row.Viewed,
+			&row.RegDate,
+			&row.ModDate)
+		
+		if scanErr != nil {
+			log.Printf("[POST_CATEGORY] Scan Query Result Error: %v", scanErr)
+			return []types.PostByCategoryResponse{}, scanErr
+		}
+
+		postsData = append(postsData, row)
+	}
+
+	// stringify된 array를 array로
+	var postByCategoryList []types.PostByCategoryResponse
+
+	for _, d := range(postsData) {
+		var tempTag []string
+
+		jsonErr :=  json.Unmarshal([]byte(d.TagName), &tempTag)
+
+		if jsonErr != nil {
+			log.Printf("[POST_CATEGORY] Unmarshing Array Error: %v", jsonErr)
+			return []types.PostByCategoryResponse{}, jsonErr
+		}
+
+		data := types.PostByCategoryResponse{
+			TagName: tempTag,
+			CategoryName: d.CategoryName,
+			PostTitle: d.PostTitle,
+			PostSeq: d.PostSeq,
+			Viewed: d.Viewed,
+			RegDate: d.RegDate,
+			ModDate: d.ModDate}
+
+		postByCategoryList = append(postByCategoryList, data)
+	}
+
+	return postByCategoryList, nil
 }

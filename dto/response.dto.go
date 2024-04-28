@@ -88,6 +88,14 @@ func SetPostByTagResponse(res http.ResponseWriter, statusCode int, code string, 
 }
 
 
+// 게시글 리스트 담음 응답
+func SetPostByCategoryResponse(res http.ResponseWriter, statusCode int, code string, posts []types.PostByCategoryResponse) {
+	responseObject, _ := json.Marshal(types.ResponsePostByCategoryListType{Code: code, Status: true, Result: posts})
+
+	res.WriteHeader(200)
+	res.Write(responseObject)
+}
+
 // 에러 응답
 func SetErrorResponse(res http.ResponseWriter, statusCode int, code string, message string, err error ) {
 	responseObject, _ := json.Marshal(types.ErrorResponseType{Code: code, Status: false, Message: message})

@@ -65,13 +65,6 @@ func CheckConnection() error {
 		return createUserErr
 	}
 
-	_, createCategoryErr := connect.Query(queries.CreateCategoryTable)
-
-	if createCategoryErr != nil {
-		log.Printf("[DATABASE] Create Category Table Error: %v", createCategoryErr)
-		return createCategoryErr
-	}
-
 	_, createPostErr := connect.Query(queries.CreatePostTable)
 
 	if createPostErr != nil {
@@ -79,6 +72,15 @@ func CheckConnection() error {
 
 		return createPostErr
 	}
+	
+
+	_, createCategoryErr := connect.Query(queries.CreateCategoryTable)
+
+	if createCategoryErr != nil {
+		log.Printf("[DATABASE] Create Category Table Error: %v", createCategoryErr)
+		return createCategoryErr
+	}
+
 	
 	_, createFileErr := connect.Query(queries.CreateFileTable)
 

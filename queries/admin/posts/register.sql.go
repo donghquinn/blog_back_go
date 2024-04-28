@@ -24,8 +24,7 @@ var InsertCategory  = `
 		post_seq = ?,
 		category_name = ?
 	ON DUPLICATE KEY UPDATE
-		post_seq = VALUES(post_seq),
-		category_name = VALUES(category_name)
+		post_seq = VALUES(post_seq)
 `
 
 // 게시글 이미지 등록

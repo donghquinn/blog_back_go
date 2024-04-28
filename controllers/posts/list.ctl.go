@@ -14,8 +14,6 @@ import (
 
 // 전체 포스트 가져오기 - 페이징
 func GetPostController(res http.ResponseWriter, req *http.Request) {
-
-
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
@@ -43,7 +41,6 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 			PostSeq: data.PostSeq,
 			PostTitle: data.PostTitle,
 			PostContents: data.PostContents,
-			UserId: data.UserId,
 			UserName: decodedName,
 			IsPinned: data.IsPinned,
 			Viewed: data.Viewed,
@@ -79,4 +76,28 @@ func GetPostsByTagController(res http.ResponseWriter, req *http.Request ) {
 	}
 
 	dto.SetPostByTagResponse(res, 200, "01", postList)
+}
+
+// 태그로 포스트 찾기
+func GetPostsByCategoryController(res http.ResponseWriter, req *http.Request ) {
+	var getPostByCategoryRequest types.GetPostsByCategoryRequest
+
+	parseErr := utils.DecodeBody(req, &getPostByCategoryRequest)
+
+	if parseErr != nil {
+		dto.SetErrorResponse(res, 201, "01", "Parse Request Body Error", parseErr)
+		return
+	}
+
+	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
+	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
+
+	postList, postErr := postlib.GetPostByCategory(getPostByCategoryRequest, page, size)
+
+	if postErr != nil {
+		dto.SetErrorResponse(res, 202, "02", "Get Post List By Tag Error", postErr)
+		return
+	}
+
+	dto.SetPostByCategoryResponse(res, 200, "01", postList)
 }

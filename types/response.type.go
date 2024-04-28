@@ -42,6 +42,13 @@ type ResponsePostByTagListType struct {
 	Result []PostsByTagsResponse `json:"result"`
 }
 
+type ResponsePostByCategoryListType struct {
+	Code string `json:"code"`
+	Status bool `json:"status"`
+	Result []PostByCategoryResponse `json:"result"`
+}
+
+
 // 메세지를 담은 응답
 type ResponseMessageType struct {
 	Code string `json:"code"`
