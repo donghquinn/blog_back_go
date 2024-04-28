@@ -18,6 +18,7 @@ func EditPost(data types.EditPostRequest, userId string) error {
 		return connectErr
 	}
 
+	// 카테고리 유효성 검증
 	isValidCategory := utils.ValidateRequestValue(data.Category)
 
 	if isValidCategory {
@@ -53,6 +54,7 @@ func EditPost(data types.EditPostRequest, userId string) error {
 		}
 	}
 
+	// 데이터 업데이트
 	_, resultErr := database.InsertQuery(
 		connect,
 		queries.UpdateEditPost, 
