@@ -15,10 +15,10 @@ package types
 	Name string `json:"name" binding:"optional"`
 	Color string `json:"color" binding:"optional"`
 	Title string `json:"title" binding:"optional"`
-	BackgroundImage string `json:"backgroundImage" binding:"optional"`
-	ProfileImage string `json:"profileImage" binding:"optional"`
-	Memo string `json:"memo" binding:"optional"`
 	Instagram string `json:"instagram" binding:"optional"`
 	GithubUrls string `json:"githubUrls" binding:"optional"`
 	PersonalUrls string `json:"personalUrls" binding:"optional"`
+	Memo string `json:"memo" binding:"optional"`
+	// BackgroundImage string `json:"backgroundImage" binding:"optional"`
+	// ProfileImage string `json:"profileImage" binding:"optional"`
  }

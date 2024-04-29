@@ -45,6 +45,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 	}
 
 	tags := registerPostRequest.Tags
+
 	if len(tags) > 0 {
 		// Array https://www.infracody.com/2023/08/how-to-deal-with-array-data-in-mysql.html
 		tagArray, _ := json.Marshal(tags)
