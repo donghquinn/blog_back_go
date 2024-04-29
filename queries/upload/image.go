@@ -19,7 +19,7 @@ var InsertProfileImageData = `
 	INSERT INTO file_table 
 		(file_type, target_id, target_table, target_purpose, file_size, object_name, file_format)
     VALUES (?, ?, ?, ?, ?, ?, ?)
-	ON DUPLICATE KEY UPDATE 
+	ON DUPLICATE KEY UPDATE
 		file_type = VALUES(file_type),
 		file_format = VALUES(file_format),
 		target_seq = VALUES(target_seq),

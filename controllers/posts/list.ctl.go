@@ -1,4 +1,4 @@
-package posts
+package controllers
 
 import (
 	"log"
@@ -7,7 +7,7 @@ import (
 
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/crypto"
-	"github.com/donghquinn/blog_back_go/libraries/postlib"
+	post "github.com/donghquinn/blog_back_go/libraries/post"
 	types "github.com/donghquinn/blog_back_go/types/post"
 	"github.com/donghquinn/blog_back_go/utils"
 )
@@ -17,7 +17,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	queryResult, queryErr := postlib.QueryAllPostData(page, size)
+	queryResult, queryErr := post.QueryAllPostData(page, size)
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Query Post Data Error", queryErr)
@@ -68,7 +68,7 @@ func GetPostsByTagController(res http.ResponseWriter, req *http.Request ) {
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	postList, postErr := postlib.GetPostByTag(getPostByTagRequest, page, size)
+	postList, postErr := post.GetPostByTag(getPostByTagRequest, page, size)
 
 	if postErr != nil {
 		dto.SetErrorResponse(res, 202, "02", "Get Post List By Tag Error", postErr)
@@ -92,7 +92,7 @@ func GetPostsByCategoryController(res http.ResponseWriter, req *http.Request ) {
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	postList, postErr := postlib.GetPostByCategory(getPostByCategoryRequest, page, size)
+	postList, postErr := post.GetPostByCategory(getPostByCategoryRequest, page, size)
 
 	if postErr != nil {
 		dto.SetErrorResponse(res, 202, "02", "Get Post List By Tag Error", postErr)

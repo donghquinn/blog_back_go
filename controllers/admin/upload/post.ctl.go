@@ -1,4 +1,4 @@
-package admin
+package admincontrollers
 
 import (
 	"fmt"
@@ -10,7 +10,7 @@ import (
 	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
-	"github.com/donghquinn/blog_back_go/libraries/upload/image"
+	upload "github.com/donghquinn/blog_back_go/libraries/upload/image"
 	queries "github.com/donghquinn/blog_back_go/queries/upload"
 )
 
@@ -25,7 +25,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// 요청으로부터 이미지 파일 가져오기
-	file, handler, fileErr := image.GetImagefileFromRequest(res, req)
+	file, handler, fileErr := upload.GetImagefileFromRequest(res, req)
 
 	if fileErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "File Getting Error", fileErr)
@@ -34,7 +34,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// 파일 생성
-	tempFile, tempErr := image.CreateFileImage(res, req, file, handler)
+	tempFile, tempErr := upload.CreateFileImage(res, req, file, handler)
 
 	if tempErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Create Temp Image File", tempErr)

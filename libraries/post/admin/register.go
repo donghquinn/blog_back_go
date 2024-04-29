@@ -1,4 +1,4 @@
-package postlib // 게시글 데이터 입력
+package post // 게시글 데이터 입력
 import (
 	"encoding/json"
 	"log"
@@ -45,6 +45,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 	}
 
 	tags := registerPostRequest.Tags
+
 	if len(tags) > 0 {
 		// Array https://www.infracody.com/2023/08/how-to-deal-with-array-data-in-mysql.html
 		tagArray, _ := json.Marshal(tags)
