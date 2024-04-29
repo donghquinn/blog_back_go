@@ -3,16 +3,16 @@ package routers
 import (
 	"net/http"
 
-	posts "github.com/donghquinn/blog_back_go/controllers/admin/posts"
+	admincontrollers "github.com/donghquinn/blog_back_go/controllers/admin/posts"
 )
 
 func AdminPostRouter(server *http.ServeMux) {
-	server.HandleFunc("POST /admin/post/register", posts.RegisterPostController)
-	server.HandleFunc("POST /admin/post/edit", posts.EditPostController)
+	server.HandleFunc("POST /admin/post/register", admincontrollers.RegisterPostController)
+	server.HandleFunc("POST /admin/post/edit", admincontrollers.EditPostController)
 	
-	server.HandleFunc("POST /admin/post/delete", posts.DeletePostController)
+	server.HandleFunc("POST /admin/post/delete", admincontrollers.DeletePostController)
 
-	server.HandleFunc("POST /admin/post/update/pin", posts.UpdatePinPostController)
-	server.HandleFunc("POST /admin/post/update/unpin", posts.UpdateUnPinPostController)
+	server.HandleFunc("POST /admin/post/update/pin", admincontrollers.UpdatePinPostController)
+	server.HandleFunc("POST /admin/post/update/unpin", admincontrollers.UpdateUnPinPostController)
 
 }

@@ -66,6 +66,8 @@ func ChangeColor(data types.UserUpdateProfileColorRequest, userId string) error 
 		return updateErr
 	}
 
+	defer connect.Close()
+
 	return nil
 }
 
@@ -84,5 +86,7 @@ func ChangeBlogTitle(data types.UserUpdateBlogTitleRequest, userId string) error
 		return updateErr
 	}
 
+	defer connect.Close()
+	
 	return nil
 }

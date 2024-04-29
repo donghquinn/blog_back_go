@@ -1,4 +1,4 @@
-package postlib // 게시글 데이터 입력
+package post // 게시글 데이터 입력
 import (
 	"encoding/json"
 	"log"

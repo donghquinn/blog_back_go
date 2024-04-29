@@ -3,13 +3,13 @@ package routers
 import (
 	"net/http"
 
-	"github.com/donghquinn/blog_back_go/controllers/posts"
+	controllers "github.com/donghquinn/blog_back_go/controllers/posts"
 )
 
 func PostRouter(server *http.ServeMux) {
-	server.HandleFunc("POST /post/contents", posts.PostContentsController)
-	server.HandleFunc("POST /post/list", posts.GetPostController)
+	server.HandleFunc("POST /post/contents", controllers.PostContentsController)
+	server.HandleFunc("POST /post/list", controllers.GetPostController)
 
-	server.HandleFunc("POST /post/list/tag", posts.GetPostsByTagController)
-	server.HandleFunc("POST /post/list/category", posts.GetPostsByCategoryController)
+	server.HandleFunc("POST /post/list/tag", controllers.GetPostsByTagController)
+	server.HandleFunc("POST /post/list/category", controllers.GetPostsByCategoryController)
 }

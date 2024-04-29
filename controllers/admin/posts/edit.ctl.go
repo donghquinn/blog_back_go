@@ -1,11 +1,11 @@
-package admin
+package admincontrollers
 
 import (
 	"net/http"
 
 	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
-	postlib "github.com/donghquinn/blog_back_go/libraries/postlib/admin"
+	post "github.com/donghquinn/blog_back_go/libraries/post/admin"
 	types "github.com/donghquinn/blog_back_go/types/admin/posts"
 	"github.com/donghquinn/blog_back_go/utils"
 )
@@ -28,7 +28,7 @@ func EditPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	editErr := postlib.EditPost(editPostRequest, userId)
+	editErr := post.EditPost(editPostRequest, userId)
 
 	if editErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Edit Post Data Error", editErr)

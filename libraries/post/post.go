@@ -1,4 +1,4 @@
-package postlib
+package post
 
 import (
 	"encoding/json"

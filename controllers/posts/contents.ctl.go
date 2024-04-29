@@ -1,4 +1,4 @@
-package posts
+package controllers
 
 import (
 	"encoding/json"
@@ -8,7 +8,7 @@ import (
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/crypto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
-	"github.com/donghquinn/blog_back_go/libraries/postlib"
+	"github.com/donghquinn/blog_back_go/libraries/post"
 	queries "github.com/donghquinn/blog_back_go/queries/posts"
 	types "github.com/donghquinn/blog_back_go/types/post"
 	"github.com/donghquinn/blog_back_go/utils"
@@ -26,7 +26,7 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// 게시글 쿼리
-	queryResult, tagResults, queryErr := postlib.GetPostData(postContentsRequest.PostSeq)
+	queryResult, tagResults, queryErr := post.GetPostData(postContentsRequest.PostSeq)
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Query Specific Contents Error", queryErr)
