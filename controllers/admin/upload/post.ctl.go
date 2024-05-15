@@ -45,6 +45,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	contentType := handler.Header["Content-Type"][0]
 
 	// 이미지 업로드 - minio
+
 	_, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
 
 	if uploadErr != nil {
@@ -54,14 +55,15 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 
 	connect, _ := database.InitDatabaseConnection()
 
-	// 데이터 입력 - DB
-	insertId, insertErr := database.InsertQuery(
+	var insertId int64
+
+// 데이터 입력 - DB
+	seq, insertErr := database.InsertQuery(
 		connect, 
 		queries.InsertPostImageData,
 		// USER ID from JWT
 		"1",
 		userId,
-		// post_seq
 		"post_table",
 		"POST_IMAGE",
 		strconv.Itoa(int(handler.Size)),
@@ -72,6 +74,8 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
  		dto.SetErrorResponse(res, 406, "06", "Insert Image Info Error", insertErr)
 		return
     }
+
+	insertId = seq
 
 	defer connect.Close()
 
