@@ -62,7 +62,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		queries.InsertPostImageData,
 		// USER ID from JWT
 		"1",
-		"12345",
+		os.Getenv("ADMIN_USER_ID"),
 		"post_table",
 		"POST_IMAGE",
 		strconv.Itoa(int(handler.Size)),
