@@ -1,4 +1,4 @@
-package admincontrollers
+package controllers
 
 import (
 	"fmt"
@@ -7,7 +7,6 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/donghquinn/blog_back_go/auth"
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	upload "github.com/donghquinn/blog_back_go/libraries/upload/image"
@@ -16,13 +15,13 @@ import (
 
 // 게시글 이미지 업로드
 func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
-	userId, _, _, err := auth.ValidateJwtToken(req)
+	// userId, _, _, err := auth.ValidateJwtToken(req)
 
-	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+	// if err != nil {
+	// 	dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
 
-		return
-	}
+	// 	return
+	// }
 
 	// 요청으로부터 이미지 파일 가져오기
 	file, handler, fileErr := upload.GetImagefileFromRequest(res, req)
@@ -63,7 +62,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		queries.InsertPostImageData,
 		// USER ID from JWT
 		"1",
-		userId,
+		"12345",
 		"post_table",
 		"POST_IMAGE",
 		strconv.Itoa(int(handler.Size)),

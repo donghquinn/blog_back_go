@@ -20,6 +20,9 @@ type ViewSpecificPostContentsResponse struct {
 	ModDate string `json:"modDate"`
 }
 
+type ViewImageUrl struct {
+	Urls []string `json:"urls"`
+}
 // 특정 게시글 태그 데이터 쿼리 결과
 type SelectSpeicificPostTagDataResult struct {
 	TagName string

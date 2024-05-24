@@ -9,3 +9,8 @@ type GetPostsByTagRequest struct {
 type GetPostsByCategoryRequest struct {
 	CategoryName string `json:"category" binding:"required"`
 }
+
+
+type GetPostByPostSeq struct {
+	PostSeq string `json:"postSeq"`
+}

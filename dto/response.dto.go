@@ -15,6 +15,13 @@ func SetResponse(res http.ResponseWriter, statusCode int, code string) {
 	res.Write(responseObject)
 }
 
+func SetImageUrlResponse(res http.ResponseWriter, statusCode int, code string, urls []string) {
+	responseObject, _ := json.Marshal(types.ResponseImageUrl{Code: code, Status: true, Result: urls})
+
+	res.WriteHeader(200)
+	res.Write(responseObject)
+}
+
 // 기본 응답
 func SetProfileResponse(res http.ResponseWriter, statusCode int, code string, profile types.UserProfileDataResponseType) {
 	responseObject, _ := json.Marshal(types.ResponseProfileType{Code: code, Status: true, Result: profile})

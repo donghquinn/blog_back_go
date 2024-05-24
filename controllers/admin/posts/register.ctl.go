@@ -30,12 +30,18 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	insertErr := post.InsertPostData(registerPostRequest, userId)
+	log.Printf("Start")
 
-	if insertErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Insert Post Data Error", insertErr)
-		return
-	}
+	go func(){
+		insertErr := post.InsertPostData(registerPostRequest, userId)
+
+		if insertErr != nil {
+			dto.SetErrorResponse(res, 402, "02", "Insert Post Data Error", insertErr)
+			return
+		}
+	}()
+
+	log.Printf("FIN")
 
 	dto.SetResponse(res, 200, "01")
 }
@@ -66,7 +72,7 @@ func DeletePostController(res http.ResponseWriter, req *http.Request) {
 		dto.SetErrorResponse(res, 402, "02", "Delete Post Error", deleteErr)
 		return
 	}
-
+	
 	dto.SetResponse(res, 200, "01")
 }
 
