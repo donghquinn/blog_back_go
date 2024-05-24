@@ -13,6 +13,13 @@ type ResponseProfileType struct {
 	Result UserProfileDataResponseType `json:"result"`
 }
 
+type ResponseImageUrl struct {
+	Code string `json:"code"`
+	Status bool `json:"status"`
+	Result []string `json:"result"`
+}
+
+
 
 // 메세지를 담은 응답
 type ResponseMessageType struct {
