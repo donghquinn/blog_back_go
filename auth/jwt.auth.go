@@ -8,13 +8,33 @@ import (
 	"time"
 
 	"github.com/donghquinn/blog_back_go/configs"
+	"github.com/donghquinn/blog_back_go/libraries/database"
 	"github.com/donghquinn/blog_back_go/types"
 	"github.com/golang-jwt/jwt/v5"
 )
 
 // JWT 토큰 생성
-func CreateJwtToken(userId string, userEmail string, userStatus string) (string, error) {
+func CreateJwtToken(userId string, uuid string, userEmail string, userStatus string) (string, error) {
 	globalConfig := configs.GlobalConfig
+	redis := database.RedisInstance()
+
+	getToken, getTokenErr := database.Get(redis, userId, uuid)
+
+	if getTokenErr != nil {
+		log.Printf("[JWT] Get Token Error: %v", getToken)
+		return "", getTokenErr
+	}
+
+	// 이미 등록된 토큰이 있다면 삭제하고 새로 등록
+	if getToken != "" {
+		log.Printf("[JWT] Found Already Set Token")
+		deletErr := database.Delete(redis, userId, uuid)
+
+		if deletErr != nil {
+			log.Printf("[JWT] Delete Token Error")
+			return "", deletErr
+		}
+	}
 
 	jwtToken := jwt.New(jwt.SigningMethodHS256)
 
@@ -23,6 +43,7 @@ func CreateJwtToken(userId string, userEmail string, userStatus string) (string,
 	claims["userId"] = userId
 	claims["userEmail"] = userEmail
 	claims["userStatus"] = userStatus
+	claims["uuid"] = uuid
 	// 만료 시간 - 3시간
 	claims["exp"] = time.Now().Add(time.Hour * 3).Unix()
 
@@ -33,13 +54,22 @@ func CreateJwtToken(userId string, userEmail string, userStatus string) (string,
 
 		return "", err
 	}
+
 	
+	setErr := database.Set(redis, userId, uuid, token)
+
+	if setErr != nil {
+		log.Printf("[JWT] Set Key Error: %v", setErr)
+		return "", setErr
+	}
+
 	return token, nil
 }
 
 // JWT 키  검증
 func ValidateJwtToken(req *http.Request) (string, string, string, error) {
 	token := strings.Split(req.Header["Authorization"][0], "Bearer ")[1]
+	redis := database.RedisInstance()
 
 	globalConfig := configs.GlobalConfig
 
@@ -47,7 +77,7 @@ func ValidateJwtToken(req *http.Request) (string, string, string, error) {
 	parseToken, err := jwt.ParseWithClaims(token, &types.JwtInterface{}, func(token *jwt.Token) (interface{}, error) {
 		// Don't forget to validate the alg is what you expect:
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
-			parseErr := fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			parseErr := fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 
 			log.Printf("[JWT] Parse With Claims Error: %v", parseErr)
 			return nil, parseErr
@@ -65,9 +95,16 @@ func ValidateJwtToken(req *http.Request) (string, string, string, error) {
 	claim, ok := parseToken.Claims.(*types.JwtInterface)
 
 	if !ok {
-		claimErr := fmt.Errorf("Can't Parse Values from TOKEN")
+		claimErr := fmt.Errorf("can't parse values from token")
 		log.Printf("[JWT] Parse Token with Claims: %v", claimErr)
 		return "", "", "", claimErr
+	}
+
+	_, getErr := database.Get(redis, claim.UserId, claim.Uuid)
+	
+	if getErr != nil {
+		log.Printf("[JWT] Get Token Error: %v", getErr)
+		return "", "", "", getErr
 	}
 
 	return claim.UserId, claim.UserEmail, claim.UserType, nil

@@ -12,6 +12,7 @@ import (
 	queries "github.com/donghquinn/blog_back_go/queries/users"
 	"github.com/donghquinn/blog_back_go/types"
 	"github.com/donghquinn/blog_back_go/utils"
+	"github.com/google/uuid"
 )
 
 func LoginController(res http.ResponseWriter, req *http.Request) {
@@ -59,8 +60,15 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	uuid, uuidErr := uuid.NewUUID()
+
+	if uuidErr != nil {
+		log.Printf("[REDIS] Create UUID Error: %v", uuidErr)
+		dto.SetErrorResponse(res, 407, "07", "Create Uuid Error", uuidErr)
+	}
+
 	// JWT 토큰 생성
-	token, tokenErr := auth.CreateJwtToken(queryResult.UserId, decodeEmail, queryResult.UserStatus)
+	token, tokenErr := auth.CreateJwtToken(queryResult.UserId, uuid.String(), decodeEmail, queryResult.UserStatus)
 
 	if tokenErr != nil {
 		dto.SetErrorResponse(res, 406, "06", "Create JWT Token Error", tokenErr)
