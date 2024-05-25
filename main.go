@@ -63,4 +63,5 @@ func setConfigs() {
 	configs.SetGlobalConfig()
 	configs.SetDatabaseConfig()
 	configs.SetMinioConfig()
+	configs.SetRedisConfig()
 }
