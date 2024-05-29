@@ -45,7 +45,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 
 	// 이미지 업로드 - minio
 
-	uploadInfo, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
+	_, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
 
 	if uploadErr != nil {
 		dto.SetErrorResponse(res, 405, "05", "Upload Image Error", uploadErr)
@@ -67,7 +67,6 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		"POST_IMAGE",
 		strconv.Itoa(int(handler.Size)),
 		handler.Filename, 
-		uploadInfo.VersionID,
 		contentType)
     
 	if insertErr != nil {

@@ -2,8 +2,8 @@ package queries
 
 var InsertPostImageData = `
  	INSERT INTO file_table 
-		(file_type, target_id, target_table, target_purpose, file_size, object_name, version_id, file_format)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+		(file_type, target_id, target_table, target_purpose, file_size, object_name, file_format)
+    VALUES (?, ?, ?, ?, ?, ?, ?)
 `
 
 // 원본
