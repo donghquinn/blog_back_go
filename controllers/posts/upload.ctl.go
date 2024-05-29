@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/donghquinn/blog_back_go/dto"
@@ -46,9 +47,8 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 
 	// 이미지 업로드 - minio
 
-	uniqueSurfix := time.Now().String()
-	log.Printf("UNIQUE SURFIX: %s", uniqueSurfix)
-	
+	uniqueSurfix := strings.Split(time.Now().String(), "+")[0]
+
 	_, uploadErr := database.UploadImage(handler.Filename + uniqueSurfix , tempFile.Name(), contentType)
 
 	if uploadErr != nil {
