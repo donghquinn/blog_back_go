@@ -41,8 +41,6 @@ func CreateFileImage(res http.ResponseWriter, req *http.Request, file multipart.
 		return nil, err
     }
 
-    defer tempFile.Close()
-
 	// read all of the contents of our uploaded file into a
     // byte array
     fileBytes, err2 := io.ReadAll(file)
@@ -53,6 +51,8 @@ func CreateFileImage(res http.ResponseWriter, req *http.Request, file multipart.
 	
     // write this byte array to our temporary file
     tempFile.Write(fileBytes)
+
+    defer tempFile.Close()
 
 	return tempFile, nil
 }

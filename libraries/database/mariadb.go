@@ -30,10 +30,9 @@ func InitDatabaseConnection() (*sql.DB, error) {
 		return nil, err
 	}
 
-	connect.SetConnMaxLifetime(time.Second * 30)
-	connect.SetMaxOpenConns(10)
-	connect.SetMaxIdleConns(10)
-	connect.SetMaxOpenConns(30)
+	connect.SetConnMaxLifetime(time.Second * 60)
+	connect.SetMaxIdleConns(50)
+	connect.SetMaxOpenConns(50)
 
 	return connect, nil
 }
