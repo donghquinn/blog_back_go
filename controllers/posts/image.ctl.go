@@ -13,6 +13,7 @@ func GetImageUrl(res http.ResponseWriter, req *http.Request) {
 	var getPostRequest types.GetPostByPostSeq
 
 	err := utils.DecodeBody(req, &getPostRequest)
+	
 	if err != nil {
 		dto.SetErrorResponse(res, 400, "01", "Request Is Not Valid", err)
 	}
