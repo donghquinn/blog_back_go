@@ -112,7 +112,8 @@ func GetImageData(postSeq string) ([]types.SelectPostImageData, error){
 			&row.ObjectName,
 			&row.FileFormat,
 			&row.TargetPurpose,
-			&row.TargetSeq)
+			&row.TargetSeq,
+			&row.VersionId)
 
 		returnImageDate = append(returnImageDate, row)
 	}

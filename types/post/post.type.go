@@ -6,5 +6,6 @@ type SelectPostImageData struct {
 	FileFormat string
 	TargetPurpose string
 	TargetSeq string
+	VersionId string
 }
 
