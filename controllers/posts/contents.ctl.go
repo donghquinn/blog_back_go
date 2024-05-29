@@ -103,6 +103,8 @@ func GetImageData(postSeq string) ([]types.SelectPostImageData, error){
 		return []types.SelectPostImageData{}, queryErr
 	}
 
+	defer connect.Close()
+
 	for result.Next() {
 		var row types.SelectPostImageData
 
