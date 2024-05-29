@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/donghquinn/blog_back_go/dto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
@@ -45,7 +46,10 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 
 	// 이미지 업로드 - minio
 
-	_, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
+	uniqueSurfix := time.Now().String()
+	log.Printf("UNIQUE SURFIX: %s", uniqueSurfix)
+	
+	_, uploadErr := database.UploadImage(handler.Filename + uniqueSurfix , tempFile.Name(), contentType)
 
 	if uploadErr != nil {
 		dto.SetErrorResponse(res, 405, "05", "Upload Image Error", uploadErr)
@@ -66,7 +70,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		"post_table",
 		"POST_IMAGE",
 		strconv.Itoa(int(handler.Size)),
-		handler.Filename, 
+		handler.Filename+uniqueSurfix, 
 		contentType)
     
 	if insertErr != nil {

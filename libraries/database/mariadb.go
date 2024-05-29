@@ -32,7 +32,7 @@ func InitDatabaseConnection() (*sql.DB, error) {
 
 	connect.SetConnMaxLifetime(time.Second * 60)
 	connect.SetMaxIdleConns(50)
-	connect.SetMaxOpenConns(50)
+	connect.SetMaxOpenConns(100)
 
 	return connect, nil
 }
@@ -123,6 +123,8 @@ func Query(connect *sql.DB, queryString string, args ...string) (*sql.Rows, erro
 		return nil, err
 	}
 
+	defer connect.Close()
+
 	return result, nil
 }
 
@@ -141,6 +143,8 @@ func QueryOne(connect *sql.DB, queryString string, args ...string) (*sql.Row, er
 
 		return nil, result.Err()
 	}
+
+	defer connect.Close()
 
 	return result, nil
 }
@@ -161,6 +165,8 @@ func InsertQuery(connect *sql.DB, queryString string, args ...string) (int64, er
 		return -99999, insertErr
 	}
 
+	defer connect.Close()
+
 	// Insert ID
 	insertId, insertIdErr := insertResult.LastInsertId()
 
@@ -169,6 +175,7 @@ func InsertQuery(connect *sql.DB, queryString string, args ...string) (int64, er
 
 		return -999999, insertIdErr
 	}
+
 
 	return insertId, nil
 }
