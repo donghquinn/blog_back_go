@@ -56,6 +56,8 @@ func GetUserProfileByUserId(userId string) (types.SelectUserProfileQueryResult, 
 		return types.SelectUserProfileQueryResult{}, profileErr
 	}
 
+	defer connect.Close()
+
 	profile.Scan(
 		&userProfileData.UserId,
 		&userProfileData.UserEmail,
@@ -80,13 +82,14 @@ func GetUserProfileImageList(userId string) (types.UserImageFileData, error){
 		return types.UserImageFileData{}, dbErr
 	}
 
-
 	images, imagesErr := database.Query(connect, queries.SelectUserProfileProfileAndBackground, userId, "USER_PROFILE", "USER_BACKGROUND")
 	
 	if imagesErr != nil {
 		log.Printf("[PROFILE] Get Profile And Background Images Error: %v", imagesErr)
 		return types.UserImageFileData{}, imagesErr
 	}
+	
+	defer connect.Close()
 
 	for images.Next() {
 		var row types.SelectFileQueryResult
