@@ -16,7 +16,7 @@ func RedisInstance() (*redis.Client, error) {
 
 	redisInstance := redis.NewClient(&redis.Options{
 		Addr: redisConfig.Addr,
-		Username: redisConfig.UserName,
+		// Username: redisConfig.UserName,
 		Password: redisConfig.Password,
 		DB: 0,
 	})
@@ -59,7 +59,7 @@ func Get(rdb *redis.Client, key string) (string, error) {
 		case getErr == redis.Nil:
 			log.Printf("[REDIS] No Value Found")
 			return "", nil
-			
+
 		case getErr != nil:
 			log.Printf("[REDIS] Get Key Error: %v", getErr)
 			return "", getErr
