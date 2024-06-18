@@ -77,10 +77,10 @@ func Delete(redis *redis.Client, key string, objKey string) error {
 	return nil
 }
 
-func RedisLoginSet(redis *redis.Client, sessionId string,  email string, name string, userId string) error {
+func RedisLoginSet(redis *redis.Client, sessionId string, email string, userStatus string, userId string) error {
 	sessionInfo := types.LoginRedisStruct {
 		Email: email,
-		Name: name,
+		UserStatus: userStatus,
 		UserId: userId}
 
 	var ctx = context.Background()

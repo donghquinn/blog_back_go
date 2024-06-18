@@ -48,8 +48,8 @@ type UserProfileRequest struct {
  }
 
 type LoginRedisStruct struct {
-	Name string `json:"name"`
 	Email string `json:"email"`
+	UserStatus string `json:"userStatus"`
 	UserId string `json:"userId"`
 }
 

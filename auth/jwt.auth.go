@@ -16,12 +16,13 @@ import (
 // JWT 토큰 생성
 func CreateJwtToken(userId string, uuid string, userEmail string, userStatus string) (string, error) {
 	globalConfig := configs.GlobalConfig
+
 	redis := database.RedisInstance()
 
 	getToken, getTokenErr := database.Get(redis, userId, uuid)
 
 	if getTokenErr != nil {
-		log.Printf("[JWT] Get Token Error: %v", getToken)
+		log.Printf("[JWT] Get Token Error: %v", getTokenErr)
 		return "", getTokenErr
 	}
 
@@ -34,6 +35,14 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 			log.Printf("[JWT] Delete Token Error")
 			return "", deletErr
 		}
+	}
+
+	setLoginErr := database.RedisLoginSet(redis, uuid, userEmail, userStatus, userId)
+
+	if setLoginErr != nil {
+		log.Printf("[JWT] Set Login Error: %v", setLoginErr)
+
+		return "", setLoginErr
 	}
 
 	jwtToken := jwt.New(jwt.SigningMethodHS256)

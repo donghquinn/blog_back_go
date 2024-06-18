@@ -9,3 +9,9 @@ var SelectUserInfo = `
 		user_email = ?
 	;
 `
+
+var InsertSessionData = `
+	INSERT INTO session_table
+	SET
+		user_id = ?
+`
