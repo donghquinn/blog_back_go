@@ -14,24 +14,9 @@ type GlobalConfigStruct struct {
 	JwtKey string
 }
 
-type DatabaseConfigStruct struct {
-	Host string
-	Port string
-	Database string
-	User string
-	Password string
-}
 
 var GlobalConfig GlobalConfigStruct
-var MinioConfig MinioConfigStruct
-var DatabaseConfig DatabaseConfigStruct
 
-type MinioConfigStruct struct {
-	AccessKey string
-	SecretKey string
-	HostUrl string
-	BlogBucket string
-}
 
 func SetGlobalConfig(){
 	GlobalConfig.AppPort = os.Getenv("APP_PORT")
@@ -40,19 +25,4 @@ func SetGlobalConfig(){
 	GlobalConfig.AesKey = os.Getenv("AES_KEY")
 	GlobalConfig.JwtKey = os.Getenv("JWT_KEY")
 	GlobalConfig.SecretKey = os.Getenv("SECRET_KEY")
-}
-
-func SetDatabaseConfig() {
-	DatabaseConfig.Host = os.Getenv("MARIADB_HOST")
-	DatabaseConfig.User = os.Getenv("MARIADB_USER")
-	DatabaseConfig.Password = os.Getenv("MARIADB_PASSWORD")
-	DatabaseConfig.Port = os.Getenv("MARIADB_PORT")
-	DatabaseConfig.Database = os.Getenv("MARIADB_DATABASE")
-}
-
-func SetMinioConfig() {
-	MinioConfig.AccessKey = os.Getenv("MINIO_ACCESSKEY")
-	MinioConfig.HostUrl = os.Getenv("MINIO_URL")
-	MinioConfig.SecretKey = os.Getenv("MINIO_SECRET")
-	MinioConfig.BlogBucket = os.Getenv("MINIO_BLOG_BUCKET")
 }
