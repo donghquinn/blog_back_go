@@ -35,29 +35,27 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 
 	postSeq := strconv.Itoa(int(insertId))
 
-	isValidCategory := utils.ValidateRequestValue(registerPostRequest.Category)
+	categories := registerPostRequest.Category
 
-	if isValidCategory {
-		_, categoryErr := database.InsertQuery(connect, queries.InsertCategory, postSeq, registerPostRequest.Category)
+	log.Println(categories)
 
-		if categoryErr != nil {
-			log.Printf("[REGISTER] Insert category data Error: %v", categoryErr)
-			return categoryErr
+	if categories != ""  {
+		insertCategoriesErr := InsertCategories(categories, postSeq)
+
+		if insertCategoriesErr != nil {
+			log.Printf("[REGISTER] Insert Categories Error: %v", insertCategoriesErr)
+
+			return insertCategoriesErr
 		}
 	}
 
 	tags := registerPostRequest.Tags
 
 	if len(tags) > 0 {
-		// Array https://www.infracody.com/2023/08/how-to-deal-with-array-data-in-mysql.html
-		tagArray, _ := json.Marshal(tags)
-
-		_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(tagArray))
-
-		if tagQueryErr != nil {
-			log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
-
-			return tagQueryErr
+		insertTagErr := InsertTags(tags, postSeq)
+		if insertTagErr != nil {
+			log.Printf("[REGISTER] Insert TagList Error: %v", insertTagErr)
+			return insertTagErr
 		}
 	}
 
@@ -69,6 +67,52 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 			log.Printf("[REGISTER] Insert Update File Data Error: %v", insertUpdateErr)
 			return insertUpdateErr
 		}
+	}
+
+	return nil
+}
+
+func InsertCategories(categories string, postSeq string) error {
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return dbErr
+	}
+
+	isValidCategory := utils.ValidateRequestValue(categories)
+
+	if isValidCategory {
+		_, categoryErr := database.InsertQuery(connect, queries.InsertCategory, postSeq, categories)
+
+		if categoryErr != nil {
+			log.Printf("[REGISTER] Insert category data Error: %v", categoryErr)
+			return categoryErr
+		}
+	}
+
+	defer connect.Close()
+
+	return nil
+}
+
+func InsertTags(tags []string, postSeq string) error {
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return dbErr
+	}
+
+	// Array https://www.infracody.com/2023/08/how-to-deal-with-array-data-in-mysql.html
+	tagArray, _ := json.Marshal(tags)
+
+	_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(tagArray))
+
+	defer connect.Close()
+	
+	if tagQueryErr != nil {
+		log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
+
+		return tagQueryErr
 	}
 
 	return nil
