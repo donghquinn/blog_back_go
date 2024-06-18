@@ -81,7 +81,7 @@ func GetAll(rdb *redis.Client, key string) (string, error) {
 }
 
 func Delete(rdb *redis.Client, key string, objKey string) error {
-	deleteErr := rdb.HDel(ctx, key).Err()
+	deleteErr := rdb.Del(ctx, key).Err()
 
 	if deleteErr != nil {
 		log.Printf("[REDIS] Delete Key Error: %v", deleteErr)
