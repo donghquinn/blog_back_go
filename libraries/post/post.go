@@ -27,6 +27,8 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResponse, er
 
 		return nil, queryErr
 	}
+	
+	defer connect.Close()
 
 	var queryResult = []types.SelectAllPostDataResponse{}
 
@@ -52,8 +54,6 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResponse, er
 
 		queryResult = append(queryResult, row)
 	}
-
-	defer connect.Close()
 
 	return queryResult, nil
 }
