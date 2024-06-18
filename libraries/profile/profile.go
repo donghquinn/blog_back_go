@@ -10,29 +10,53 @@ import (
 
 
 func GetUserProfile(userId string) (types.UserProfileDataResponseType, error) {
+	var userProfileResult types.UserProfileDataResponseType
+
+	userProfileData, profileErr := GetUserProfileByUserId(userId)
+
+	if profileErr != nil {
+		return types.UserProfileDataResponseType{}, profileErr
+	}
+
+	imageUrlList, imageUrlErr := GetUserProfileImageList(userId)
+	
+	if imageUrlErr != nil {
+		return types.UserProfileDataResponseType{}, imageUrlErr
+	}
+
+	 userProfileResult = types.UserProfileDataResponseType {
+		UserId: userProfileData.UserId,
+		UserName: userProfileData.UserName,
+		UserEmail: userProfileData.UserEmail,
+		Color: userProfileData.Color,
+		Title: userProfileData.Title,
+		GithubUrl: userProfileData.GithubUrl,
+		PersonalUrl: userProfileData.PersonalUrl,
+		Memo: userProfileData.Memo,
+		Images: imageUrlList,
+	 }
+
+	return userProfileResult, nil
+}
+
+
+func GetUserProfileByUserId(userId string) (types.SelectUserProfileQueryResult, error) {
+	var userProfileData types.SelectUserProfileQueryResult
+
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
-		return types.UserProfileDataResponseType{}, dbErr
+		return types.SelectUserProfileQueryResult{}, dbErr
 	}
 
 	profile, profileErr := database.QueryOne(connect, queries.SelectUserProfile, userId)
 
 	if profileErr != nil {
 		log.Printf("[PROFILE] Get Profile Error: %v", profileErr)
-		return types.UserProfileDataResponseType{}, profileErr
-	}
-
-	images, imagesErr := database.Query(connect, queries.SelectUserProfileProfileAndBackground, userId, "USER_PROFILE", "USER_BACKGROUND")
-	
-	if imagesErr != nil {
-		log.Printf("[PROFILE] Get Profile And Background Images Error: %v", imagesErr)
-		return types.UserProfileDataResponseType{}, imagesErr
+		return types.SelectUserProfileQueryResult{}, profileErr
 	}
 
 	defer connect.Close()
-
-	var userProfileData types.SelectUserProfileQueryResult
 
 	profile.Scan(
 		&userProfileData.UserId,
@@ -44,8 +68,28 @@ func GetUserProfile(userId string) (types.UserProfileDataResponseType, error) {
 		&userProfileData.PersonalUrl,
 		&userProfileData.Memo)
 
-	// 이미지 데이터 url 가져오기 시작
+	return userProfileData, nil
+}
+
+func GetUserProfileImageList(userId string) (types.UserImageFileData, error){
+		// 이미지 데이터 url 가져오기 시작
 	var userImageData []types.SelectFileQueryResult
+	var imageUrlList types.UserImageFileData
+
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return types.UserImageFileData{}, dbErr
+	}
+
+	images, imagesErr := database.Query(connect, queries.SelectUserProfileProfileAndBackground, userId, "USER_PROFILE", "USER_BACKGROUND")
+	
+	if imagesErr != nil {
+		log.Printf("[PROFILE] Get Profile And Background Images Error: %v", imagesErr)
+		return types.UserImageFileData{}, imagesErr
+	}
+	
+	defer connect.Close()
 
 	for images.Next() {
 		var row types.SelectFileQueryResult
@@ -62,24 +106,16 @@ func GetUserProfile(userId string) (types.UserProfileDataResponseType, error) {
 
 	imageUrls, urlErr := getImages(userImageData)
 
+	imageUrlList = imageUrls
+
 	if urlErr != nil {
-		return types.UserProfileDataResponseType{}, urlErr
+		return types.UserImageFileData{}, urlErr
 	}
 
-	 userProfileResult := types.UserProfileDataResponseType {
-		UserId: userProfileData.UserId,
-		UserName: userProfileData.UserName,
-		UserEmail: userProfileData.UserEmail,
-		Color: userProfileData.Color,
-		Title: userProfileData.Title,
-		GithubUrl: userProfileData.GithubUrl,
-		PersonalUrl: userProfileData.PersonalUrl,
-		Memo: userProfileData.Memo,
-		Images: imageUrls,
-	 }
-
-	return userProfileResult, nil
+	return imageUrlList, nil
 }
+
+
 
 func getImages(imageData []types.SelectFileQueryResult) (types.UserImageFileData, error){
 	var imageUrlData types.UserImageFileData
