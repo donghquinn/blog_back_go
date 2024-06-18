@@ -17,10 +17,10 @@ import (
 func CreateJwtToken(userId string, uuid string, userEmail string, userStatus string) (string, error) {
 	globalConfig := configs.GlobalConfig
 
-	redis, redisErr := database.RedisInstance()
+	redis, redisPingErr := database.RedisInstance()
 
-	if redisErr != nil {
-		return "", redisErr
+	if redisPingErr != nil {
+		return "", redisPingErr
 	}
 
 	getToken, getTokenErr := database.Get(redis, uuid)
