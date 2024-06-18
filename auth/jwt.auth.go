@@ -17,7 +17,11 @@ import (
 func CreateJwtToken(userId string, uuid string, userEmail string, userStatus string) (string, error) {
 	globalConfig := configs.GlobalConfig
 
-	redis := database.RedisInstance()
+	redis, redisErr := database.RedisInstance()
+
+	if redisErr != nil {
+		return "", redisErr
+	}
 
 	getToken, getTokenErr := database.Get(redis, userId, uuid)
 
@@ -78,8 +82,12 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 // JWT 키  검증
 func ValidateJwtToken(req *http.Request) (string, string, string, error) {
 	token := strings.Split(req.Header["Authorization"][0], "Bearer ")[1]
-	redis := database.RedisInstance()
+	redis, redisErr := database.RedisInstance()
 
+	if redisErr != nil {
+		return "", "", "", redisErr
+	}
+	
 	globalConfig := configs.GlobalConfig
 
 	// JWT 토큰 파싱
