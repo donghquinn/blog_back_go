@@ -47,6 +47,11 @@ type UserProfileRequest struct {
 	UserPassword string
  }
 
+type LoginRedisStruct struct {
+	Name string `json:"name"`
+	Email string `json:"email"`
+	UserId string `json:"userId"`
+}
 
  // 유저 프로필 쿼리 결과
  type SelectUserProfileQueryResult struct {

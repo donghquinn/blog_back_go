@@ -76,3 +76,21 @@ func Delete(redis *redis.Client, key string, objKey string) error {
 
 	return nil
 }
+
+func RedisLoginSet(redis *redis.Client, sessionId string,  email string, name string, userId string) error {
+	sessionInfo := types.LoginRedisStruct {
+		Email: email,
+		Name: name,
+		UserId: userId}
+
+	var ctx = context.Background()
+
+	err := redis.Set(ctx, sessionId, sessionInfo, time.Hour * 3).Err()
+ 
+    if err != nil {
+		log.Printf("[REDIS] Set Value Error: %v", err)
+        return err
+    }	
+
+	return nil
+}
