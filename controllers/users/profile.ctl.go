@@ -17,7 +17,7 @@ func GetUserProfileController(res http.ResponseWriter, req *http.Request) {
 	parseErr := utils.DecodeBody(req, &getProfileUser)
 
 	if parseErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Parse Body Error", parseErr)
+		dto.SetErrorResponse(res, 401, "01", "Parse Body Error", parseErr)
 		return
 	}
 

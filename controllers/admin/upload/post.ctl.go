@@ -49,7 +49,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	_, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
 
 	if uploadErr != nil {
-		dto.SetErrorResponse(res, 405, "05", "Upload Image Error", uploadErr)
+		dto.SetErrorResponse(res, 404, "04", "Upload Image Error", uploadErr)
 		return
 	}
 
@@ -71,7 +71,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 		contentType)
     
 	if insertErr != nil {
- 		dto.SetErrorResponse(res, 406, "06", "Insert Image Info Error", insertErr)
+ 		dto.SetErrorResponse(res, 405, "05", "Insert Image Info Error", insertErr)
 		return
     }
 
@@ -84,7 +84,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	if removeErr != nil {
 		log.Printf("[UPLOAD] Remove Saved Image Error: %v", removeErr)
 
-		dto.SetErrorResponse(res, 407, "07", "Remove Image Error", removeErr)
+		dto.SetErrorResponse(res, 406, "06", "Remove Image Error", removeErr)
 		return
 	}
 
