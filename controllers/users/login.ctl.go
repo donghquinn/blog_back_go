@@ -67,6 +67,19 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 		dto.SetErrorResponse(res, 407, "07", "Create Uuid Error", uuidErr)
 	}
 
+	// dbCon, dbErr := database.InitDatabaseConnection()
+
+	// if dbErr != nil {
+	// 	log.Printf("[JWT] Start Db CONNECTION Error: %v", dbErr)
+	// 	dto.SetErrorResponse(res, 408, "08", "Insert Session Data Error", dbErr)
+	// }
+
+	// insertId, insertErr := database.InsertQuery(dbCon, queries.InsertSessionData, userId)
+
+	// if insertErr != nil {
+	// 	log.Printf("[JWT] Insert Seesion Data Error")
+	// }
+
 	// JWT 토큰 생성
 	token, tokenErr := auth.CreateJwtToken(queryResult.UserId, uuid.String(), decodeEmail, queryResult.UserStatus)
 
@@ -95,6 +108,10 @@ func decodeLoginRequest(loginRequest types.UserLoginRequest) (string, string, er
 
 	return decodeEmail, decodePassword, nil
 }
+
+// func insertSessionData(userId string) {
+
+// }
 
 func getUserInfo(encodedEmail string) (types.UserLoginQueryResult, error){
 	connect, connectErr := database.InitDatabaseConnection()

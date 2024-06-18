@@ -36,6 +36,17 @@ var CreatePostTable = `
 	);
 `
 
+// var CreateSessionTable = `
+// 	CREATE TABLE IF NOT EXISTS session_table (
+// 		session_id	 	VARCHAR(50)			NOT NULL 	AUTO_INCREMENT PRIMARY KEY,
+// 		user_id 		VARCHAR(50)			NOT NULL	REFERENCES post_table(post_seq),
+// 		reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+// 		INDEX category_idx(user_id)
+// 	);
+// `
+
+
 var CreateCategoryTable = `
 	CREATE TABLE IF NOT EXISTS category_table (
 		category_seq 	INT(20)			NOT NULL 	AUTO_INCREMENT PRIMARY KEY,
