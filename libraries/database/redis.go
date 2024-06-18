@@ -12,15 +12,24 @@ import (
 
 var ctx = context.Background()
 
-func RedisInstance() *redis.Client {
+func RedisInstance() (*redis.Client, error) {
 	 redisConfig := configs.RedisConfig
 
-	redis := redis.NewClient(&redis.Options{
+	redisInstance := redis.NewClient(&redis.Options{
 		Addr: redisConfig.Addr,
 		Password: redisConfig.Password,
 	})
 
-	return redis
+	pingResult, pingError := redisInstance.Ping(ctx).Result()
+
+	if pingError != nil {
+		log.Printf("[REDIS] Ping Redis Error: %v", pingError)
+		return nil, pingError
+	}
+
+	log.Printf("[REDIS] Successfully Connect to Redis: %s", pingResult)
+
+	return redisInstance, nil
 }
 
 func Set(redis *redis.Client, key string, objKey string, token string) error {
