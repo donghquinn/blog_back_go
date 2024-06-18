@@ -117,7 +117,7 @@ func ValidateJwtToken(req *http.Request) (string, string, string, error) {
 		return "", "", "", claimErr
 	}
 
-	_, getErr := database.Get(redis, claim.Uuid)
+	_, getErr := database.RedisLoginGet(redis, claim.Uuid)
 	
 	if getErr != nil {
 		log.Printf("[JWT] Get Token Error: %v", getErr)
