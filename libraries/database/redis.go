@@ -81,7 +81,7 @@ func GetAll(rdb *redis.Client, key string) (string, error) {
 }
 
 func Delete(rdb *redis.Client, key string, objKey string) error {
-	deleteErr := rdb.Del(ctx, key).Err()
+	deleteErr := rdb.HDel(ctx, key).Err()
 
 	if deleteErr != nil {
 		log.Printf("[REDIS] Delete Key Error: %v", deleteErr)
@@ -99,7 +99,7 @@ func RedisLoginSet(rdb *redis.Client, sessionId string, email string, userStatus
 
 	var ctx = context.Background()
 
-	err := rdb.Set(ctx, sessionId, sessionInfo, time.Hour * 3).Err()
+	err := rdb.HMSet(ctx, sessionId, sessionInfo, time.Hour * 3).Err()
  
     if err != nil {
 		log.Printf("[REDIS] Set Value Error: %v", err)
@@ -107,4 +107,23 @@ func RedisLoginSet(rdb *redis.Client, sessionId string, email string, userStatus
     }	
 
 	return nil
+}
+
+func RedisLoginGet(rdb *redis.Client, sessionId string) ([]interface{}, error) {
+	var ctx = context.Background()
+
+	getItem, getErr := rdb.HMGet(ctx, sessionId).Result()
+ 
+	switch {
+		case getErr == redis.Nil:
+			log.Printf("[REDIS] No Value Found")
+			return nil, nil
+
+		case getErr != nil:
+			log.Printf("[REDIS] Get Key Error: %v", getErr)
+			return nil, getErr
+
+		default:
+			return getItem, nil
+	}
 }

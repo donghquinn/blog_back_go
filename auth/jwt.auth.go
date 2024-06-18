@@ -23,7 +23,7 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 		return "", redisPingErr
 	}
 
-	getToken, getTokenErr := database.Get(redis, uuid)
+	getToken, getTokenErr := database.RedisLoginGet(redis, uuid)
 
 	if getTokenErr != nil {
 		log.Printf("[JWT] Get Token Error: %v", getTokenErr)
@@ -31,7 +31,7 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 	}
 
 	// 이미 등록된 토큰이 있다면 삭제하고 새로 등록
-	if getToken != "" {
+	if getToken != nil {
 		log.Printf("[JWT] Found Already Set Token")
 		deletErr := database.Delete(redis, userId, uuid)
 
