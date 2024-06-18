@@ -9,7 +9,7 @@ import (
 
 // 기본 응답
 func SetResponse(res http.ResponseWriter, statusCode int, code string) {
-	responseObject, _ := json.Marshal(types.ResponseType{Result: true, Code: code, Status: true})
+	responseObject, _ := json.Marshal(types.ResponseType{Result: true, Code: code})
 
 	res.WriteHeader(200)
 	res.Write(responseObject)
@@ -64,7 +64,7 @@ func SetPasswordResponse(res http.ResponseWriter, statusCode int, code string, p
 
 // 에러 응답
 func SetErrorResponse(res http.ResponseWriter, statusCode int, code string, message string, err error ) {
-	responseObject, _ := json.Marshal(types.ErrorResponseType{Code: code, Result: true, Message: message})
+	responseObject, _ := json.Marshal(types.ErrorResponseType{Code: code, Result: false, Message: message})
 
 	res.WriteHeader(500)
 	res.Write(responseObject)

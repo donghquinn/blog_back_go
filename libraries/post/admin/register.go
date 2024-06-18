@@ -37,8 +37,6 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 
 	categories := registerPostRequest.Category
 
-	log.Println(categories)
-
 	if categories != ""  {
 		insertCategoriesErr := InsertCategories(categories, postSeq)
 
@@ -108,7 +106,7 @@ func InsertTags(tags []string, postSeq string) error {
 	_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(tagArray))
 
 	defer connect.Close()
-	
+
 	if tagQueryErr != nil {
 		log.Printf("[REGISTER] Insert Tag Data Error: %v", tagQueryErr)
 

@@ -4,7 +4,6 @@ package types
 type ResponseType struct {
 	Code string `json:"code"`
 	Result bool `json:"result"`
-	Status bool `json:"status"`
 }
 
 // 유저 프로필 응답 구조체
