@@ -31,6 +31,8 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 		return queryErr
 	}
 
+	defer connect.Close()
+
 	postSeq := strconv.Itoa(int(insertId))
 
 	isValidCategory := utils.ValidateRequestValue(registerPostRequest.Category)
@@ -68,8 +70,6 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 			return insertUpdateErr
 		}
 	}
-
-	defer connect.Close()
 
 	return nil
 }
