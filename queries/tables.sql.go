@@ -98,4 +98,6 @@ var CreateCommentTable = `
 	);
 `
 
+var CreateTableQueryList = []string {
+	CreateUserTable, CreatePostTable, CreateTagTable, CreateFileTable, CreateCommentTable, CreateCategoryTable}
 //	mod_date    DATETIME        NULL        DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

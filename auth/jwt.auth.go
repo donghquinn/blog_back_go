@@ -23,7 +23,7 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 		return "", redisErr
 	}
 
-	getToken, getTokenErr := database.Get(redis, userId, uuid)
+	getToken, getTokenErr := database.Get(redis, uuid)
 
 	if getTokenErr != nil {
 		log.Printf("[JWT] Get Token Error: %v", getTokenErr)
@@ -69,7 +69,7 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 	}
 
 	
-	setErr := database.Set(redis, userId, uuid, token)
+	setErr := database.RedisLoginSet(redis, uuid, userEmail, userStatus, userId)
 
 	if setErr != nil {
 		log.Printf("[JWT] Set Key Error: %v", setErr)
@@ -87,7 +87,7 @@ func ValidateJwtToken(req *http.Request) (string, string, string, error) {
 	if redisErr != nil {
 		return "", "", "", redisErr
 	}
-	
+
 	globalConfig := configs.GlobalConfig
 
 	// JWT 토큰 파싱
@@ -117,7 +117,7 @@ func ValidateJwtToken(req *http.Request) (string, string, string, error) {
 		return "", "", "", claimErr
 	}
 
-	_, getErr := database.Get(redis, claim.UserId, claim.Uuid)
+	_, getErr := database.Get(redis, claim.Uuid)
 	
 	if getErr != nil {
 		log.Printf("[JWT] Get Token Error: %v", getErr)

@@ -1,6 +1,7 @@
 package database
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"log"
@@ -52,57 +53,49 @@ func CheckConnection() error {
 
 	if pingErr != nil {
 		log.Printf("[DATABASE] Database Ping Error: %v", pingErr)
-
 		return  pingErr
 	}
 
-	_, createUserErr := connect.Query(queries.CreateUserTable)
+	createErr := CreateTable(connect, queries.CreateTableQueryList)
 
-	if createUserErr != nil {
-		log.Printf("[DATABASE] Create User Table Err: %v", createUserErr)
-
-		return createUserErr
-	}
-
-	_, createPostErr := connect.Query(queries.CreatePostTable)
-
-	if createPostErr != nil {
-		log.Printf("[DATABASE] Create Post Table Error: %v", createPostErr)
-
-		return createPostErr
-	}
-	
-
-	_, createCategoryErr := connect.Query(queries.CreateCategoryTable)
-
-	if createCategoryErr != nil {
-		log.Printf("[DATABASE] Create Category Table Error: %v", createCategoryErr)
-		return createCategoryErr
-	}
-
-	
-	_, createFileErr := connect.Query(queries.CreateFileTable)
-
-	if createFileErr != nil {
-		log.Printf("[DATABASE] Create File Table Error: %v", createFileErr)
-
-		return createFileErr
-	}
-
-	_, createCommentErr := connect.Query(queries.CreateCommentTable)
-
-	if createCommentErr != nil {
-		log.Printf("[DATABASE] Create Comment Table Error: %v", createCommentErr)
-		return createCommentErr
-	}
-	
-	_, createTagErr := connect.Query(queries.CreateTagTable)
-	if createTagErr != nil {
-		log.Printf("[DATABASE] Create Tag Table Error: %v", createTagErr)
-		return createTagErr
+	if createErr != nil {
+		log.Printf("[DATABASE] Create Table Error: %v", createErr)
+		return createErr
 	}
 
 	defer connect.Close()
+
+	return nil
+}
+
+func CreateTable(connect *sql.DB, queryList []string) error {
+	ctx := context.Background()
+
+	tx, txErr := connect.Begin()
+
+	if txErr != nil {
+		log.Printf("[DATABASE] Begin Transaction Error: %v", txErr)
+		return txErr
+	}
+
+	defer tx.Rollback()
+
+	for _, queryString := range(queryList) {
+		_, execErr := tx.ExecContext(ctx, queryString)
+
+		if execErr != nil {
+			tx.Rollback()
+			log.Printf("[DATABASE] Create Table Querystring Transaction Exec Error: %v", execErr)
+			return execErr
+		}
+	}
+
+	commitErr := tx.Commit()
+
+	if commitErr != nil {
+		log.Printf("[DATABASE] Commit Transaction Error: %v", commitErr)
+		return commitErr
+	}
 
 	return nil
 }
