@@ -99,7 +99,13 @@ func RedisLoginSet(rdb *redis.Client, sessionId string, email string, userStatus
 
 	var ctx = context.Background()
 
-	err := rdb.HMSet(ctx, sessionId, sessionInfo, time.Hour * 3).Err()
+	var data []interface{}
+
+    for key, value := range sessionInfo {
+        data = append(data, key, value)
+    }
+
+	err := rdb.HSet(ctx, sessionId, data...).Err()
  
     if err != nil {
 		log.Printf("[REDIS] Set Value Error: %v", err)
@@ -109,10 +115,10 @@ func RedisLoginSet(rdb *redis.Client, sessionId string, email string, userStatus
 	return nil
 }
 
-func RedisLoginGet(rdb *redis.Client, sessionId string) ([]interface{}, error) {
+func RedisLoginGet(rdb *redis.Client, sessionId string) (map[string]string, error) {
 	var ctx = context.Background()
 
-	getItem, getErr := rdb.HMGet(ctx, sessionId).Result()
+	getItem, getErr := rdb.HGetAll(ctx, sessionId).Result()
  
 	switch {
 		case getErr == redis.Nil:
