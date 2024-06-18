@@ -26,14 +26,14 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 	parseErr := utils.DecodeBody(req, &registerPostRequest)
 
 	if parseErr != nil {
-		dto.SetErrorResponse(res, 401, "01", "Parsing Request Body", parseErr)
+		dto.SetErrorResponse(res, 402, "02", "Parsing Request Body", parseErr)
 		return
 	}
 
 	insertErr := post.InsertPostData(registerPostRequest, userId)
 
 	if insertErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Insert Post Data Error", insertErr)
+		dto.SetErrorResponse(res, 403, "03", "Insert Post Data Error", insertErr)
 		return
 	}
 
@@ -63,7 +63,7 @@ func DeletePostController(res http.ResponseWriter, req *http.Request) {
 	deleteErr := post.DeletePost(deleteRequest)
 
 	if deleteErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Delete Post Error", deleteErr)
+		dto.SetErrorResponse(res, 403, "03", "Delete Post Error", deleteErr)
 		return
 	}
 	
@@ -93,7 +93,7 @@ func UpdatePinPostController(res http.ResponseWriter, req *http.Request ) {
 	updateErr := post.UpdatePinPost(updatePinRequest)
 
 	if updateErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Update Pin Error", updateErr)
+		dto.SetErrorResponse(res, 403, "03", "Update Pin Error", updateErr)
 		return
 	}
 
@@ -123,7 +123,7 @@ func UpdateUnPinPostController(res http.ResponseWriter, req *http.Request ) {
 	updateErr := post.UpdateUnPinPost(updateUnPinRequest)
 
 	if updateErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Update Un-Pin Error", updateErr)
+		dto.SetErrorResponse(res, 403, "03", "Update Un-Pin Error", updateErr)
 		return
 	}
 

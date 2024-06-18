@@ -20,7 +20,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 	queryResult, queryErr := post.QueryAllPostData(page, size)
 
 	if queryErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Query Post Data Error", queryErr)
+		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", queryErr)
 
 		return
 	}
@@ -33,7 +33,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 
 		if decodeErr != nil {
 			log.Printf("[LIST] Decoding User Name Error: %v", decodeErr)
-			dto.SetErrorResponse(res, 403,"03", "Decode Name Error", decodeErr)
+			dto.SetErrorResponse(res, 402, "02", "Decode Name Error", decodeErr)
 			return
 		}
 
@@ -61,7 +61,7 @@ func GetPostsByTagController(res http.ResponseWriter, req *http.Request ) {
 	parseErr := utils.DecodeBody(req, &getPostByTagRequest)
 
 	if parseErr != nil {
-		dto.SetErrorResponse(res, 201, "01", "Parse Request Body Error", parseErr)
+		dto.SetErrorResponse(res, 401, "01", "Parse Request Body Error", parseErr)
 		return
 	}
 
@@ -71,7 +71,7 @@ func GetPostsByTagController(res http.ResponseWriter, req *http.Request ) {
 	postList, postErr := post.GetPostByTag(getPostByTagRequest, page, size)
 
 	if postErr != nil {
-		dto.SetErrorResponse(res, 202, "02", "Get Post List By Tag Error", postErr)
+		dto.SetErrorResponse(res, 402, "02", "Get Post List By Tag Error", postErr)
 		return
 	}
 
@@ -85,7 +85,7 @@ func GetPostsByCategoryController(res http.ResponseWriter, req *http.Request ) {
 	parseErr := utils.DecodeBody(req, &getPostByCategoryRequest)
 
 	if parseErr != nil {
-		dto.SetErrorResponse(res, 201, "01", "Parse Request Body Error", parseErr)
+		dto.SetErrorResponse(res, 401, "01", "Parse Request Body Error", parseErr)
 		return
 	}
 
@@ -95,7 +95,7 @@ func GetPostsByCategoryController(res http.ResponseWriter, req *http.Request ) {
 	postList, postErr := post.GetPostByCategory(getPostByCategoryRequest, page, size)
 
 	if postErr != nil {
-		dto.SetErrorResponse(res, 202, "02", "Get Post List By Tag Error", postErr)
+		dto.SetErrorResponse(res, 402, "02", "Get Post List By Tag Error", postErr)
 		return
 	}
 

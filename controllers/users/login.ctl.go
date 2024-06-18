@@ -64,7 +64,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 
 	if uuidErr != nil {
 		log.Printf("[REDIS] Create UUID Error: %v", uuidErr)
-		dto.SetErrorResponse(res, 407, "07", "Create Uuid Error", uuidErr)
+		dto.SetErrorResponse(res, 406, "06", "Create Uuid Error", uuidErr)
 	}
 
 	// dbCon, dbErr := database.InitDatabaseConnection()
@@ -84,7 +84,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 	token, tokenErr := auth.CreateJwtToken(queryResult.UserId, uuid.String(), decodeEmail, queryResult.UserStatus)
 
 	if tokenErr != nil {
-		dto.SetErrorResponse(res, 406, "06", "Create JWT Token Error", tokenErr)
+		dto.SetErrorResponse(res, 407, "07", "Create JWT Token Error", tokenErr)
 		return
 	}
 

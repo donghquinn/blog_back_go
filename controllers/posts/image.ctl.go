@@ -15,13 +15,13 @@ func GetImageUrl(res http.ResponseWriter, req *http.Request) {
 	err := utils.DecodeBody(req, &getPostRequest)
 	
 	if err != nil {
-		dto.SetErrorResponse(res, 400, "01", "Request Is Not Valid", err)
+		dto.SetErrorResponse(res, 401, "01", "Request Is Not Valid", err)
 	}
 
 	imageData, imageErr := GetImageData(getPostRequest.PostSeq)
 
 	if imageErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Image Data Error", imageErr)
+		dto.SetErrorResponse(res, 402, "02", "Image Data Error", imageErr)
 		return
 	}
 
@@ -32,7 +32,7 @@ func GetImageUrl(res http.ResponseWriter, req *http.Request) {
 		url, getErr := database.GetImageUrl(data.ObjectName, data.FileFormat)
 
 		if getErr != nil {
-			dto.SetErrorResponse(res, 404, "04", "Get Presigned URL Error", getErr)
+			dto.SetErrorResponse(res, 403, "03", "Get Presigned URL Error", getErr)
 			return
 		}
 
