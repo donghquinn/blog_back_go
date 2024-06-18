@@ -32,17 +32,17 @@ func RedisInstance() (*redis.Client, error) {
 	return redisInstance, nil
 }
 
-func Set(redis *redis.Client, key string, objKey string, token string) error {
+func Set(redis *redis.Client, key string, token string) error {
 
-	var item = map[string]string {
-		objKey: token}
+	// var item = map[string]string {
+	// 	objKey: token}
 
-	tokenItem := types.RedisToken{
-		TokenItem: item,
-	}
+	// tokenItem := types.RedisToken{
+	// 	TokenItem: item,
+	// }
 
 	expireDuration := 3 * time.Hour
-	setErr := redis.Set(ctx, key, tokenItem, expireDuration).Err()
+	setErr := redis.Set(ctx, key, token, expireDuration).Err()
 
 	if setErr != nil {
 		log.Printf("[REDIS] Key Set Error: %v", setErr)
@@ -53,26 +53,26 @@ func Set(redis *redis.Client, key string, objKey string, token string) error {
 	return nil
 }
 
-func Get(redis *redis.Client, key string, objKey string) (string, error) {
+func Get(redis *redis.Client, key string) (string, error) {
 	getItem, getErr := redis.Get(ctx, key).Result()
 
 	if getErr != nil {
 		log.Printf("[REDIS] Get Key Error: %v", getErr)
 		return "", getErr
-	} 
+	}
 
 	return getItem, nil
 }
 
-func GetAll(redis *redis.Client, key string, objKey string) (string, error) {
-	getItem, getErr := redis.Get(ctx, key).Result()
+func GetAll(redis *redis.Client, key string) (string, error) {
+	getItemList, getErr := redis.Get(ctx, key).Result()
 
 	if getErr != nil {
 		log.Printf("[REDIS] Get Key Error: %v", getErr)
 		return "", getErr
 	} 
 
-	return getItem, nil
+	return getItemList, nil
 }
 
 func Delete(redis *redis.Client, key string, objKey string) error {
