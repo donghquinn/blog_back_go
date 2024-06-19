@@ -11,18 +11,13 @@ func CorsMiddlewares(next http.Handler) http.Handler {
 		res.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
 		res.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		res.Header().Set("Access-Control-Allow-Credentials", "true")
-	// Handle preflight request
-	if req.Method == http.MethodOptions {
-		res.WriteHeader(http.StatusOK)
-		return
-	}
 
-	// Handle actual request
-	if req.Method == http.MethodGet {
-		res.WriteHeader(http.StatusOK)
-		res.Write([]byte("Received GET request"))
-		return
-	}
+		// if req.Method == "OPTIONS" {
+		// 	log.Printf("Method Options")
+
+		// 	res.WriteHeader(http.StatusOK)
+		// 	return
+		// }
 		
 		next.ServeHTTP(res, req)
 	})
