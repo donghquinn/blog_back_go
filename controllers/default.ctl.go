@@ -18,3 +18,7 @@ func DefaultController(res http.ResponseWriter, req *http.Request) {
 
 	dto.SetResponseWithMessage(res, 200, "01", "Hello World") 
 }
+
+func CorsTestController(res http.ResponseWriter, req *http.Request) {
+	dto.SetResponseWithMessage(res, 200, "01",  "Hi")
+}
