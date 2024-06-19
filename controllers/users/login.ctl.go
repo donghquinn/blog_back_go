@@ -92,6 +92,8 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 }
 
 func decodeLoginRequest(loginRequest types.UserLoginRequest) (string, string, error) {
+	log.Printf("[LOGIN] Request: Email:  %s, Password: %s", loginRequest.Email, loginRequest.Password)
+
 	decodeEmail, decodeEmailErr := crypt.DecryptString(loginRequest.Email)
 
 	if decodeEmailErr != nil {
