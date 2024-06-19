@@ -16,7 +16,7 @@ func CorsMiddlewares(next http.Handler) http.Handler {
 
 		// Handle preflight request
 	if req.Method == http.MethodOptions {
-		log.Printf("[MIDDLEWARE] Handling preflight request")
+		log.Printf("[MIDDLEWARE] Handling preflight request: %s", req.Method)
 		res.WriteHeader(http.StatusOK)
 		return
 	}
