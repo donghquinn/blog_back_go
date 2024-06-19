@@ -16,7 +16,7 @@ func OpenServer() *http.Server{
 	server := http.NewServeMux()
 
 	middlewares.CorsMiddlewares(server)
-	
+
 	routers.DefaultRouter(server)
 	routers.AdminRouter(server)
 
@@ -32,6 +32,7 @@ func OpenServer() *http.Server{
 
 func DatabaseConnect() {
 	minioErr := database.MinioConnect()
+	
 	if minioErr != nil {
 		log.Printf("[START] Minio Connection Check Error: %v", minioErr)
 	}

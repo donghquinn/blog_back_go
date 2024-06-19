@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/donghquinn/blog_back_go/dto"
-	"github.com/donghquinn/blog_back_go/libraries/crypto"
+	crypt "github.com/donghquinn/blog_back_go/libraries/crypto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	"github.com/donghquinn/blog_back_go/libraries/post"
 	queries "github.com/donghquinn/blog_back_go/queries/posts"
@@ -54,7 +54,7 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		urlArray = append(urlArray, url.String())
 	}
 
-	userName, _ := crypto.DecryptString(queryResult.UserName)
+	userName, _ := crypt.DecryptString(queryResult.UserName)
 
 	// 특정 게시글 태그 배열 가공해서 담아 응답
 	var tagsArray []string

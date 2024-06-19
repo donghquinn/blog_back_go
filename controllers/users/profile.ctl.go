@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/donghquinn/blog_back_go/dto"
-	"github.com/donghquinn/blog_back_go/libraries/crypto"
+	crypt "github.com/donghquinn/blog_back_go/libraries/crypto"
 	"github.com/donghquinn/blog_back_go/libraries/profile"
 	"github.com/donghquinn/blog_back_go/types"
 	"github.com/donghquinn/blog_back_go/utils"
@@ -28,7 +28,7 @@ func GetUserProfileController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	decodedName, nameErr := crypto.DecryptString(profile.UserName)
+	decodedName, nameErr := crypt.DecryptString(profile.UserName)
 
 	if nameErr != nil {
 		log.Printf("[PROFILE] Decode User Name: %v", nameErr)
@@ -36,7 +36,7 @@ func GetUserProfileController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	decodedEmail, emailErr := crypto.DecryptString(profile.UserEmail)
+	decodedEmail, emailErr := crypt.DecryptString(profile.UserEmail)
 
 	if emailErr != nil {
 		log.Printf("[PROFILE] Decode User Email: %v", emailErr)
