@@ -16,6 +16,7 @@ func OpenServer() *http.Server{
 	server := http.NewServeMux()
 
 	middlewares.CorsMiddlewares(server)
+	
 	routers.DefaultRouter(server)
 	routers.AdminRouter(server)
 
