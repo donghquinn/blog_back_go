@@ -13,7 +13,6 @@ func CorsMiddlewares(next http.Handler) http.Handler {
 		res.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
 		res.Header().Set("Access-Control-Allow-Credentials", "true")
 
-
 		// Handle preflight request
 	if req.Method == http.MethodOptions {
 		log.Printf("[MIDDLEWARE] Handling preflight request: %s", req.Method)
