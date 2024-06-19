@@ -15,13 +15,13 @@ import (
 func OpenServer() *http.Server{
 	server := http.NewServeMux()
 
-	middlewares.CorsMiddlewares(server)
+	middleWareHandler := middlewares.CorsMiddlewares(server)
 
 	routers.DefaultRouter(server)
 	routers.AdminRouter(server)
 
 	serving := &http.Server{
-		Handler: 		server,
+		Handler: 		middleWareHandler,
 		Addr: 			configs.GlobalConfig.AppHost,
 		WriteTimeout: 	30 * time.Second,
 		ReadTimeout:  	30 * time.Second,
@@ -32,7 +32,7 @@ func OpenServer() *http.Server{
 
 func DatabaseConnect() {
 	minioErr := database.MinioConnect()
-	
+
 	if minioErr != nil {
 		log.Printf("[START] Minio Connection Check Error: %v", minioErr)
 	}
