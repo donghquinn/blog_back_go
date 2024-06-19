@@ -3,7 +3,7 @@ package profile
 import (
 	"log"
 
-	"github.com/donghquinn/blog_back_go/libraries/crypto"
+	crypt "github.com/donghquinn/blog_back_go/libraries/crypto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	queries "github.com/donghquinn/blog_back_go/queries/users"
 	types "github.com/donghquinn/blog_back_go/types/admin/users"
@@ -17,7 +17,7 @@ func ChangeProfile(data types.UserChangeProfileRequest, userId string) error {
 		return connectErr
 	}
 
-	encodedName, encodeErr := crypto.EncryptString(data.Name)
+	encodedName, encodeErr := crypt.EncryptString(data.Name)
 
 	if encodeErr != nil {
 		log.Printf("[PROFILE] Encode Name Error: %v", encodeErr)

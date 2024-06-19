@@ -1,4 +1,4 @@
-package crypto
+package crypt
 
 import (
 	"crypto/aes"
@@ -17,7 +17,7 @@ func DecryptString(encodedString string) (string, error) {
 
     if len(globalConfig.AesIv) != aes.BlockSize {
         log.Printf("Block Size and IV Length Do Not Match\n AES IV: %v\n BlockSize: %v\n", len(globalConfig.AesIv), aes.BlockSize)
-        return "", fmt.Errorf("Block Size and IV Length Do Not Match")
+        return "", fmt.Errorf("block size and iv length do not match")
     }
 
 	// Validate input string

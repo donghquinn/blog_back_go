@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/donghquinn/blog_back_go/dto"
-	"github.com/donghquinn/blog_back_go/libraries/crypto"
+	crypt "github.com/donghquinn/blog_back_go/libraries/crypto"
 	post "github.com/donghquinn/blog_back_go/libraries/post"
 	types "github.com/donghquinn/blog_back_go/types/post"
 	"github.com/donghquinn/blog_back_go/utils"
@@ -29,7 +29,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 
 	// 이름 디코딩 위해
 	for _, data := range(queryResult){
-		decodedName, decodeErr := crypto.DecryptString(data.UserName)
+		decodedName, decodeErr := crypt.DecryptString(data.UserName)
 
 		if decodeErr != nil {
 			log.Printf("[LIST] Decoding User Name Error: %v", decodeErr)

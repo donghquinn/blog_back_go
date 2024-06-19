@@ -12,7 +12,7 @@ func DefaultRouter(server *http.ServeMux) {
 	server.HandleFunc("GET /api", controllers.DefaultController)
 
 	server.HandleFunc("GET /", controllers.CorsTestController)
-	
+
 	userRouters.UserRouter(server)
 	postRouters.PostRouter(server)
 }

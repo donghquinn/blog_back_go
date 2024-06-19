@@ -1,4 +1,4 @@
-package crypto
+package crypt
 
 import (
 	"bytes"
@@ -18,7 +18,7 @@ func EncryptString(rawString string) (string, error) {
 	if (len(globalConfig.AesIv) != aes.BlockSize) {
 		log.Printf("Block Size and IV Length is Not Match\n AES IV: %v\n BlockSize: %v\n",len(globalConfig.AesIv), aes.BlockSize)
 
-		return "", fmt.Errorf("Block Size and IV Length is Not Match")
+		return "", fmt.Errorf("block size and iv length is not match")
 	}
 
 	byteString := PKCS5Padding([]byte(rawString), aes.BlockSize, len(rawString))
@@ -46,3 +46,7 @@ func PKCS5Padding(ciphertext []byte, blockSize int, after int) []byte {
 	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
 	return append(ciphertext, padtext...)
 }
+
+// func EncryptPassword(password string) {
+// 	crypto.
+// }

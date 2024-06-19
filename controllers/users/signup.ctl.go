@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	"github.com/donghquinn/blog_back_go/dto"
-	"github.com/donghquinn/blog_back_go/libraries/crypto"
+	crypt "github.com/donghquinn/blog_back_go/libraries/crypto"
 	"github.com/donghquinn/blog_back_go/libraries/database"
 	queries "github.com/donghquinn/blog_back_go/queries/users"
 	"github.com/donghquinn/blog_back_go/types"
@@ -64,21 +64,21 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 }
 
 func decodeSignupUserRequest(signupRequest types.UserSignupRequest) (string, string, string, error) {
-	decodedEmail, decodeEmailErr := crypto.DecryptString(signupRequest.Email)
+	decodedEmail, decodeEmailErr := crypt.DecryptString(signupRequest.Email)
 
 	if decodeEmailErr != nil {
 		log.Printf("[SIGNUP] Decode Email Error: %v", decodeEmailErr)
 		return "","","",decodeEmailErr
 	}
 
-	decodedName, decodeNameErr := crypto.DecryptString(signupRequest.Name)
+	decodedName, decodeNameErr := crypt.DecryptString(signupRequest.Name)
 
 	if decodeNameErr != nil {
 		log.Printf("[SIGNUP] Decode Name Error: %v", decodeNameErr)
 		return "","","",decodeNameErr
 	}
 
-	decodedPassword, decodePasswordErr := crypto.DecryptString(signupRequest.Password)
+	decodedPassword, decodePasswordErr := crypt.DecryptString(signupRequest.Password)
 
 	if decodePasswordErr != nil {
 		log.Printf("[SIGNUP] Decode Password Error: %v", decodePasswordErr)
@@ -98,19 +98,19 @@ func encodeSignupUserInfo(decodeEmail string, decodePassword string, decodeName 
 		return "", "", "", "", uuidErr
 	}
 
-	encodedEmail, encodeEmailErr := crypto.EncryptString(decodeEmail)
+	encodedEmail, encodeEmailErr := crypt.EncryptString(decodeEmail)
 
 	if encodeEmailErr != nil {
 		return "","","","",encodeEmailErr
 	}
 
-	encodedName, encodeNameErr := crypto.EncryptString(decodeName)
+	encodedName, encodeNameErr := crypt.EncryptString(decodeName)
 
 	if encodeNameErr != nil {
 		return "","","","",encodeNameErr
 	}
 
-	encodedPassword, encodePasswordErr := crypto.EncryptHashPassword(decodePassword)
+	encodedPassword, encodePasswordErr := crypt.EncryptHashPassword(decodePassword)
 
 	if encodePasswordErr != nil {
 		return "","","","",encodePasswordErr
