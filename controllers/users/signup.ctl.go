@@ -64,8 +64,6 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 }
 
 func decodeSignupUserRequest(signupRequest types.UserSignupRequest) (string, string, string, error) {
-	log.Printf("[SIGNUP] Signup Request: Email: %s, Name: %s, Password: %s", signupRequest.Email, signupRequest.Name, signupRequest.Password)
-
 	decodedEmail, decodeEmailErr := crypt.DecryptString(signupRequest.Email)
 
 	if decodeEmailErr != nil {
@@ -100,8 +98,6 @@ func encodeSignupUserInfo(decodeEmail string, decodePassword string, decodeName 
 		return "", "", "", "", uuidErr
 	}
 	
-	log.Printf("[SIGNUP] Signup Request: Email: %s, Name: %s, Password: %s", decodeEmail, decodeName, decodePassword)
-
 	encodedEmail, encodeEmailErr := crypt.EncryptString(decodeEmail)
 
 	if encodeEmailErr != nil {

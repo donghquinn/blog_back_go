@@ -7,34 +7,16 @@ import (
 )
 
 func Test() {
-	// textData, _ := generateRandomString(16)
-	// log.Println(textData)
-	email:="WFHhVq6smMIeDskaIHg4Ow=="
-	// name := "김동현"
-	// password := "패스워드"
+	receivedPw:=  "Z8CcFfKXIcOkTq1aBn/tew=="
+	dbPwd := "$2a$10$hKBV01zNJjuojmhUzdJ6z.2V/Ua4QLr/NxP86jUvj70M2jUSzM7h6"
 	
-	// enc, encErr := crypt.EncryptString(email)
-
-
-	em, err := crypt.DecryptString(email)
+	decoded, _ := crypt.DecryptString(receivedPw)
+	isMatch, err := crypt.PasswordCompare(dbPwd, decoded)
 
 	if err != nil {
-	log.Println(err)
+		log.Printf("ERR: %v", err)
 	}
-
-	// na, naErr := crypt.DecryptString(encN)
-
-	// if naErr != nil {
-	// log.Println(naErr)
-	// }
-
-	// pa, paErr := crypt.DecryptString(encP)
-
-	// if paErr != nil {
-	// log.Println(paErr)
-	// }
-
-	log.Printf("[복호화된] email: %s", em)
+	log.Printf("[복호화된] email: %v", isMatch)
 }
 
 // func generateRandomString(length int) (string, error) {

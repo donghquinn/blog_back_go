@@ -11,7 +11,7 @@ func main() {
 	network.SetConfigs()
 
 	network.DatabaseConnect()
-	
+
 	serving := network.OpenServer()
 
 	log.Printf("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
