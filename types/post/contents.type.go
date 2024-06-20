@@ -2,7 +2,7 @@ package types
 
 // 상세 포스트 조회 요청
 type ViewPostContents struct {
-	PostSeq string `json:"postSeq" binding:"required"`
+	PostSeq string `json:"postSeq"`
 }
 
 // 특정 게시글 응답
