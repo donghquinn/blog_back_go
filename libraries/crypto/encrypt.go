@@ -1,52 +1,41 @@
 package crypt
 
 import (
-	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
-	"encoding/hex"
-	"fmt"
-	"log"
+	"crypto/rand"
+	"encoding/base64"
+	"io"
 
 	"github.com/donghquinn/blog_back_go/configs"
 )
 
-// Encrypt AES-256-CBC
+// 암호화 #요청
 func EncryptString(rawString string) (string, error) {
 	globalConfig := configs.GlobalConfig
 
-	if (len(globalConfig.AesIv) != aes.BlockSize) {
-		log.Printf("Block Size and IV Length is Not Match\n AES IV: %v\n BlockSize: %v\n",len(globalConfig.AesIv), aes.BlockSize)
+	key := []byte(globalConfig.AesKey)
+	plaintext := []byte(rawString)
 
-		return "", fmt.Errorf("block size and iv length is not match")
-	}
-
-	byteString := PKCS5Padding([]byte(rawString), aes.BlockSize, len(rawString))
-
-	block, err := aes.NewCipher([]byte(globalConfig.AesKey))
+	block, err := aes.NewCipher(key)
 
 	if err != nil {
-		log.Printf("Creating Decrypt Error: %v", err)
-
 		return "", err
 	}
-	
-	cipherText := make([]byte, len(byteString))
 
-	mode := cipher.NewCBCEncrypter(block, []byte(globalConfig.AesIv))
-	mode.CryptBlocks(cipherText, byteString)
+	// The IV needs to be unique, but not secure. Therefore it's common to
+	// include it at the beginning of the ciphertext.
+	ciphertext := make([]byte, len(plaintext))
+	iv := ciphertext[:aes.BlockSize]
+	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
+		return "", err
+	}
 
-	encodedText := hex.EncodeToString(cipherText)
+	stream := cipher.NewCBCEncrypter(block, iv)
+	stream.CryptBlocks(ciphertext, plaintext)
+	// stream.XORKeyStream(ciphertext[aes.BlockSize:], plaintext)
 
-	return encodedText, nil
+	// Encode the ciphertext in base64 to make it easier to handle as a string
+	return base64.StdEncoding.EncodeToString(ciphertext), nil
 }
 
-func PKCS5Padding(ciphertext []byte, blockSize int, after int) []byte {
-	padding := (blockSize - len(ciphertext)%blockSize)
-	padtext := bytes.Repeat([]byte{byte(padding)}, padding)
-	return append(ciphertext, padtext...)
-}
-
-// func EncryptPassword(password string) {
-// 	crypto.
-// }
