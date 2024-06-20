@@ -37,14 +37,13 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// DB에서 유저 데이터 체크
-	queryResult, queryErr := getUserInfo(loginRequst.Email)
+	queryResult, queryErr := getUserInfo(decodeEmail)
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Query User Info Error", queryErr)
 		return
 	}
 	
-	log.Printf("DB PASSWORD: %s, ReCEVIED Password: %s", queryResult.UserPassword, decodePassword)
 	// 패스워드 비교 (암호화 해싱된 패스워드)
 	isMatch, matchErr := crypt.PasswordCompare(queryResult.UserPassword, decodePassword)
 
