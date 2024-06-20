@@ -44,7 +44,6 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	
-	log.Printf("DB PASSWORD: %s, ReCEVIED Password: %s", queryResult.UserPassword, decodePassword)
 	// 패스워드 비교 (암호화 해싱된 패스워드)
 	isMatch, matchErr := crypt.PasswordCompare(queryResult.UserPassword, decodePassword)
 
