@@ -1,42 +1,42 @@
 package crypt
 
 import (
+	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
-	"crypto/rand"
 	"encoding/base64"
-	"io"
+	"strings"
 
 	"github.com/donghquinn/blog_back_go/configs"
 )
 
 // 암호화 #요청
-func EncryptString(rawString string) (string, error) {
+func EncryptString(plainText string) (string, error) {
+	if strings.TrimSpace(plainText) == "" {
+		return plainText, nil
+	}
+
 	globalConfig := configs.GlobalConfig
 
-	key := []byte(globalConfig.AesKey)
-	plaintext := []byte(rawString)
 
-	block, err := aes.NewCipher(key)
-
+	block, err := aes.NewCipher([]byte(globalConfig.AesKey))
 	if err != nil {
 		return "", err
 	}
 
-	// The IV needs to be unique, but not secure. Therefore it's common to
-	// include it at the beginning of the ciphertext.
-	ciphertext := make([]byte, len(plaintext))
-	iv := []byte(globalConfig.AesIv)
-	
-	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
-		return "", err
-	}
+	encrypter := cipher.NewCBCEncrypter(block, []byte(globalConfig.AesIv))
+	paddedPlainText := padPKCS7([]byte(plainText), encrypter.BlockSize())
 
-	stream := cipher.NewCBCEncrypter(block, iv)
-	stream.CryptBlocks(ciphertext, plaintext)
-	// stream.XORKeyStream(ciphertext[aes.BlockSize:], plaintext)
+	cipherText := make([]byte, len(paddedPlainText))
+	// CryptBlocks 함수에 데이터(paddedPlainText)와 암호화 될 데이터를 저장할 슬라이스(cipherText)를 넣으면 암호화가 된다.
+	encrypter.CryptBlocks(cipherText, paddedPlainText)
 
-	// Encode the ciphertext in base64 to make it easier to handle as a string
-	return base64.StdEncoding.EncodeToString(ciphertext), nil
+	return base64.StdEncoding.EncodeToString(cipherText), nil
 }
 
+
+func padPKCS7(plainText []byte, blockSize int) []byte {
+	padding := blockSize - len(plainText)%blockSize
+	padText := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(plainText, padText...)
+}
