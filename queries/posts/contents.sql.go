@@ -46,7 +46,7 @@ var UpdateViewCount = `
 // 이미지 데이터
 var SelectImageData = `
 	SELECT
-		object_name, file_format, target_purpose, file_seq, version_id
+		object_name, file_format, target_purpose, file_seq
 	FROM
 		file_table
 	WHERE
