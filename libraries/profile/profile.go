@@ -9,16 +9,16 @@ import (
 )
 
 
-func GetUserProfile(userId string) (types.UserProfileDataResponseType, error) {
+func GetUserProfile() (types.UserProfileDataResponseType, error) {
 	var userProfileResult types.UserProfileDataResponseType
 
-	userProfileData, profileErr := GetUserProfileByUserId(userId)
+	userProfileData, profileErr := GetDefaultUserProfile()
 
 	if profileErr != nil {
 		return types.UserProfileDataResponseType{}, profileErr
 	}
 
-	imageUrlList, imageUrlErr := GetUserProfileImageList(userId)
+	imageUrlList, imageUrlErr := GetUserProfileImageList(userProfileData.UserId)
 	
 	if imageUrlErr != nil {
 		return types.UserProfileDataResponseType{}, imageUrlErr
@@ -39,7 +39,39 @@ func GetUserProfile(userId string) (types.UserProfileDataResponseType, error) {
 	return userProfileResult, nil
 }
 
+// 기본 유저 구하기
+func GetDefaultUserProfile() (types.SelectUserProfileQueryResult, error) {
+	var userProfileData types.SelectUserProfileQueryResult
 
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return types.SelectUserProfileQueryResult{}, dbErr
+	}
+
+	profile, profileErr := database.QueryOne(connect, queries.SelectUserProfile)
+
+	if profileErr != nil {
+		log.Printf("[PROFILE] Get Profile Error: %v", profileErr)
+		return types.SelectUserProfileQueryResult{}, profileErr
+	}
+
+	defer connect.Close()
+
+	profile.Scan(
+		&userProfileData.UserId,
+		&userProfileData.UserEmail,
+		&userProfileData.UserName,
+		&userProfileData.Color,
+		&userProfileData.Title,
+		&userProfileData.GithubUrl,
+		&userProfileData.PersonalUrl,
+		&userProfileData.Memo)
+
+	return userProfileData, nil
+}
+
+// 유저 ID 로 조회하기
 func GetUserProfileByUserId(userId string) (types.SelectUserProfileQueryResult, error) {
 	var userProfileData types.SelectUserProfileQueryResult
 
@@ -49,7 +81,7 @@ func GetUserProfileByUserId(userId string) (types.SelectUserProfileQueryResult, 
 		return types.SelectUserProfileQueryResult{}, dbErr
 	}
 
-	profile, profileErr := database.QueryOne(connect, queries.SelectUserProfile, userId)
+	profile, profileErr := database.QueryOne(connect, queries.SelectUserProfileByUserId, userId)
 
 	if profileErr != nil {
 		log.Printf("[PROFILE] Get Profile Error: %v", profileErr)

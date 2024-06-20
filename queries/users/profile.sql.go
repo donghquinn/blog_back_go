@@ -42,10 +42,27 @@ var SelectUserProfile = `
 		memo
 	FROM user_table
 	WHERE
+		user_status = 1
+	;
+`
+
+var SelectUserProfileByUserId = `
+	SELECT
+		user_id,
+		user_email,
+		user_name,
+		preferred_color as color,
+		title,
+		github_url,
+		personal_url,
+		memo
+	FROM user_table
+	WHERE
 		user_status = 1 AND
 		user_id = ?
 	;
 `
+
 
 var SelectUserProfileProfileAndBackground = `
 	SELECT
