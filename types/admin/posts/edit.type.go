@@ -1,11 +1,11 @@
 package types
 
 type EditPostRequest struct {
-	PostSeq string `json:"postSeq" binding:"required"`
-	PostTitle string `json:"postTitle" binding:"required"`
-	PostContents string `json:"postContents" binding:"required"`
-	Category 	string `json:"category" binding:"optional"`
-	ImageSeqs  []string `json:"imageSeqs" binding:"optional"`
-	Tags []string `json:"tags" binding:"optional"`
-	IsPinned string `json:"isPinned" binding:"required"`
+	PostSeq string `json:"postSeq"`
+	PostTitle string `json:"postTitle"`
+	PostContents string `json:"postContents"`
+	Category 	string `json:"category,omitempty"`
+	ImageSeqs  []string `json:"imageSeqs,omitempty"`
+	Tags []string `json:"tags,omitempty"`
+	IsPinned string `json:"isPinned"`
 }

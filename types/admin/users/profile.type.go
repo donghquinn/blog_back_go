@@ -2,23 +2,23 @@ package types
 
 // 프로필 색 변경 요청
  type UserUpdateProfileColorRequest struct {
-	Color string `json:"color" binding:"required"`
+	Color string `json:"color"`
  }
 
  // 블로그 타이틀 변경 요청
  type UserUpdateBlogTitleRequest struct {
-	Title string `json:"title" binding:"required"`
+	Title string `json:"title"`
  }
 
   // 프로필 수정
  type UserChangeProfileRequest struct {
-	Name string `json:"name" binding:"optional"`
-	Color string `json:"color" binding:"optional"`
-	Title string `json:"title" binding:"optional"`
-	Instagram string `json:"instagram" binding:"optional"`
-	GithubUrls string `json:"githubUrls" binding:"optional"`
-	PersonalUrls string `json:"personalUrls" binding:"optional"`
-	Memo string `json:"memo" binding:"optional"`
+	Name string `json:"name,omitempty"`
+	Color string `json:"color,omitempty"`
+	Title string `json:"title,omitempty"`
+	Instagram string `json:"instagram,omitempty"`
+	GithubUrls string `json:"githubUrls,omitempty"`
+	PersonalUrls string `json:"personalUrls,omitempty"`
+	Memo string `json:"mem,omitempty"`
 	// BackgroundImage string `json:"backgroundImage" binding:"optional"`
 	// ProfileImage string `json:"profileImage" binding:"optional"`
  }

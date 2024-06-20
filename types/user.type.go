@@ -2,15 +2,15 @@ package types
 
 // 회원가입 요청
 type UserSignupRequest struct {
-	Email string 		`json:"email" binding:"required"`
-	Password string 	`json:"password" binding:"required"`
-	Name string 		`json:"name" binding:"required"`
+	Email string 		`json:"email"`
+	Password string 	`json:"password"`
+	Name string 		`json:"name"`
  }
 
  // 로그인 요청
  type UserLoginRequest struct {
-	Email string 		`json:"email" binding:"required"`
-	Password string 	`json:"password" binding:"required"`
+	Email string 		`json:"email"`
+	Password string 	`json:"password"`
  }
  
 // 유저 프로필 조회 요청
@@ -20,13 +20,13 @@ type UserProfileRequest struct {
 
  // 이메일 찾기 요청
  type UserSearchEmailRequest struct {
-	Name string `json:"name" binding:"required"`
+	Name string `json:"name"`
  }
 
   // 패스워드 찾기 요청
  type UserSearchPasswordRequest struct {
-	Email string `json:"email" binding:"required"`
-	Name string `json:"name" binding:"required"`
+	Email string `json:"email"`
+	Name string `json:"name"`
  }
 
 
