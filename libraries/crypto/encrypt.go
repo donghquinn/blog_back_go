@@ -26,7 +26,8 @@ func EncryptString(rawString string) (string, error) {
 	// The IV needs to be unique, but not secure. Therefore it's common to
 	// include it at the beginning of the ciphertext.
 	ciphertext := make([]byte, len(plaintext))
-	iv := ciphertext[:aes.BlockSize]
+	iv := []byte(globalConfig.AesIv)
+	
 	if _, err := io.ReadFull(rand.Reader, iv); err != nil {
 		return "", err
 	}
