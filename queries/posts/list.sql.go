@@ -133,9 +133,3 @@ var SelectPostByCategory = `
 	LIMIT ?
 	OFFSET ?;
 `
-
-
-
-var SelectAllCategories = `
-
-`

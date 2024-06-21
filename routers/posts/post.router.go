@@ -15,4 +15,6 @@ func PostRouter(server *http.ServeMux) {
 	server.HandleFunc("POST /post/list/category", controllers.GetPostsByCategoryController)
 
 	server.HandleFunc("POST /post/url", controllers.GetImageUrl)
+
+	server.HandleFunc("POST /post/category/list", controllers.GetCategoryController)
 }
