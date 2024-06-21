@@ -54,6 +54,7 @@ var SelectUserProfileByUserId = `
 		user_name,
 		preferred_color as color,
 		title,
+		sns_instagram,
 		github_url,
 		personal_url,
 		memo
