@@ -102,7 +102,7 @@ var SelectPostByTags = `
 	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
 	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	WHERE
-		tags LIKE ? AND
+		t.tags LIKE ? AND
 		p.post_status = 1
 	ORDER BY p.mod_date DESC
 	LIMIT ?

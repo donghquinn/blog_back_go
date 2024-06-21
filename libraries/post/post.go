@@ -223,9 +223,7 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 		return []types.PostsByTagsResponseType{}, dbErr
 	}
 
-	tagArray, _ := json.Marshal(data.TagName)
-
-	posts, selectErr := database.Query(connect, queries.SelectPostByTags, "%"+string(tagArray)+"%", fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	posts, selectErr := database.Query(connect, queries.SelectPostByTags, "%"+data.TagName+"%", fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if selectErr != nil {
 		log.Printf("[POST_TAG] GET Post by TagName Error: %v", selectErr)
