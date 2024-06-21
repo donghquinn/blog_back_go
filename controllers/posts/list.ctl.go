@@ -98,7 +98,7 @@ func GetPinnedPostController(res http.ResponseWriter, req *http.Request) {
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	pinnedQueryResult, pinnedErr := post.QueryisPinnedPostData()
+	pinnedQueryResult, pinnedErr := post.QueryisPinnedPostList(page, size)
 
 	if pinnedErr != nil {
 		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", pinnedErr)

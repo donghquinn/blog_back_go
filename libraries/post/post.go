@@ -65,6 +65,59 @@ func QueryUnpinnedPostData(page int, size int) ([]types.SelectAllPostDataRespons
 }
 
 // 포스트들 가져오기 - 모듈함수
+func QueryisPinnedPostList(page int, size int) ([]types.SelectAllPostDataResponse, error) {
+		// parseBodyErr :=utils.DecodeBody(&req.Body)
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return nil, dbErr
+	}
+
+	// 페이징 파라미터 파싱
+	result, queryErr := database.Query(connect, queries.SelectAllPinnedPosts, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+
+	if queryErr != nil {
+		log.Printf("[LIST] Get Pinned Post Data Error: %v", queryErr)
+
+		return nil, queryErr
+	}
+	
+	defer connect.Close()
+
+	var queryResult = []types.SelectAllPostDataResponse{}
+
+	for result.Next() {
+		var row types.SelectAllPostDataResponse
+
+		scanErr := result.Scan(
+			&row.PostSeq,
+			&row.PostTitle,
+			&row.PostContents,
+			&row.CategoryName,
+			&row.UserName,
+			&row.IsPinned,
+			&row.Viewed,
+			&row.RegDate,
+			&row.ModDate)
+
+		if scanErr != nil {
+			if scanErr == sql.ErrNoRows {
+				return []types.SelectAllPostDataResponse{}, nil
+			} else {
+				log.Printf("[LIST] Scan and Assign Pinned Query Result Error: %v", scanErr)
+
+				return nil, scanErr
+			}
+
+		}
+
+		queryResult = append(queryResult, row)
+	}
+
+	return queryResult, nil
+}
+
+// 포스트들 가져오기 - 모듈함수
 func QueryisPinnedPostData() ([]types.SelectAllPostDataResponse, error) {
 		// parseBodyErr :=utils.DecodeBody(&req.Body)
 	connect, dbErr := database.InitDatabaseConnection()

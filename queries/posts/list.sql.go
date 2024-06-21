@@ -24,6 +24,30 @@ var SelectUnPinnedPosts = `
 	OFFSET ?;
 `
 
+var SelectAllPinnedPosts = `
+	SELECT
+		p.post_seq, 
+		p.post_title, 
+		p.post_contents, 
+		c.category_name,
+		IFNULL(u.user_name, 'unknown') as user_name,
+		p.is_pinned,
+		p.viewed,
+		p.reg_date, 
+		p.mod_date
+	FROM
+		post_table AS p
+	LEFT JOIN user_table AS u ON u.user_id = p.user_id
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
+	WHERE p.post_status = 1
+		AND p.is_pinned = 1
+	ORDER BY
+		p.mod_date DESC
+	LIMIT ?
+	OFFSET ?;
+`
+
+
 var SelectPinnedPosts = `
 	SELECT
 		p.post_seq, 
