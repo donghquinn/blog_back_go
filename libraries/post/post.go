@@ -1,6 +1,7 @@
 package post
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -47,9 +48,14 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResponse, er
 			&row.ModDate)
 
 		if scanErr != nil {
-			log.Printf("[LIST] Scan and Assign Query Result Error: %v", scanErr)
+			if scanErr == sql.ErrNoRows {
+				return []types.SelectAllPostDataResponse{}, nil
+			} else {
+				log.Printf("[LIST] Scan and Assign Query Result Error: %v", scanErr)
 
-			return nil, scanErr
+				return nil, scanErr
+			}
+
 		}
 
 		queryResult = append(queryResult, row)

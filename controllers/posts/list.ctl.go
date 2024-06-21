@@ -41,6 +41,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 			PostSeq: data.PostSeq,
 			PostTitle: data.PostTitle,
 			PostContents: data.PostContents,
+			CategoryName: data.CategoryName,
 			UserName: decodedName,
 			IsPinned: data.IsPinned,
 			Viewed: data.Viewed,
