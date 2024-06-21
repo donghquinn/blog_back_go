@@ -92,6 +92,8 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 		return types.SelectSpecificPostDataResult{}, postScanErr
 	}
 
+	log.Printf("[CONTENT] Query Result: %v", queryResult)
+
 	return queryResult, nil
 }
 
