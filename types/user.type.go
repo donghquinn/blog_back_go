@@ -88,6 +88,7 @@ type LoginRedisStruct struct {
 	UserName string		`json:"userName"`
 	Color string		`json:"color"`
 	Title string		`json:"title"`
+	Instagram *string `json:"instagram"`
 	GithubUrl *string	`json:"githubUrl"`
 	PersonalUrl *string	`json:"personalUrl"`
 	Memo *string			`json:"memo"`
