@@ -61,14 +61,14 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 
 	if tagResults.TagName != nil {
 		jsonErr := json.Unmarshal([]byte(*tagResults.TagName), &tagsArray)
-
 		if jsonErr != nil {
 			log.Printf("[CONTENTS] JSON Unmarsh tag array Error: %v", jsonErr)
 			dto.SetErrorResponse(res, 405, "05", "Unmarshing Tags Error", jsonErr)
 			return
 		}
+	} else {
+		tagsArray = make([]string, 0)
 	}
-	
 
 	// 게시글 컨텐츠 데이터
 	postContentsData := types.ViewSpecificPostContentsResponse{
