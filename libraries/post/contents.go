@@ -116,12 +116,14 @@ func GetTagList(postSeq string) (types.SelectSpeicificPostTagDataResult, error) 
 		return types.SelectSpeicificPostTagDataResult{}, tagErr
 	}
 
-	scanErr := tagResult.Scan(
-		&tagQueryResult.TagName)
+	if tagResult!= nil {
+		scanErr := tagResult.Scan(
+			&tagQueryResult.TagName)
 
-	if scanErr != nil {
-		log.Printf("[CONTENTS] Scan Tag Query Data Error: %v", scanErr)
-		return types.SelectSpeicificPostTagDataResult{}, scanErr
+		if scanErr != nil {
+			log.Printf("[CONTENTS] Scan Tag Query Data Error: %v", scanErr)
+			return types.SelectSpeicificPostTagDataResult{}, scanErr
+		}
 	}
 
 	return tagQueryResult, nil
