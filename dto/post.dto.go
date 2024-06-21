@@ -55,3 +55,10 @@ func SetPostByCategoryResponse(res http.ResponseWriter, statusCode int, code str
 	res.WriteHeader(200)
 	res.Write(responseObject)
 }
+
+func SetCategoryResponse(res http.ResponseWriter, statusCode int, code string, categoryList []string) {
+	responseObject, _ := json.Marshal(types.ResponseCategoryResponseType{Result: true, Code: code, CategoryList: categoryList})
+
+	res.WriteHeader(200)
+	res.Write(responseObject)
+}
