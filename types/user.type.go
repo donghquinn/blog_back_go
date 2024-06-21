@@ -60,10 +60,10 @@ type LoginRedisStruct struct {
 	UserName string
 	Color string
 	Title string
-	Instagram string
-	GithubUrl string
-	PersonalUrl string
-	Memo string
+	Instagram *string
+	GithubUrl *string
+	PersonalUrl *string
+	Memo *string
  }
  
  // 파일 데이터 쿼리 결과
@@ -88,8 +88,8 @@ type LoginRedisStruct struct {
 	UserName string		`json:"userName"`
 	Color string		`json:"color"`
 	Title string		`json:"title"`
-	GithubUrl string	`json:"githubUrl"`
-	PersonalUrl string	`json:"personalUrl"`
-	Memo string			`json:"memo"`
+	GithubUrl *string	`json:"githubUrl"`
+	PersonalUrl *string	`json:"personalUrl"`
+	Memo *string			`json:"memo"`
 	Images UserImageFileData	`json:"images"`
  }
