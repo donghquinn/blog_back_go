@@ -33,7 +33,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	unpinnedTotalCount, unpinnedTotalCountErr := post.GetTotalPostCount()
+	unpinnedTotalCount, unpinnedTotalCountErr := post.GetTotalUnPinnedPostCount()
 
 	if unpinnedTotalCountErr != nil {
 		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", unpinnedTotalCountErr)
@@ -91,6 +91,55 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	dto.SetPostListResponse(res, 200, "01", unpinnedData, pinnedData, unpinnedTotalCount.Count, page, size)
+}
+
+// 전체 포스트 가져오기 - 페이징
+func GetPinnedPostController(res http.ResponseWriter, req *http.Request) {
+	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
+	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
+
+	pinnedQueryResult, pinnedErr := post.QueryisPinnedPostData()
+
+	if pinnedErr != nil {
+		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", pinnedErr)
+
+		return
+	}
+
+	pinnedTotalCount, pinnedTotalCountErr := post.GetTotalPinnedPostCount()
+
+	if pinnedTotalCountErr != nil {
+		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", pinnedTotalCountErr)
+
+		return
+	}
+
+	var pinnedData []types.SelectAllPostDataResponse
+
+	// 이름 디코딩 위해
+	for _, data := range(pinnedQueryResult){
+		decodedName, decodeErr := crypt.DecryptString(data.UserName)
+
+		if decodeErr != nil {
+			log.Printf("[LIST] Decoding User Name Error: %v", decodeErr)
+			dto.SetErrorResponse(res, 402, "02", "Decode Name Error", decodeErr)
+			return
+		}
+
+		pinnedData = append(pinnedData, types.SelectAllPostDataResponse{
+			PostSeq: data.PostSeq,
+			PostTitle: data.PostTitle,
+			PostContents: data.PostContents,
+			CategoryName: data.CategoryName,
+			UserName: decodedName,
+			IsPinned: data.IsPinned,
+			Viewed: data.Viewed,
+			RegDate: data.RegDate,
+			ModDate: data.ModDate,
+		})
+	}
+
+	dto.SetPinnedPostListResponse(res, 200, "01", pinnedData, pinnedTotalCount.Count, page, size)
 }
 
 

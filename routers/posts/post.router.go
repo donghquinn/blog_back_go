@@ -9,6 +9,7 @@ import (
 func PostRouter(server *http.ServeMux) {
 	server.HandleFunc("POST /post/contents", controllers.PostContentsController)
 	server.HandleFunc("POST /post/list", controllers.GetPostController)
+	server.HandleFunc("POST /post/list/unpinned", controllers.GetPinnedPostController)
 
 	server.HandleFunc("POST /post/list/tag", controllers.GetPostsByTagController)
 	server.HandleFunc("POST /post/list/category", controllers.GetPostsByCategoryController)
