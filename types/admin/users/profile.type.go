@@ -18,7 +18,7 @@ package types
 	Instagram string `json:"instagram,omitempty"`
 	GithubUrls string `json:"githubUrl,omitempty"`
 	PersonalUrls string `json:"personalUrl,omitempty"`
-	Memo string `json:"mem,omitempty"`
+	Memo string `json:"memo,omitempty"`
 	// BackgroundImage string `json:"backgroundImage" binding:"optional"`
 	// ProfileImage string `json:"profileImage" binding:"optional"`
  }
