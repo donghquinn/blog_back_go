@@ -1,6 +1,6 @@
 package queries
 
 var SelectAllCategories = `
-	SELECT category_name
+	SELECT DISTINCT(category_name) AS category_name
 	FROM category_table
 `
