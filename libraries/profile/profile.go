@@ -64,6 +64,7 @@ func GetDefaultUserProfile() (types.SelectUserProfileQueryResult, error) {
 		&userProfileData.UserName,
 		&userProfileData.Color,
 		&userProfileData.Title,
+		&userProfileData.Instagram,
 		&userProfileData.GithubUrl,
 		&userProfileData.PersonalUrl,
 		&userProfileData.Memo)
@@ -96,6 +97,7 @@ func GetUserProfileByUserId(userId string) (types.SelectUserProfileQueryResult, 
 		&userProfileData.UserName,
 		&userProfileData.Color,
 		&userProfileData.Title,
+		&userProfileData.Instagram,
 		&userProfileData.GithubUrl,
 		&userProfileData.PersonalUrl,
 		&userProfileData.Memo)

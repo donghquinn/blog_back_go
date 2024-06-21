@@ -60,6 +60,7 @@ type LoginRedisStruct struct {
 	UserName string
 	Color string
 	Title string
+	Instagram string
 	GithubUrl string
 	PersonalUrl string
 	Memo string
