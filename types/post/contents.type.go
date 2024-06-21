@@ -34,7 +34,7 @@ type SelectSpecificPostDataResult struct {
 	PostTitle string
 	PostContents string
 	PostStatus string
-	Tags *string
+	Tags string
 	CategoryName *string
 	UserName string
 	Viewed string

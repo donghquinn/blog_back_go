@@ -3,16 +3,16 @@ package queries
 // 특정 게시글 조회
 var SelectSpecificPostContents = `
 	SELECT p.post_seq, p.post_title, p.post_contents, p.post_status,
-		t.tags, c.category_name, u.user_name,
-		p.viewed, p.is_pinned, p.reg_date, p.mod_date
+		IFNULL(t.tags, "NULL") AS tags, 
+		IFNULL(c.category_name, "NULL") AS category_name, 
+		u.user_name, p.viewed, p.is_pinned, p.reg_date, p.mod_date
 	FROM
 		post_table AS p
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id
 	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	LEFT JOIN tag_table AS t ON t.post_seq = p.post_seq
 	WHERE p.post_seq = ?
-		AND p.post_status = 1 
-		
+		AND p.post_status = 1
 	;
 `
 
