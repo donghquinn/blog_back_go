@@ -43,11 +43,11 @@ func DatabaseConnect() {
 		log.Printf("[START] Databae Connection Check Error: %v", checkErr)
 	}
 
-	_, redisErr := database.RedisInstance()
+	// _, redisErr := database.RedisInstance()
 
-	if redisErr != nil {
-		log.Printf("[START] Redis Connection Check Error: %v", redisErr)
-	}
+	// if redisErr != nil {
+	// 	log.Printf("[START] Redis Connection Check Error: %v", redisErr)
+	// }
 
 }
 

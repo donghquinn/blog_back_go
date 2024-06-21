@@ -1,6 +1,7 @@
 package post
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/donghquinn/blog_back_go/libraries/database"
@@ -9,26 +10,20 @@ import (
 )
 
 // 특정 게시글 가져오기
-func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, types.SelectSpeicificPostTagDataResult, error){
+func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 	updateErr := UpdateViewCount(postSeq)
 
 	if updateErr != nil {
-		return types.SelectSpecificPostDataResult{}, types.SelectSpeicificPostTagDataResult{}, updateErr
+		return types.SelectSpecificPostDataResult{}, updateErr
 	}
 
 	postList, getPostErr := GetPostContents(postSeq)
 
 	if getPostErr != nil {
-		return types.SelectSpecificPostDataResult{}, types.SelectSpeicificPostTagDataResult{}, getPostErr
+		return types.SelectSpecificPostDataResult{}, getPostErr
 	}
 
-	tagList, tagErr := GetTagList(postSeq)
-
-	if tagErr != nil {
-		return types.SelectSpecificPostDataResult{}, types.SelectSpeicificPostTagDataResult{}, tagErr
-	}
-
-	return postList, tagList, nil
+	return postList, nil
 }
 
 func UpdateViewCount(postSeq string) error {
@@ -63,7 +58,7 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 		return types.SelectSpecificPostDataResult{}, connectErr
 	}
 
-		// 특정 게시글 조회
+	// 특정 게시글 조회
 	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq)
 
 	defer connect.Close()
@@ -73,13 +68,12 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 		return types.SelectSpecificPostDataResult{}, queryErr
 	}
 
-
 	postScanErr := result.Scan(
 		&queryResult.PostSeq,
-		&queryResult.PostTitle, 
+		&queryResult.PostTitle,
 		&queryResult.PostContents,
 		&queryResult.PostStatus,
-		&queryResult.Tags, 
+		&queryResult.Tags,
 		&queryResult.CategoryName,
 		&queryResult.UserName,
 		&queryResult.Viewed,
@@ -88,45 +82,47 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 		&queryResult.ModDate)
 
 	if postScanErr != nil {
-		log.Printf("[CONTENTS] Can Post Data Error: %v", postScanErr)
-		return types.SelectSpecificPostDataResult{}, postScanErr
+		if postScanErr == sql.ErrNoRows {
+			return types.SelectSpecificPostDataResult{}, nil
+		} else {
+			log.Printf("[CONTENTS] Can Post Data Error: %v", postScanErr)
+			return types.SelectSpecificPostDataResult{}, postScanErr
+		}
 	}
-
-	log.Printf("[CONTENT] Query Result: %v", queryResult)
 
 	return queryResult, nil
 }
 
-func GetTagList(postSeq string) (types.SelectSpeicificPostTagDataResult, error) {
-			// 태그 쿼리
-	var tagQueryResult types.SelectSpeicificPostTagDataResult
+// func GetTagList(postSeq string) (types.SelectSpeicificPostTagDataResult, error) {
+// 			// 태그 쿼리
+// 	var tagQueryResult types.SelectSpeicificPostTagDataResult
 
-	connect, connectErr := database.InitDatabaseConnection()
+// 	connect, connectErr := database.InitDatabaseConnection()
 
-	if connectErr != nil {
-		log.Printf("[CONTENTS] Init Database Connection Error for Post Data: %v", connectErr)
-		return types.SelectSpeicificPostTagDataResult{},connectErr
-	}
+// 	if connectErr != nil {
+// 		log.Printf("[CONTENTS] Init Database Connection Error for Post Data: %v", connectErr)
+// 		return types.SelectSpeicificPostTagDataResult{},connectErr
+// 	}
 
-		// 태그들 조회
-	tagResult, tagErr := database.QueryOne(connect, queries.SelectPostTags, postSeq)
+// 		// 태그들 조회
+// 	tagResult, tagErr := database.QueryOne(connect, queries.SelectPostTags, postSeq)
 
-		defer connect.Close()
+// 	defer connect.Close()
 
-	if tagErr != nil {
-		log.Printf("[CONTENTS] Query Tags Error: %v", tagErr)
-		return types.SelectSpeicificPostTagDataResult{}, tagErr
-	}
+// 	if tagErr != nil {
+// 		log.Printf("[CONTENTS] Query Tags Error: %v", tagErr)
+// 		return types.SelectSpeicificPostTagDataResult{}, tagErr
+// 	}
 
-	if tagResult!= nil {
-		scanErr := tagResult.Scan(
-			&tagQueryResult.TagName)
+// 	if tagResult!= nil {
+// 		scanErr := tagResult.Scan(
+// 			&tagQueryResult.TagName)
 
-		if scanErr != nil {
-			log.Printf("[CONTENTS] Scan Tag Query Data Error: %v", scanErr)
-			return types.SelectSpeicificPostTagDataResult{}, scanErr
-		}
-	}
+// 		if scanErr != nil {
+// 			log.Printf("[CONTENTS] Scan Tag Query Data Error: %v", scanErr)
+// 			return types.SelectSpeicificPostTagDataResult{}, scanErr
+// 		}
+// 	}
 
-	return tagQueryResult, nil
-}
+// 	return tagQueryResult, nil
+// }

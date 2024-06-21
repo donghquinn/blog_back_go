@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"database/sql"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -26,7 +27,7 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// 게시글 쿼리
-	queryResult, tagResults, queryErr := post.GetPostData(postContentsRequest.PostSeq)
+	queryResult, queryErr := post.GetPostData(postContentsRequest.PostSeq)
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Query Specific Contents Error", queryErr)
@@ -34,33 +35,40 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	imageData, imageErr := GetImageData(postContentsRequest.PostSeq)
-
+	
 	if imageErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Image Data Error", imageErr)
 		return
 	}
 
+	
 	var urlArray []string
 
-	// 게시글 URL 배열 만들기
-	for _, data := range(imageData) {
-		url, getErr := database.GetImageUrl(data.ObjectName, data.FileFormat)
+	if len(imageData) > 0 {
+		// 게시글 URL 배열 만들기
+		for _, data := range(imageData) {
+			url, getErr := database.GetImageUrl(data.ObjectName, data.FileFormat)
 
-		if getErr != nil {
-			dto.SetErrorResponse(res, 404, "04", "Get Presigned URL Error", getErr)
-			return
+			if getErr != nil {
+				dto.SetErrorResponse(res, 404, "04", "Get Presigned URL Error", getErr)
+				return
+			}
+
+			if url == nil {
+				urlArray = make([]string, 0)
+			}
+
+			urlArray = append(urlArray, url.String())
 		}
-
-		urlArray = append(urlArray, url.String())
 	}
-
+	
 	userName, _ := crypt.DecryptString(queryResult.UserName)
 
 	// 특정 게시글 태그 배열 가공해서 담아 응답
 	var tagsArray []string
 
-	if tagResults.TagName != nil {
-		jsonErr := json.Unmarshal([]byte(*tagResults.TagName), &tagsArray)
+	if queryResult.Tags != nil {
+		jsonErr := json.Unmarshal([]byte(*queryResult.Tags), &tagsArray)
 		if jsonErr != nil {
 			log.Printf("[CONTENTS] JSON Unmarsh tag array Error: %v", jsonErr)
 			dto.SetErrorResponse(res, 405, "05", "Unmarshing Tags Error", jsonErr)
@@ -111,12 +119,21 @@ func GetImageData(postSeq string) ([]types.SelectPostImageData, error){
 	for result.Next() {
 		var row types.SelectPostImageData
 
-		result.Scan(
+		scanErr := result.Scan(
 			&row.ObjectName,
 			&row.FileFormat,
 			&row.TargetPurpose,
 			&row.TargetSeq)
 
+			if scanErr != nil {
+				if scanErr == sql.ErrNoRows {
+					returnImageDate = append(returnImageDate, types.SelectPostImageData{})
+				} else {
+					log.Printf("[CONTENTS] Scan Files Error: %v", scanErr)
+					return []types.SelectPostImageData{}, nil
+				}
+			}
+			
 		returnImageDate = append(returnImageDate, row)
 	}
 
