@@ -30,7 +30,7 @@ type SelectAllPostDataResponse struct {
 	PostSeq string	`json:"postSeq"`
 	PostTitle string	`json:"postTitle"`
 	PostContents string	`json:"postContents"`
-	CategoryName string `json:"categoryName"`
+	CategoryName *string `json:"categoryName"`
 	UserName string	`json:"userName"`
 	IsPinned string	`json:"isPinned"`
 	Viewed string	`json:"viewed"`
