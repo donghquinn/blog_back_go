@@ -25,7 +25,7 @@ type ViewImageUrl struct {
 }
 // 특정 게시글 태그 데이터 쿼리 결과
 type SelectSpeicificPostTagDataResult struct {
-	TagName string
+	TagName *string
 }
 
 // 특정 게시글 데이터 쿼리 결과

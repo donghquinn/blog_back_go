@@ -66,7 +66,7 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 		// 특정 게시글 조회
 	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq)
 
-		defer connect.Close()
+	defer connect.Close()
 
 	if queryErr != nil {
 		log.Printf("[CONTENTS] Query A Post Contents Error: %v", queryErr)
