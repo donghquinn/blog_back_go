@@ -50,7 +50,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 		})
 	}
 
-	dto.SetPostListResponse(res, 200, "01", returnDecodedData)
+	dto.SetPostListResponse(res, 200, "01", returnDecodedData, len(returnDecodedData))
 }
 
 

@@ -3,13 +3,14 @@ package dto
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 
 	types "github.com/donghquinn/blog_back_go/types/post"
 )
 
 // 게시글 리스트 담음 응답
-func SetPostListResponse(res http.ResponseWriter, statusCode int, code string, data []types.SelectAllPostDataResponse) {
-	responseObject, _ := json.Marshal(types.ResponsePostListType{Code: code, Result: true, PostList: data})
+func SetPostListResponse(res http.ResponseWriter, statusCode int, code string, data []types.SelectAllPostDataResponse, postCount int) {
+	responseObject, _ := json.Marshal(types.ResponsePostListType{Code: code, Result: true, PostList: data, PostCount: strconv.Itoa(postCount)})
 
 	res.WriteHeader(200)
 	res.Write(responseObject)

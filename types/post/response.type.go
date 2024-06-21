@@ -12,6 +12,7 @@ type ResponsePostListType struct {
 	Code string `json:"code"`
 	Result bool `json:"result"`
 	PostList []SelectAllPostDataResponse `json:"postList"`
+	PostCount string `json:"postCount"`
 }
 
 // 게시글 리스트 응답 구조체
