@@ -6,7 +6,7 @@ var SelectAllPosts = `
 		p.post_seq, 
 		p.post_title, 
 		p.post_contents, 
-		IFNULL(c.category_name, 'NULL') as category_name,
+		c.category_name,
 		IFNULL(u.user_name, 'unknown') as user_name,
 		p.is_pinned,
 		p.viewed,
