@@ -12,7 +12,7 @@ import (
 )
 
 // 포스트들 가져오기 - 모듈함수
-func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResponse, error) {
+func QueryUnpinnedPostData(page int, size int) ([]types.SelectAllPostDataResponse, error) {
 		// parseBodyErr :=utils.DecodeBody(&req.Body)
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -21,10 +21,10 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResponse, er
 	}
 
 	// 페이징 파라미터 파싱
-	result, queryErr := database.Query(connect, queries.SelectAllPosts,  fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	result, queryErr := database.Query(connect, queries.SelectUnPinnedPosts,  fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if queryErr != nil {
-		log.Printf("[LIST] Get Post Data Error: %v", queryErr)
+		log.Printf("[LIST] Get Unpinned Post Data Error: %v", queryErr)
 
 		return nil, queryErr
 	}
@@ -51,7 +51,7 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResponse, er
 			if scanErr == sql.ErrNoRows {
 				return []types.SelectAllPostDataResponse{}, nil
 			} else {
-				log.Printf("[LIST] Scan and Assign Query Result Error: %v", scanErr)
+				log.Printf("[LIST] Scan and Assign Unpinned Query Result Error: %v", scanErr)
 
 				return nil, scanErr
 			}
@@ -62,6 +62,81 @@ func QueryAllPostData(page int, size int) ([]types.SelectAllPostDataResponse, er
 	}
 
 	return queryResult, nil
+}
+
+// 포스트들 가져오기 - 모듈함수
+func QueryisPinnedPostData() ([]types.SelectAllPostDataResponse, error) {
+		// parseBodyErr :=utils.DecodeBody(&req.Body)
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return nil, dbErr
+	}
+
+	// 페이징 파라미터 파싱
+	result, queryErr := database.Query(connect, queries.SelectPinnedPosts)
+
+	if queryErr != nil {
+		log.Printf("[LIST] Get Pinned Post Data Error: %v", queryErr)
+
+		return nil, queryErr
+	}
+	
+	defer connect.Close()
+
+	var queryResult = []types.SelectAllPostDataResponse{}
+
+	for result.Next() {
+		var row types.SelectAllPostDataResponse
+
+		scanErr := result.Scan(
+			&row.PostSeq,
+			&row.PostTitle,
+			&row.PostContents,
+			&row.CategoryName,
+			&row.UserName,
+			&row.IsPinned,
+			&row.Viewed,
+			&row.RegDate,
+			&row.ModDate)
+
+		if scanErr != nil {
+			if scanErr == sql.ErrNoRows {
+				return []types.SelectAllPostDataResponse{}, nil
+			} else {
+				log.Printf("[LIST] Scan and Assign Pinned Query Result Error: %v", scanErr)
+
+				return nil, scanErr
+			}
+
+		}
+
+		queryResult = append(queryResult, row)
+	}
+
+	return queryResult, nil
+}
+
+func GetTotalPostCount() (types.PostTotalUnPinnedCountType, error) {
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return types.PostTotalUnPinnedCountType{}, dbErr
+	}
+
+	queryResult, queryErr := database.QueryOne(connect, queries.SelectUnPinnedPostCount)
+
+	if queryErr != nil {
+		log.Printf("[LIST] Get UnPinned Post Count Error: %v", queryErr)
+
+		return types.PostTotalUnPinnedCountType{}, queryErr
+	}
+
+	var unPinnedTotalCount types.PostTotalUnPinnedCountType
+
+	queryResult.Scan(&unPinnedTotalCount.Count)
+
+	return unPinnedTotalCount, nil
 }
 
 

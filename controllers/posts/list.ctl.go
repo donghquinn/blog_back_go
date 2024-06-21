@@ -17,7 +17,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	queryResult, queryErr := post.QueryAllPostData(page, size)
+	queryResult, queryErr := post.QueryUnpinnedPostData(page, size)
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", queryErr)
@@ -25,10 +25,27 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var returnDecodedData []types.SelectAllPostDataResponse
+	pinnedQueryResult, pinnedErr := post.QueryisPinnedPostData()
 
-	// 이름 디코딩 위해
-	for _, data := range(queryResult){
+	if pinnedErr != nil {
+		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", pinnedErr)
+
+		return
+	}
+
+	unpinnedTotalCount, unpinnedTotalCountErr := post.GetTotalPostCount()
+
+	if unpinnedTotalCountErr != nil {
+		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", unpinnedTotalCountErr)
+
+		return
+	}
+
+
+	var pinnedData []types.SelectAllPostDataResponse
+	var unpinnedData []types.SelectAllPostDataResponse
+
+		for _, data := range(pinnedQueryResult){
 		decodedName, decodeErr := crypt.DecryptString(data.UserName)
 
 		if decodeErr != nil {
@@ -37,7 +54,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		returnDecodedData = append(returnDecodedData, types.SelectAllPostDataResponse{
+		unpinnedData = append(unpinnedData, types.SelectAllPostDataResponse{
 			PostSeq: data.PostSeq,
 			PostTitle: data.PostTitle,
 			PostContents: data.PostContents,
@@ -50,7 +67,30 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 		})
 	}
 
-	dto.SetPostListResponse(res, 200, "01", returnDecodedData, len(returnDecodedData))
+	// 이름 디코딩 위해
+	for _, data := range(queryResult){
+		decodedName, decodeErr := crypt.DecryptString(data.UserName)
+
+		if decodeErr != nil {
+			log.Printf("[LIST] Decoding User Name Error: %v", decodeErr)
+			dto.SetErrorResponse(res, 402, "02", "Decode Name Error", decodeErr)
+			return
+		}
+
+		pinnedData = append(pinnedData, types.SelectAllPostDataResponse{
+			PostSeq: data.PostSeq,
+			PostTitle: data.PostTitle,
+			PostContents: data.PostContents,
+			CategoryName: data.CategoryName,
+			UserName: decodedName,
+			IsPinned: data.IsPinned,
+			Viewed: data.Viewed,
+			RegDate: data.RegDate,
+			ModDate: data.ModDate,
+		})
+	}
+
+	dto.SetPostListResponse(res, 200, "01", unpinnedData, pinnedData, unpinnedTotalCount.Count, page, size)
 }
 
 

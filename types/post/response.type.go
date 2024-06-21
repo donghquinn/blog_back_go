@@ -11,8 +11,11 @@ type ResponsePostContentsType struct {
 type ResponsePostListType struct {
 	Code string `json:"code"`
 	Result bool `json:"result"`
-	PostList []SelectAllPostDataResponse `json:"postList"`
+	PinnedPostList []SelectAllPostDataResponse `json:"pinnedPostList"`
+	UnpinnedPostList []SelectAllPostDataResponse `json:"unpinnedPostList"`
 	PostCount string `json:"postCount"`
+	Page int `json:"page"`
+	Size int `json:"size"`
 }
 
 // 게시글 리스트 응답 구조체
