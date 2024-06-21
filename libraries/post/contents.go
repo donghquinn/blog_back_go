@@ -1,6 +1,7 @@
 package post
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/donghquinn/blog_back_go/libraries/database"
@@ -73,6 +74,9 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 		return types.SelectSpecificPostDataResult{}, queryErr
 	}
 
+	var tagList sql.NullString
+	var category sql.NullString
+
 	postScanErr := result.Scan(
 		&queryResult.PostSeq,
 		&queryResult.PostTitle, 
@@ -90,6 +94,20 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 	if postScanErr != nil {
 		log.Printf("[CONTENTS] Can Post Data Error: %v", postScanErr)
 		return types.SelectSpecificPostDataResult{}, postScanErr
+	}
+
+	if tagList.Valid {
+		value := tagList.String
+		queryResult.Tags = &value
+	} else {
+		queryResult.Tags = nil
+	}
+
+	if category.Valid {
+		categoryValue := category.String
+		queryResult.CategoryName = &categoryValue
+	} else {
+		queryResult.CategoryName = nil
 	}
 
 	return queryResult, nil
