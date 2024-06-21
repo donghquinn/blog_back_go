@@ -17,7 +17,7 @@ var SelectUnPinnedPosts = `
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id
 	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	WHERE p.post_status = 1
-		AMD p.is_pinned = 0
+		AND p.is_pinned = 0
 	ORDER BY
 		p.mod_date DESC
 	LIMIT ?
@@ -40,7 +40,7 @@ var SelectPinnedPosts = `
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id
 	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	WHERE p.post_status = 1
-		AMD p.is_pinned = 1
+		AND p.is_pinned = 1
 	ORDER BY
 		p.mod_date DESC
 	LIMIT 5;
@@ -101,4 +101,8 @@ var SelectPostByCategory = `
 	ORDER BY p.mod_date DESC
 	LIMIT ?
 	OFFSET ?;
+`
+
+var SelectAllCategories = `
+
 `
