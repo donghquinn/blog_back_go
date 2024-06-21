@@ -24,6 +24,9 @@ type PostsByTagsResponseType struct {
 	ModDate string	`json:"modDate"`
 }
 
+type PostTotalUnPinnedCountType struct {
+	Count string
+}
 
 // 게시글 전체 가져오기 쿼리 결과 타입
 type SelectAllPostDataResponse struct {
