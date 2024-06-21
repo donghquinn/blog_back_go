@@ -18,6 +18,16 @@ type ResponsePostListType struct {
 	Size int `json:"size"`
 }
 
+type ResponsePinnedPostListType struct {
+	Code string `json:"code"`
+	Result bool `json:"result"`
+	PinnedPostList []SelectAllPostDataResponse `json:"pinnedPostList"`
+	PostCount string `json:"postCount"`
+	Page int `json:"page"`
+	Size int `json:"size"`
+}
+
+
 // 게시글 리스트 응답 구조체
 type ResponsePostByTagListType struct {
 	Code string `json:"code"`

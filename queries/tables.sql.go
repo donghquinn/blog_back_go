@@ -36,6 +36,16 @@ var CreatePostTable = `
 	);
 `
 
+// var CreatePinnedPost = `
+// 	CREATE TABLE IF NOT EXISTS post_table (
+// 		pinned_seq		INT(20)			NOT NULL PRIMARY KEY,
+// 		post_seq 		INT(20)		    NOT NULL AUTO_INCREMENT PRIMARY KEY,
+// 		reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+// 		INDEX pinned_post_idx(post_seq)
+// 	);
+// `
+
 // var CreateSessionTable = `
 // 	CREATE TABLE IF NOT EXISTS session_table (
 // 		session_id	 	VARCHAR(50)			NOT NULL 	AUTO_INCREMENT PRIMARY KEY,

@@ -117,7 +117,7 @@ func QueryisPinnedPostData() ([]types.SelectAllPostDataResponse, error) {
 	return queryResult, nil
 }
 
-func GetTotalPostCount() (types.PostTotalUnPinnedCountType, error) {
+func GetTotalUnPinnedPostCount() (types.PostTotalUnPinnedCountType, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
@@ -128,6 +128,28 @@ func GetTotalPostCount() (types.PostTotalUnPinnedCountType, error) {
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get UnPinned Post Count Error: %v", queryErr)
+
+		return types.PostTotalUnPinnedCountType{}, queryErr
+	}
+
+	var unPinnedTotalCount types.PostTotalUnPinnedCountType
+
+	queryResult.Scan(&unPinnedTotalCount.Count)
+
+	return unPinnedTotalCount, nil
+}
+
+func GetTotalPinnedPostCount() (types.PostTotalUnPinnedCountType, error) {
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return types.PostTotalUnPinnedCountType{}, dbErr
+	}
+
+	queryResult, queryErr := database.QueryOne(connect, queries.SelectPinnedPostCount)
+
+	if queryErr != nil {
+		log.Printf("[LIST] Get Pinned Post Count Error: %v", queryErr)
 
 		return types.PostTotalUnPinnedCountType{}, queryErr
 	}

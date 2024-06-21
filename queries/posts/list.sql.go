@@ -53,6 +53,13 @@ var SelectUnPinnedPostCount = `
 		AND is_pinned = 0
 `
 
+var SelectPinnedPostCount = `
+	SELECT COUNT(*) AS count
+	FROM post_table
+	WHERE post_status = 1
+		AND is_pinned = 1
+`
+
 // 태그 이름을 통해 게시글 가져오기
 var SelectPostByTags = `
 	SELECT
@@ -102,6 +109,8 @@ var SelectPostByCategory = `
 	LIMIT ?
 	OFFSET ?;
 `
+
+
 
 var SelectAllCategories = `
 
