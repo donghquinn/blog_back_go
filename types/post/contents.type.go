@@ -24,9 +24,9 @@ type ViewImageUrl struct {
 	Urls []string `json:"urls"`
 }
 // 특정 게시글 태그 데이터 쿼리 결과
-type SelectSpeicificPostTagDataResult struct {
-	TagName *string
-}
+// type SelectSpeicificPostTagDataResult struct {
+// 	TagName *string
+// }
 
 // 특정 게시글 데이터 쿼리 결과
 type SelectSpecificPostDataResult struct {
@@ -34,7 +34,7 @@ type SelectSpecificPostDataResult struct {
 	PostTitle string
 	PostContents string
 	PostStatus string
-	Tags *string
+	Tags string
 	CategoryName string
 	UserName string
 	Viewed string
