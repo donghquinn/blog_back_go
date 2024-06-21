@@ -17,7 +17,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	queryResult, queryErr := post.QueryUnpinnedPostData(page, size)
+	unpinnedQueryResult, queryErr := post.QueryUnpinnedPostData(page, size)
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", queryErr)
@@ -45,7 +45,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 	var pinnedData []types.SelectAllPostDataResponse
 	var unpinnedData []types.SelectAllPostDataResponse
 
-		for _, data := range(pinnedQueryResult){
+		for _, data := range(unpinnedQueryResult){
 		decodedName, decodeErr := crypt.DecryptString(data.UserName)
 
 		if decodeErr != nil {
@@ -68,7 +68,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// 이름 디코딩 위해
-	for _, data := range(queryResult){
+	for _, data := range(pinnedQueryResult){
 		decodedName, decodeErr := crypt.DecryptString(data.UserName)
 
 		if decodeErr != nil {
