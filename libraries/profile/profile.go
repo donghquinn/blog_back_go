@@ -30,6 +30,7 @@ func GetUserProfile() (types.UserProfileDataResponseType, error) {
 		UserEmail: userProfileData.UserEmail,
 		Color: userProfileData.Color,
 		Title: userProfileData.Title,
+		Instagram: userProfileData.Instagram,
 		GithubUrl: userProfileData.GithubUrl,
 		PersonalUrl: userProfileData.PersonalUrl,
 		Memo: userProfileData.Memo,
