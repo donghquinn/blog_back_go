@@ -25,6 +25,7 @@ func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
 	return postList, nil
 }
 
+// 조회수 올리기
 func UpdateViewCount(postSeq string) error {
 	connect, connectErr := database.InitDatabaseConnection()
 
@@ -46,6 +47,7 @@ func UpdateViewCount(postSeq string) error {
 	return nil
 }
 
+// 개사굴 콘탠추 상세 조회
 func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error) {
 	var queryResult types.SelectSpecificPostDataResult
 

@@ -36,6 +36,7 @@ func DecryptString(cipherText string) (string, error) {
 	return string(trimmedPlainText), nil
 }
 
+// Unpadding PKCS
 func trimPKCS5(text []byte) []byte {
 	padding := text[len(text)-1]
 	return text[:len(text)-int(padding)]
