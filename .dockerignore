@@ -3,3 +3,4 @@ test/decode.go
 .gitignore
 mariadb
 .github
+*.md
