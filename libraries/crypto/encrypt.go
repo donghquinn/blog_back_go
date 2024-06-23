@@ -35,6 +35,7 @@ func EncryptString(plainText string) (string, error) {
 }
 
 
+// Padding PKCS
 func padPKCS7(plainText []byte, blockSize int) []byte {
 	padding := blockSize - len(plainText)%blockSize
 	padText := bytes.Repeat([]byte{byte(padding)}, padding)
