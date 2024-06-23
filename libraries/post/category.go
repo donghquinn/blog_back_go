@@ -9,6 +9,7 @@ import (
 	types "github.com/donghquinn/blog_back_go/types/post"
 )
 
+// 전체 카테고리 조회
 func GetAllCategoryList() ([]string, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 

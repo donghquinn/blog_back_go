@@ -170,6 +170,7 @@ func QueryisPinnedPostData() ([]types.SelectAllPostDataResponse, error) {
 	return queryResult, nil
 }
 
+// 고정 개시글 전체 개수
 func GetTotalUnPinnedPostCount() (types.PostTotalUnPinnedCountType, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -192,6 +193,7 @@ func GetTotalUnPinnedPostCount() (types.PostTotalUnPinnedCountType, error) {
 	return unPinnedTotalCount, nil
 }
 
+// 고정 전체 게시글 개수 조회
 func GetTotalPinnedPostCount() (types.PostTotalUnPinnedCountType, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 

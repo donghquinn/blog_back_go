@@ -18,7 +18,6 @@ func EncryptString(plainText string) (string, error) {
 
 	globalConfig := configs.GlobalConfig
 
-
 	block, err := aes.NewCipher([]byte(globalConfig.AesKey))
 	if err != nil {
 		return "", err
