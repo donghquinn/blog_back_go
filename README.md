@@ -10,259 +10,97 @@
 - 따라서 이미지 업로드 후 응답은, 페이지 상에 표시할 이미지 URL과 해당 이미지들의 원본 이름(originalName)
 - 더 좋은 방법이 있다면 변경 예정
 
-## Middlewares
-
-- 기본 요청(모든 라우트)
-    - headers에 특정 값을 key 에 매핑시켜 요청
-
-- 유저 관련 요청 (logout, my)
-    - headers애 Authorization에 유저 인코딩 된 email 값 넣고 요청 전송
-
-- 게시글 관련 요청 (register, get, lists, edit)
-    - headers애 Authorization에 유저 인코딩 된 email 값 넣고 요청 전송
-
 ## Controllers
 
-### /posts
+### /user
 
-- register: 유저의 게시글 등록
+- /user/signup
+    - 회원가입
 
-- delete: 유저의 게시글 삭제
+- /user/login
+    - 로그인
 
-- edit: 유저의 게시글 수정
+- /user/profile
+    - 프로필 조회
 
-- edit/pin: 고정 게시글 상태 수정
+### /post
 
-- get: 특정 게시글 가져오기
+- /post/list?page=1&size=10
+    - 게시글 리스트 조회
 
-- lists: 유저의 게시글 전체 리스트
+- /post/contents
+    - 게시글 상세 조회
 
-- lists/pin: 고정게시글 가져오기
+- /post/list/pinned?page=1&size=10
+    - 고정 게시글 리스트 조회
 
-- all: 전체 글 리스트
+- /post/list/tag?page=1&size=10
+    - 태그로 게시글 조회
 
-- comment: 댓글 달기
+- /post/list/category?page=1&size=10
+    - 카테고리로 개시글 조회
 
-- get/categories: 카테고리 종류 다 가져오기
+- /post/category/list
+    - 전체 카테고리 리스트 조회
 
-- category/:category: 특정 카테고리에 해당되는 모든 글 불러오기
+### /admin
 
-- tag/:tag: 특정 태그를 가지고 있는 모든 게시글 불러오기
+- 회원 계정으로 수행하는 기능들 (JWT 인증이 필요한 기능들)
 
-### /users
+- /admin/user/profile/update
+    - 유저 프로필 업데이트
 
-- singup: 회원가입
+- /admin/user/profile/title
+    - 블로그 타이틀 변경
 
-- login: 로그인
+- /admin/user/profile/color
+    - 블로그 색상 변경
 
-- logout: 로그아웃
+- /admin/post/register
+    - 게시글 등록
 
-- info: 마이페이지. 유저 정보 + 프로필 이미지 url
+- /admin/post/edit
+    - 게시글 수정
 
-- info/edit: 마이페이지 수정. 유저정보 + 이미지들 + 한줄메모 ...
+- /admin/post/delete
+    - 게시글 삭제
 
-- color: 색상 변경
+- /admin/post/update/pin
+    - 게시글 고정으로 변경
 
-- search/email: 이메일 찾기
+- /admin/post/update/unpin
+    - 개사굴 비고정으로 변경
 
-- search/password: 비밀번호 찾기 - 변경
+- /admin/upload/image/profile
+    - 프로필 이미지 업로드
 
-- search/password/validate: 이메일 인증 키 검증
+- /admin/upload/image/background
+    - 프로필 배경 이미지 업로드
 
-- search/password/change: 패스워드 찾는 곳에서의 변경
+- /admin/upload/image/post
+    - 게시글 이미지 업로드
 
-- change/password: 비밀번호 변경
+## Crypt
 
-- change/title: 블로그 제목 변경
+- Encrypt
+    - AES CBC
+    - AES KEY: 32bytes
+    - AES IV: 16bytes
+    - Padding PKCS 7
+    - Base64 Encoding
 
-### Upload
+- Decrypt
+    - AES CBC
+    - AES KEY: 32bytes
+    - AES IV: 16bytes
+    - Unpadding PKCS 5
+    - Base64 Decoding
 
-- profile: 프로필 이미지 업로드
-
-## Request
-
-### Headers
-
-- key: AUTH_KEY (posts 쪽)
-
-### /posts
-
-- register: HTTP Post
-    - email: 로그인 응답 값으로 준 인코딩 된 유저 email  - string
-    - title: 게시글 제목 - string
-    - post: 게시글 내용 - string
-    - category: 게시글 카테고리 - string (optional), 최소 1글자, 최대 12글자
-    - tag: 태그 - string array (optional)
-    - imageUrl: 있을 경우 이미지 URL들 - string array (optional)
-    - isPinned: 고정 게시글 여부 - boolean (optional)
-    - isPublic: 공개 게시글 여부 - boolean (optional)
-
-- delete: HTTP Post
-    - email: 로그인 응답 값으로 준 인코딩 된 유저 email
-    - postNumber: 게시글 번호
-    - postUuid: 게시글 UUID
-
-- get: HTTP Post
-    - 특정 게시글 정보 가져오기
-    - postNumber: 게시글 번호 - number
-
-- edit: HTTP Post
-    - postNumber: 게시글 번호 - number
-    - email: 로그인 응답 값으로 준 인코딩 된 유저 email - string
-    - postUuid: 게시글 UUID - string
-    - title: 수정된 게시글 제목
-    - editPost: 수정할 내용 - string
-    - created: 잭성된 날짜 - string
-    - category: 수정된 카테고리 - string (optional)
-    - tag: 수정된 태그들 - string array (optional)
-    - imageUrl: 있을 경우 이미지 URL들 - string array (optional)
-    - isPinned: 고정 게시글 여부 - boolean (optional)
-    - isPublic: 공개 게시글 여부 - boolean (optional)
-
-- edit/pin: HTTP Post
-    - email: 인코딩 된 이메일 값 - string
-    - postNumber: 게시글 번호 - number
-    - isPinned: 고정게시글 여부 - boolean
-
-- lists: HTTP Get
-     - 전체 게시글 리스트 가져오기
-     - Query page (required), Query category(optional)
-
-- lists/pin: HTTP Get
-    - 고정 게시글 3개 가져오기
-
-- lists/pin/all: HTTP Get
-    - page - 페이지 번호 - number
-    - 전체 고정 게시글 가져오기
-
-- comment: HTTP Post
-    - uuid: 유저 uuid
-    - comment: 댓글 내용
-    - postUuid: 게시글 UUID
-
-- get/categories: HTTP Get
-    - 카테고리 리스트 리턴
-
-- category/:category: HTTP Get
-    - 특정 카테고리에 해당하는 모든 게시글 불러오기
-    - :category: 카테고리 이름 - string
-    - page: 페이지 번호 - number, 요청 파라미터
-    - 예시 - ~/category/KANGMINJE?page=2
-
-- tag/:tag : HTTP Get
-    - 게시글에서 태그 하나 클릭했을 때, 해당 태그를 가지고 있는 모든 게시글 가져오기
-    - :tag: 태그이름(하나) - string
-    - page: 페이지 번호 - number, 요청 파라미터
-    - 예시 - ~/tag/dairy?page=2
-
-### /users
-
-- signup: HTTP Post
-    - data: AES 방식 암호화.
-    - 포함돠는 내용
-        - email
-        - name
-        - password: 8~12 사이
-    - 코드 예시
-
-    ```js
-        import CryptoJs from "crypto-js";
-        
-        const secretKey = process.env.CIPHER_KEY;
-
-        // Assuming user data is in this format
-        const userData = {
-            username: 'john_doe',
-            email: 'john.doe@example.com',
-        // ... other user data
-        };
-
-        // Encrypt the user data
-        const encryptedData = CryptoJS.AES.encrypt(JSON.stringify(userData), secretKey).toString();
-    ```
-
-- login: HTTP Post
-    - data: AES 방식으로 암호화 된 email, password(8 ~ 12) - string
-    - return: 인코딩 된 email
-
-- logout: HTTP Post
-    - email: 로그인 응답 값으로 준 인코딩 된 유저 email - string
-
-- info: HTTP Post
-    - email: 로그인 응답 값으로 준 인코딩 된 유저 email- string
-
-- info/edit: HTTP Post
-    - email: 로그인 응답 값으로 준 인코딩 된 유저 email - string
-    - name: 유저 이름 - string, optional
-    - memo: 한줄 메모 - string, optional
-    - instagram: 인스타그램 링크 - string, optional
-    - githubUrl: 깃허브 링크 - string, optional
-    - personalUrls: 이외의 개인 링크들 - Array<string>, optional
-    - profileImageName: 프로필 이미지 특수 이름 - string, optional
-
-- color: HTTP Post
-    - email: 인코딩 된 이메일 값
-    - color: 색상 값 - string required
-
-- search/email: HTTP  Post
-    - name: 회원 가입 때 기입한 유저 이름
-
-- search/password: HTTP Post
-    - email: 원본 유저 이메일
-    - name: 회원 가입 때 기입한 유저 이름
-
-- search/password/validate: HTTP Post
-    - tempKey: 메일로 전송 된 랜덤 키. 제한 시간은 3분
-    - 응답: 암호화 된 비밀번호. 패스워드 변경 시 서버쪽으로 보내야할 이전 패스워드 값.
-
-- search/password/change: HTTP Post
-    - email: 원본 이메일
-    - name: 유저 이름
-    - password: 암호화 된 이전 패스워드
-    - newPassword: 암호화 된 변경할 패스워드
-    - 새로운 패스워드 암호화 예시
-
-    ```js
-        const secretKey = process.env.CIPHER_KEY;
-
-        const bytes = CryptoJS.AES.encrypt(originalPassword, secretKey);
-        const encryptedText = bytes.toString();
-    ```
-
-- change/password: HTTP Post
-    - email: 인코딩 된 이메일
-    - password: 이전 비밀번호
-    - newPassword: 변경할 비밀번호
-
-- change/title: HTTP Post
-    - title: 변경할 제목
-    - email: 인코딩된 이메일
-
-### /upload
-
-- image: FormData files
-
-- profile
-    - Headers {"Authorization": 인코딩 된 이메일}
-    - FormData file
-
-## Error Code
-
-- Auth Error(401): 요청의 Headers의 인증키 에러
-- Validation Error(402): 요청 검증 중에 발생한 에러
-- Prisma Error(403): ORM 및 DB 관련 에러
-- Minio Error(404): 파일 서버 관련 에러
-- Upload Error(405): 이미지 업로드 에러
-- User Error(406): 유저 관련 에러
-- Post Error(407): 게시글 관련 에러
-- Common Error(408): 위의 것 이외의 에러
-- Mailer Error(409): 메일 전송 에러
-- Password Error(416): 패스워드 매칭 에러
-- NoUser Error(417): 유저 발견 안된 에러
-- NoPost Error(418): 게시글 미발견 에러
-- NoValidateKey Error(419): 패스워드 찾기 검증키 존재하지 않을 때의 에러
+- Password Encrypt
+    - bcrypt
+    - Salt 10
 
 ## ERD
 
-<img src="erd.png"/>
+<img src="blog_db_erd.png"/>
 <em>Client ERD</em>
