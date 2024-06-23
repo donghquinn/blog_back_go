@@ -10,85 +10,73 @@
 - 따라서 이미지 업로드 후 응답은, 페이지 상에 표시할 이미지 URL과 해당 이미지들의 원본 이름(originalName)
 - 더 좋은 방법이 있다면 변경 예정
 
-## Middlewares
-
-- 기본 요청(모든 라우트)
-    - headers에 특정 값을 key 에 매핑시켜 요청
-
-- 유저 관련 요청 (logout, my)
-    - headers애 Authorization에 유저 인코딩 된 email 값 넣고 요청 전송
-
-- 게시글 관련 요청 (register, get, lists, edit)
-    - headers애 Authorization에 유저 인코딩 된 email 값 넣고 요청 전송
-
 ## Controllers
 
-### /posts
+### /user
 
-- register: 유저의 게시글 등록
+- /user/signup
+    - 회원가입
 
-- delete: 유저의 게시글 삭제
+- /user/login
+    - 로그인
 
-- edit: 유저의 게시글 수정
+- /user/profile
+    - 프로필 조회
 
-- edit/pin: 고정 게시글 상태 수정
+### /post
 
-- get: 특정 게시글 가져오기
+- /post/list?page=1&size=10
+    - 게시글 리스트 조회
 
-- lists: 유저의 게시글 전체 리스트
+- /post/contents
+    - 게시글 상세 조회
 
-- lists/pin: 고정게시글 가져오기
+- /post/list/pinned?page=1&size=10
+    - 고정 게시글 리스트 조회
 
-- all: 전체 글 리스트
+- /post/list/tag?page=1&size=10
+    - 태그로 게시글 조회
 
-- comment: 댓글 달기
+- /post/list/category?page=1&size=10
+    - 카테고리로 개시글 조회
 
-- get/categories: 카테고리 종류 다 가져오기
+- /post/category/list
+    - 전체 카테고리 리스트 조회
 
-- category/:category: 특정 카테고리에 해당되는 모든 글 불러오기
+### /admin
 
-- tag/:tag: 특정 태그를 가지고 있는 모든 게시글 불러오기
+- 회원 계정으로 수행하는 기능들 (JWT 인증이 필요한 기능들)
 
-### /users
+- /admin/user/profile/update
+    - 유저 프로필 업데이트
 
-- singup: 회원가입
+- /admin/user/profile/title
+    - 블로그 타이틀 변경
 
-- login: 로그인
+- /admin/user/profile/color
+    - 블로그 색상 변경
 
-- logout: 로그아웃
+- /admin/post/register
+    - 게시글 등록
 
-- info: 마이페이지. 유저 정보 + 프로필 이미지 url
+- /admin/post/edit
+    - 게시글 수정
 
-- info/edit: 마이페이지 수정. 유저정보 + 이미지들 + 한줄메모 ...
+- /admin/post/delete
+    - 게시글 삭제
 
-- color: 색상 변경
+- /admin/post/update/pin
+    - 게시글 고정으로 변경
 
-- search/email: 이메일 찾기
+- /admin/post/update/unpin
+    - 개사굴 비고정으로 변경
 
-- search/password: 비밀번호 찾기 - 변경
-
-- search/password/validate: 이메일 인증 키 검증
-
-- search/password/change: 패스워드 찾는 곳에서의 변경
-
-- change/password: 비밀번호 변경
-
-- change/title: 블로그 제목 변경
-
-### Upload
-
-- profile: 프로필 이미지 업로드
 
 ## Request
-
-### Headers
-
-- key: AUTH_KEY (posts 쪽)
 
 ### /posts
 
 - register: HTTP Post
-    - email: 로그인 응답 값으로 준 인코딩 된 유저 email  - string
     - title: 게시글 제목 - string
     - post: 게시글 내용 - string
     - category: 게시글 카테고리 - string (optional), 최소 1글자, 최대 12글자
@@ -246,23 +234,7 @@
     - Headers {"Authorization": 인코딩 된 이메일}
     - FormData file
 
-## Error Code
-
-- Auth Error(401): 요청의 Headers의 인증키 에러
-- Validation Error(402): 요청 검증 중에 발생한 에러
-- Prisma Error(403): ORM 및 DB 관련 에러
-- Minio Error(404): 파일 서버 관련 에러
-- Upload Error(405): 이미지 업로드 에러
-- User Error(406): 유저 관련 에러
-- Post Error(407): 게시글 관련 에러
-- Common Error(408): 위의 것 이외의 에러
-- Mailer Error(409): 메일 전송 에러
-- Password Error(416): 패스워드 매칭 에러
-- NoUser Error(417): 유저 발견 안된 에러
-- NoPost Error(418): 게시글 미발견 에러
-- NoValidateKey Error(419): 패스워드 찾기 검증키 존재하지 않을 때의 에러
-
 ## ERD
 
-<img src="erd.png"/>
+<img src="blog_db_erd.png"/>
 <em>Client ERD</em>
