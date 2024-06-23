@@ -71,6 +71,14 @@
 - /admin/post/update/unpin
     - 개사굴 비고정으로 변경
 
+- /admin/upload/image/profile
+    - 프로필 이미지 업로드
+
+- /admin/upload/image/background
+    - 프로필 배경 이미지 업로드
+
+- /admin/upload/image/post
+    - 게시글 이미지 업로드
 
 ## Request
 
