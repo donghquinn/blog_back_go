@@ -15,4 +15,4 @@ func UserRouter(server *http.ServeMux) {
 	server.HandleFunc("POST /user/search/password", controllers.SearchPasswordController)
 
 	server.HandleFunc("POST /user/profile", controllers.GetUserProfileController)
-}
+}		
