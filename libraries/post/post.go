@@ -265,7 +265,7 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 	for _, d := range(postsData) {
 		var tempTag []string
 
-		jsonErr :=  json.Unmarshal([]byte(d.TagName), &tempTag)
+		jsonErr :=  json.Unmarshal([]byte(*d.TagName), &tempTag)
 
 		if jsonErr != nil {
 			log.Printf("[POST_TAG] Unmarshing Array Error: %v", jsonErr)
@@ -337,7 +337,7 @@ func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int)
 	for _, d := range(postsData) {
 		var tempTag []string
 
-		jsonErr :=  json.Unmarshal([]byte(d.TagName), &tempTag)
+		jsonErr :=  json.Unmarshal([]byte(*d.TagName), &tempTag)
 
 		if jsonErr != nil {
 			log.Printf("[POST_CATEGORY] Unmarshing Array Error: %v", jsonErr)

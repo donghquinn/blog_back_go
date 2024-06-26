@@ -19,7 +19,7 @@ var SelectUnPinnedPosts = `
 	WHERE p.post_status = 1
 		AND p.is_pinned = 0
 	ORDER BY
-		p.mod_date DESC
+		p.reg_date DESC
 	LIMIT ?
 	OFFSET ?;
 `
@@ -42,7 +42,7 @@ var SelectAllPinnedPosts = `
 	WHERE p.post_status = 1
 		AND p.is_pinned = 1
 	ORDER BY
-		p.mod_date DESC
+		p.reg_date DESC
 	LIMIT ?
 	OFFSET ?;
 `
@@ -66,7 +66,7 @@ var SelectPinnedPosts = `
 	WHERE p.post_status = 1
 		AND p.is_pinned = 1
 	ORDER BY
-		p.mod_date DESC
+		p.reg_date DESC
 	LIMIT 5;
 `
 
@@ -129,7 +129,7 @@ var SelectPostByCategory = `
 	WHERE
 		category_name LIKE ? AND
 		p.post_status = 1
-	ORDER BY p.mod_date DESC
+	ORDER BY p.reg_date DESC
 	LIMIT ?
 	OFFSET ?;
 `
