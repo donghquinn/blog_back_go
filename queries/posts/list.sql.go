@@ -109,6 +109,18 @@ var SelectPostByTags = `
 	OFFSET ?;
 `
 
+var SelectTotalPostCountByTags = `
+	SELECT COUNT(*) as count
+	FROM
+		post_table p
+	LEFT JOIN user_table u ON u.user_id = p.user_id
+	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
+	WHERE
+		t.tags LIKE ? AND
+		p.post_status = 1
+`
+
 // 태그 이름을 통해 게시글 가져오기
 var SelectPostByCategory = `
 	SELECT
@@ -132,4 +144,16 @@ var SelectPostByCategory = `
 	ORDER BY p.reg_date DESC
 	LIMIT ?
 	OFFSET ?;
+`
+
+var SelectTotalPostCountByCategory = `
+	SELECT COUNT(*) as count
+	FROM
+		post_table p
+	LEFT JOIN user_table u ON u.user_id = p.user_id
+	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
+	WHERE
+		category_name LIKE ? AND
+		p.post_status = 1
 `

@@ -158,14 +158,14 @@ func GetPostsByTagController(res http.ResponseWriter, req *http.Request ) {
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	postList, postErr := post.GetPostByTag(getPostByTagRequest, page, size)
+	postList, totalPostCount, postErr := post.GetPostByTag(getPostByTagRequest, page, size)
 
 	if postErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Get Post List By Tag Error", postErr)
 		return
 	}
 
-	dto.SetPostByTagResponse(res, 200, "01", postList)
+	dto.SetPostByTagResponse(res, 200, "01", postList, totalPostCount.Count)
 }
 
 // 태그로 포스트 찾기
@@ -182,12 +182,12 @@ func GetPostsByCategoryController(res http.ResponseWriter, req *http.Request ) {
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	postList, postErr := post.GetPostByCategory(getPostByCategoryRequest, page, size)
+	postList, totalCount, postErr := post.GetPostByCategory(getPostByCategoryRequest, page, size)
 
 	if postErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Get Post List By Tag Error", postErr)
 		return
 	}
 
-	dto.SetPostByCategoryResponse(res, 200, "01", postList)
+	dto.SetPostByCategoryResponse(res, 200, "01", postList, totalCount.Count)
 }

@@ -47,8 +47,8 @@ func SetFileInsertIdResponse(res http.ResponseWriter, statusCode int, code strin
 }
 
 // 태그로 게시글 리스트 담음 응답
-func SetPostByTagResponse(res http.ResponseWriter, statusCode int, code string, posts []types.PostsByTagsResponseType) {
-	responseObject, _ := json.Marshal(types.ResponsePostByTagListType{Code: code, Result: true, PostList: posts})
+func SetPostByTagResponse(res http.ResponseWriter, statusCode int, code string, posts []types.PostsByTagsResponseType, postCount string) {
+	responseObject, _ := json.Marshal(types.ResponsePostByTagListType{Code: code, Result: true, PostList: posts, PostCount: postCount})
 
 	res.WriteHeader(200)
 	res.Write(responseObject)
@@ -56,8 +56,8 @@ func SetPostByTagResponse(res http.ResponseWriter, statusCode int, code string, 
 
 
 // 카테고리 게시글 리스트 담음 응답
-func SetPostByCategoryResponse(res http.ResponseWriter, statusCode int, code string, posts []types.PostByCategoryResponseType) {
-	responseObject, _ := json.Marshal(types.ResponsePostByCategoryListType{Code: code, Result: true, PostList: posts})
+func SetPostByCategoryResponse(res http.ResponseWriter, statusCode int, code string, posts []types.PostByCategoryResponseType, postCount string) {
+	responseObject, _ := json.Marshal(types.ResponsePostByCategoryListType{Code: code, Result: true, PostList: posts, PostCount: postCount})
 
 	res.WriteHeader(200)
 	res.Write(responseObject)
