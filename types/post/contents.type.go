@@ -46,7 +46,7 @@ type SelectSpecificPostDataResult struct {
 
 // 태그로 특정 게시글 쿼리
 type SelectPostsByTags struct {
-	TagName string		
+	TagName *string		
 	CategoryName string
 	UserName string
 	PostSeq string		
