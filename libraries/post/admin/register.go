@@ -10,11 +10,11 @@ import (
 	"github.com/donghquinn/blog_back_go/utils"
 )
 
-func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string) error {
+func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string) (int64, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
-		return dbErr
+		return -9999, dbErr
 	}
 
 	// 데이터 입력
@@ -28,7 +28,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 
 	if queryErr != nil {
 		log.Printf("[REGISTER] Insert Post Data Error: %v", queryErr)
-		return queryErr
+		return -9999, queryErr
 	}
 
 	defer connect.Close()
@@ -43,7 +43,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 		if insertCategoriesErr != nil {
 			log.Printf("[REGISTER] Insert Categories Error: %v", insertCategoriesErr)
 
-			return insertCategoriesErr
+			return -999999, insertCategoriesErr
 		}
 	}
 
@@ -53,7 +53,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 		insertTagErr := InsertTags(tags, postSeq)
 		if insertTagErr != nil {
 			log.Printf("[REGISTER] Insert TagList Error: %v", insertTagErr)
-			return insertTagErr
+			return -99999, insertTagErr
 		}
 	}
 
@@ -63,11 +63,11 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 
 		if insertUpdateErr != nil {
 			log.Printf("[REGISTER] Insert Update File Data Error: %v", insertUpdateErr)
-			return insertUpdateErr
+			return -999999, insertUpdateErr
 		}
 	}
 
-	return nil
+	return insertId, nil
 }
 
 func InsertCategories(categories string, postSeq string) error {

@@ -104,7 +104,7 @@ var SelectPostByTags = `
 	WHERE
 		t.tags LIKE ? AND
 		p.post_status = 1
-	ORDER BY p.mod_date DESC
+	ORDER BY p.reg_date DESC
 	LIMIT ?
 	OFFSET ?;
 `

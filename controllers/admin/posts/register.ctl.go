@@ -30,14 +30,14 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	insertErr := post.InsertPostData(registerPostRequest, userId)
+	postSeq, insertErr := post.InsertPostData(registerPostRequest, userId)
 
 	if insertErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Insert Post Data Error", insertErr)
 		return
 	}
 
-	dto.SetResponse(res, 200, "01")
+	dto.SetPostRegisterResponse(res, 200, "01", postSeq)
 }
 
 
