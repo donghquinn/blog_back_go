@@ -124,7 +124,7 @@ var SelectTotalPostCountByTags = `
 // 태그 이름을 통해 게시글 가져오기
 var SelectPostByCategory = `
 	SELECT
-		t.tags as tags,
+		IFNULL(t.tags, "NULL") as tags,
 		IFNULL(c.category_name, 'NULL') category_name,
 		IFNULL(u.user_name, 'unknown') as user_name,
 		p.post_seq,

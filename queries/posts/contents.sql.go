@@ -8,9 +8,9 @@ var SelectSpecificPostContents = `
 		u.user_name, p.viewed, p.is_pinned, p.reg_date, p.mod_date
 	FROM
 		post_table AS p
-	LEFT JOIN user_table AS u ON u.user_id = p.user_id
-	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
-	LEFT JOIN tag_table AS t ON t.post_seq = p.post_seq
+	INNER JOIN user_table AS u ON u.user_id = p.user_id
+	INNER JOIN category_table AS c ON c.post_seq = p.post_seq
+	INNER JOIN tag_table AS t ON t.post_seq = p.post_seq
 	WHERE p.post_seq = ?
 		AND p.post_status = 1
 	;

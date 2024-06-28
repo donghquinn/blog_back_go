@@ -343,8 +343,13 @@ func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int)
 			&row.ModDate)
 		
 		if scanErr != nil {
-			log.Printf("[POST_CATEGORY] Scan Query Result Error: %v", scanErr)
-			return []types.PostByCategoryResponseType{}, types.PostTotalUnPinnedCountType{}, scanErr
+			if scanErr == sql.ErrNoRows {
+					postsData = make([]types.SelectPostsByTags, 0)
+			}  else {
+				log.Printf("[POST_CATEGORY] Scan Query Result Error: %v", scanErr)
+				return []types.PostByCategoryResponseType{}, types.PostTotalUnPinnedCountType{}, scanErr
+			}
+		
 		}
 
 		postsData = append(postsData, row)
@@ -375,11 +380,12 @@ func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int)
 	for _, d := range(postsData) {
 		var tempTag []string
 
-		jsonErr :=  json.Unmarshal([]byte(d.TagName), &tempTag)
-
-		if jsonErr != nil {
-			log.Printf("[POST_CATEGORY] Unmarshing Array Error: %v", jsonErr)
-			return []types.PostByCategoryResponseType{}, types.PostTotalUnPinnedCountType{}, jsonErr
+		if d.TagName != "NULL" {
+			jsonErr :=  json.Unmarshal([]byte(d.TagName), &tempTag)
+			if jsonErr != nil {
+				log.Printf("[POST_CATEGORY] Unmarshing Array Error: %v", jsonErr)
+				return []types.PostByCategoryResponseType{}, types.PostTotalUnPinnedCountType{}, jsonErr
+			}
 		}
 
 		data := types.PostByCategoryResponseType{
