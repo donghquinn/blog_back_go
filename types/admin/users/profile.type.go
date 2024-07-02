@@ -1,5 +1,10 @@
 package types
 
+type UserGetProfileRequest struct {
+	UserId string `json:"userId"`
+	BlogId string `json:"blogId"`
+}
+
 // 프로필 색 변경 요청
  type UserUpdateProfileColorRequest struct {
 	Color string `json:"color"`
