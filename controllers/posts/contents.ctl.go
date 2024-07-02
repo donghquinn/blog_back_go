@@ -67,8 +67,8 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 	// 특정 게시글 태그 배열 가공해서 담아 응답
 	var tagsArray []string
 
-	if queryResult.Tags != "NULL" {
-		jsonErr := json.Unmarshal([]byte(queryResult.Tags), &tagsArray)
+	if queryResult.Tags != nil {
+		jsonErr := json.Unmarshal([]byte(*queryResult.Tags), &tagsArray)
 		if jsonErr != nil {
 			log.Printf("[CONTENTS] JSON Unmarsh tag array Error: %v", jsonErr)
 			dto.SetErrorResponse(res, 405, "05", "Unmarshing Tags Error", jsonErr)
