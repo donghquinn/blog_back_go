@@ -1,6 +1,7 @@
 package post
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/donghquinn/blog_back_go/libraries/database"
@@ -83,8 +84,15 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 		&queryResult.ModDate)
 
 	if postScanErr != nil {
-			log.Printf("[CONTENTS] Can Post Data Error: %v", postScanErr)
-			return types.SelectSpecificPostDataResult{}, postScanErr
+		if postScanErr == sql.ErrNoRows {
+			queryResult.CategoryName = nil
+			queryResult.Tags = nil
+
+			return queryResult, nil
+		}
+
+		log.Printf("[CONTENTS] Can Post Data Error: %v", postScanErr)
+		return types.SelectSpecificPostDataResult{}, postScanErr
 	}
 
 	return queryResult, nil
