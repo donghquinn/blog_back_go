@@ -9,10 +9,10 @@ import (
 )
 
 
-func GetUserProfile() (types.UserProfileDataResponseType, error) {
+func GetUserProfile(blogId string, userId string) (types.UserProfileDataResponseType, error) {
 	var userProfileResult types.UserProfileDataResponseType
 
-	userProfileData, profileErr := GetDefaultUserProfile()
+	userProfileData, profileErr := GetDefaultUserProfile(blogId)
 
 	if profileErr != nil {
 		return types.UserProfileDataResponseType{}, profileErr
@@ -41,7 +41,7 @@ func GetUserProfile() (types.UserProfileDataResponseType, error) {
 }
 
 // 기본 유저 구하기
-func GetDefaultUserProfile() (types.SelectUserProfileQueryResult, error) {
+func GetDefaultUserProfile(blogId string) (types.SelectUserProfileQueryResult, error) {
 	var userProfileData types.SelectUserProfileQueryResult
 
 	connect, dbErr := database.InitDatabaseConnection()
@@ -50,7 +50,7 @@ func GetDefaultUserProfile() (types.SelectUserProfileQueryResult, error) {
 		return types.SelectUserProfileQueryResult{}, dbErr
 	}
 
-	profile, profileErr := database.QueryOne(connect, queries.SelectUserProfile)
+	profile, profileErr := database.QueryOne(connect, queries.SelectUserProfile, blogId)
 
 	if profileErr != nil {
 		log.Printf("[PROFILE] Get Profile Error: %v", profileErr)
