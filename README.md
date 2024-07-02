@@ -10,6 +10,24 @@
 - 따라서 이미지 업로드 후 응답은, 페이지 상에 표시할 이미지 URL과 해당 이미지들의 원본 이름(originalName)
 - 더 좋은 방법이 있다면 변경 예정
 
+---
+
+### 추가 2024.07.02
+
+- 블로그 통합을 위한 수정
+- 블로그 분리를 위한 blog_owner 칼럼 추가
+- 블로그 ID 를 기준으로 데이터 입력, 업데이트, 조회
+- 요청에 BlogId로 진행 및 JWT를 통한 관리
+
+---
+
+## ERD
+
+<img src="blog_erd.png"/>
+<em>Client ERD</em>
+
+---
+
 ## Controllers
 
 ### /user
@@ -99,8 +117,3 @@
 - Password Encrypt
     - bcrypt
     - Salt 10
-
-## ERD
-
-<img src="blog_db_erd.png"/>
-<em>Client ERD</em>
