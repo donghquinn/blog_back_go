@@ -69,7 +69,6 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 
 		return "", err
 	}
-
 	
 	setErr := database.RedisLoginSet(redis, uuid, userEmail, userStatus, userId, blogId)
 

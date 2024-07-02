@@ -10,14 +10,14 @@ import (
 )
 
 // 전체 카테고리 조회
-func GetAllCategoryList() ([]string, error) {
+func GetAllCategoryList(blogId string) ([]string, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
 		return []string{}, dbErr
 	}
 
-	queryResult, queryErr := database.Query(connect, queries.SelectAllCategories)
+	queryResult, queryErr := database.Query(connect, queries.SelectAllCategories, blogId)
 
 	if queryErr != nil {
 		log.Printf("[CATEGORY] Get All Categories Error: %v", queryErr)
