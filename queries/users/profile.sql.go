@@ -11,7 +11,8 @@ var InsertUpdateProfileInfo = `
 		personal_url = ?,
 		memo = ?
 	WHERE
-		user_id = ?
+		user_id = ? AND
+		blog_owner = ?
 `
 
 var UpdateProfileColor = `
@@ -19,7 +20,8 @@ var UpdateProfileColor = `
 		SET
 			preferred_color = ?
 		WHERE
-			user_id = ?;
+			user_id = ? AND 
+			blog_owner = ?
 `
 
 var UpdateTitle = `
@@ -27,7 +29,8 @@ var UpdateTitle = `
 		SET
 			title = ?
 		WHERE
-			user_id = ?
+			user_id = ? AND
+			blog_owner = ?
 `
 
 var SelectUserProfile = `
@@ -43,7 +46,8 @@ var SelectUserProfile = `
 		memo
 	FROM user_table
 	WHERE
-		user_status = 1
+		user_status = 1 AND
+		blog_owner = ?
 	;
 `
 

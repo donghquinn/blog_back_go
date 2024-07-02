@@ -15,7 +15,7 @@ import (
 func UpdateProfileController(res http.ResponseWriter, req *http.Request) {
 	var updateProfile types.UserChangeProfileRequest
 
-	userId, _, _, err := auth.ValidateJwtToken(req)
+	userId, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -30,7 +30,7 @@ func UpdateProfileController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	updateErr := profile.ChangeProfile(updateProfile, userId)
+	updateErr := profile.ChangeProfile(updateProfile, userId, blogId)
 
 	if updateErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Insert Profile Update Error", updateErr)
@@ -42,7 +42,7 @@ func UpdateProfileController(res http.ResponseWriter, req *http.Request) {
 
 // 색상 변경 컨트롤러
 func UpdateColorController(res http.ResponseWriter, req *http.Request) {
-	userId, _, _, err := auth.ValidateJwtToken(req)
+	userId, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -59,7 +59,7 @@ func UpdateColorController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	changeColorErr := profile.ChangeColor(changeColorRequest, userId)
+	changeColorErr := profile.ChangeColor(changeColorRequest, userId, blogId)
 
 	if changeColorErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Change Color Error", changeColorErr)
@@ -71,7 +71,7 @@ func UpdateColorController(res http.ResponseWriter, req *http.Request) {
 
 // 블로그 타이틀 변경 컨트롤러
 func UpdateTitleController(res http.ResponseWriter, req *http.Request) {
-	userId, _, _, err := auth.ValidateJwtToken(req)
+	userId, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -88,7 +88,7 @@ func UpdateTitleController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	changeTitleErr := profile.ChangeBlogTitle(changeTitleRequest, userId)
+	changeTitleErr := profile.ChangeBlogTitle(changeTitleRequest, userId, blogId)
 
 	if changeTitleErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Change Title Error", changeTitleErr)

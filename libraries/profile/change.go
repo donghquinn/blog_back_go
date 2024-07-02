@@ -10,7 +10,7 @@ import (
 )
 
 // 프로필 전체 변경
-func ChangeProfile(data types.UserChangeProfileRequest, userId string) error {
+func ChangeProfile(data types.UserChangeProfileRequest, userId string, blogId string) error {
 	connect, connectErr := database.InitDatabaseConnection()
 
 	if connectErr != nil {
@@ -34,7 +34,8 @@ func ChangeProfile(data types.UserChangeProfileRequest, userId string) error {
 		data.GithubUrls,
 		data.PersonalUrls,
 		data.Memo,
-		userId)
+		userId, 
+		blogId)
 
 	if insertErr != nil {
 		log.Printf("[PROFILE] Insert Profile Error: %v", insertErr)
@@ -51,14 +52,14 @@ func ChangeProfile(data types.UserChangeProfileRequest, userId string) error {
 }
 
 // 색상 변경
-func ChangeColor(data types.UserUpdateProfileColorRequest, userId string) error {
+func ChangeColor(data types.UserUpdateProfileColorRequest, userId string, blogId string) error {
 	connect, connectErr := database.InitDatabaseConnection()
 
 	if connectErr != nil {
 		return connectErr
 	}
 
-	_, updateErr := database.InsertQuery(connect, queries.UpdateProfileColor, data.Color, userId)
+	_, updateErr := database.InsertQuery(connect, queries.UpdateProfileColor, data.Color, userId, blogId)
 
 	if updateErr!= nil {
 		log.Printf("[COLOR] Update Color Error: %v", updateErr)
@@ -72,14 +73,14 @@ func ChangeColor(data types.UserUpdateProfileColorRequest, userId string) error 
 }
 
 // 블로그 타이틀 변경
-func ChangeBlogTitle(data types.UserUpdateBlogTitleRequest, userId string) error {
+func ChangeBlogTitle(data types.UserUpdateBlogTitleRequest, userId string, blogId string) error {
 	connect, connectErr := database.InitDatabaseConnection()
 
 	if connectErr != nil {
 		return connectErr
 	}
 
-	_, updateErr := database.InsertQuery(connect, queries.UpdateTitle, data.Title, userId)
+	_, updateErr := database.InsertQuery(connect, queries.UpdateTitle, data.Title, userId, blogId)
 
 	if updateErr != nil {
 		log.Printf("[TITLE] Change Title Error: %v", updateErr)

@@ -7,6 +7,7 @@ type JwtInterface struct {
 	UserEmail string `json:"userEmail"`
 	UserType string `json:"userType"`
 	Uuid string `json:"uuid"`
+	BlogId 	string `json:"blogId"`
 	jwt.MapClaims
 }
 

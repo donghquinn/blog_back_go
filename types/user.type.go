@@ -5,6 +5,7 @@ type UserSignupRequest struct {
 	Email string 		`json:"email"`
 	Password string 	`json:"password"`
 	Name string 		`json:"name"`
+	BlogId string		`json:"blogId"`
  }
 
  // 로그인 요청
@@ -34,7 +35,8 @@ type UserProfileRequest struct {
  type UserLoginQueryResult struct {
 	UserId string	
 	UserPassword string 
-	UserStatus string	
+	UserStatus string
+	BlogId string
  }
 
  // 유저 이메일 찾기 쿼리 결과

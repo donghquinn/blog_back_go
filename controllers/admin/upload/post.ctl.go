@@ -16,7 +16,7 @@ import (
 
 // 게시글 이미지 업로드
 func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
-	userId, _, _, err := auth.ValidateJwtToken(req)
+	userId, _, _, _, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)

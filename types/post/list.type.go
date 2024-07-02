@@ -1,5 +1,9 @@
 package types
 
+type GetPostListRequest struct {
+	BlogId string `json:"blogId"`
+}
+
 // 카테고리 이름으로 게시글 조회
 type PostByCategoryResponseType struct {
 	TagName []string		`json:"tagName"`

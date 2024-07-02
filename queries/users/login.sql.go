@@ -2,7 +2,7 @@ package queries
 
 var SelectUserInfo = `
 	SELECT
-		user_id, user_password, user_status
+		user_id, user_password, user_status, blog_owner
 	FROM
 		user_table
 	WHERE

@@ -81,7 +81,7 @@ func LoginController(res http.ResponseWriter, req *http.Request) {
 	// }
 
 	// JWT 토큰 생성
-	token, tokenErr := auth.CreateJwtToken(queryResult.UserId, uuid.String(), decodeEmail, queryResult.UserStatus)
+	token, tokenErr := auth.CreateJwtToken(queryResult.UserId, uuid.String(), decodeEmail, queryResult.UserStatus, queryResult.BlogId)
 
 	if tokenErr != nil {
 		dto.SetErrorResponse(res, 407, "07", "Create JWT Token Error", tokenErr)
@@ -133,7 +133,8 @@ func getUserInfo(encodedEmail string) (types.UserLoginQueryResult, error){
 	result.Scan(
 		&queryUserInfoResult.UserId,
 		&queryUserInfoResult.UserPassword,
-		&queryUserInfoResult.UserStatus)
+		&queryUserInfoResult.UserStatus,
+		&queryUserInfoResult.BlogId)
 
 	return queryUserInfoResult, nil
 }

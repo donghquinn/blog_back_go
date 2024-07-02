@@ -7,7 +7,8 @@ var InsertPost = `
 		user_id = ?,
 		post_title = ?,
 		post_contents = ?,
-		is_pinned = ?;
+		is_pinned = ?,
+		blog_owner = ?
 `
 
 // 게시글 태그 등록

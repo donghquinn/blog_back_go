@@ -14,33 +14,41 @@ import (
 
 // 전체 포스트 가져오기 - 페이징
 func GetPostController(res http.ResponseWriter, req *http.Request) {
+	var getPostListRequest types.GetPostListRequest
+
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	unpinnedQueryResult, queryErr := post.QueryUnpinnedPostData(page, size)
+	parseErr := utils.DecodeBody(req, &getPostListRequest)
+
+	if parseErr != nil {
+		dto.SetErrorResponse(res, 401, "01", "Parse View Specific Post Contents Error", parseErr)
+		return
+	}
+
+	unpinnedQueryResult, queryErr := post.QueryUnpinnedPostData(getPostListRequest.BlogId, page, size)
 
 	if queryErr != nil {
-		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", queryErr)
+		dto.SetErrorResponse(res, 402, "02", "Query Post Data Error", queryErr)
 
 		return
 	}
 
-	pinnedQueryResult, pinnedErr := post.QueryisPinnedPostData()
+	pinnedQueryResult, pinnedErr := post.QueryisPinnedPostData(getPostListRequest.BlogId)
 
 	if pinnedErr != nil {
-		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", pinnedErr)
+		dto.SetErrorResponse(res, 402, "02", "Query Post Data Error", pinnedErr)
 
 		return
 	}
 
-	unpinnedTotalCount, unpinnedTotalCountErr := post.GetTotalUnPinnedPostCount()
+	unpinnedTotalCount, unpinnedTotalCountErr := post.GetTotalUnPinnedPostCount(getPostListRequest.BlogId)
 
 	if unpinnedTotalCountErr != nil {
-		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", unpinnedTotalCountErr)
+		dto.SetErrorResponse(res, 402, "02", "Query Post Data Error", unpinnedTotalCountErr)
 
 		return
 	}
-
 
 	var pinnedData []types.SelectAllPostDataResponse
 	var unpinnedData []types.SelectAllPostDataResponse
@@ -50,7 +58,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 
 		if decodeErr != nil {
 			log.Printf("[LIST] Decoding User Name Error: %v", decodeErr)
-			dto.SetErrorResponse(res, 402, "02", "Decode Name Error", decodeErr)
+			dto.SetErrorResponse(res, 403, "03", "Decode Name Error", decodeErr)
 			return
 		}
 
@@ -73,7 +81,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 
 		if decodeErr != nil {
 			log.Printf("[LIST] Decoding User Name Error: %v", decodeErr)
-			dto.SetErrorResponse(res, 402, "02", "Decode Name Error", decodeErr)
+			dto.SetErrorResponse(res, 403, "03", "Decode Name Error", decodeErr)
 			return
 		}
 
@@ -97,8 +105,16 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 func GetPinnedPostController(res http.ResponseWriter, req *http.Request) {
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
+	var getPinnedPostRequest types.GetPostListRequest
 
-	pinnedQueryResult, pinnedErr := post.QueryisPinnedPostList(page, size)
+	parseErr := utils.DecodeBody(req, &getPinnedPostRequest)
+
+	if parseErr != nil {
+		dto.SetErrorResponse(res, 401, "01", "Parse View Specific Post Contents Error", parseErr)
+		return
+	}
+
+	pinnedQueryResult, pinnedErr := post.QueryisPinnedPostList(getPinnedPostRequest.BlogId, page, size)
 
 	if pinnedErr != nil {
 		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", pinnedErr)
@@ -106,7 +122,7 @@ func GetPinnedPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	pinnedTotalCount, pinnedTotalCountErr := post.GetTotalPinnedPostCount()
+	pinnedTotalCount, pinnedTotalCountErr := post.GetTotalPinnedPostCount(getPinnedPostRequest.BlogId)
 
 	if pinnedTotalCountErr != nil {
 		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", pinnedTotalCountErr)

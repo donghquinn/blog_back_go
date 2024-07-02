@@ -10,14 +10,14 @@ import (
 )
 
 // 특정 게시글 가져오기
-func GetPostData(postSeq string) (types.SelectSpecificPostDataResult, error){
+func GetPostData(postSeq string, blogId string) (types.SelectSpecificPostDataResult, error){
 	updateErr := UpdateViewCount(postSeq)
 
 	if updateErr != nil {
 		return types.SelectSpecificPostDataResult{}, updateErr
 	}
 
-	postList, getPostErr := GetPostContents(postSeq)
+	postList, getPostErr := GetPostContents(postSeq, blogId)
 
 	if getPostErr != nil {
 		return types.SelectSpecificPostDataResult{}, getPostErr
@@ -49,7 +49,7 @@ func UpdateViewCount(postSeq string) error {
 }
 
 // 개사굴 콘탠추 상세 조회
-func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error) {
+func GetPostContents(postSeq string, blogId string) (types.SelectSpecificPostDataResult, error) {
 	var queryResult types.SelectSpecificPostDataResult
 
 
@@ -61,7 +61,7 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 	}
 
 	// 특정 게시글 조회
-	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq)
+	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq, blogId)
 
 	defer connect.Close()
 

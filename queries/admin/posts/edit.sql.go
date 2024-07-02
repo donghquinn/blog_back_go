@@ -26,13 +26,15 @@ var InsertUpdateCategory = `
 	SET
 		category_name = ?
 	WHERE
-		post_seq = ?
+		post_seq = ? AND
+		blog_owner = ?
 `
 
 var DeletePostCategory = `
 	DELETE 
 	FROM category_table
-	WHERE post_seq = ?
+	WHERE post_seq = ? AND
+		blog_owner = ?
 `
 
 var DeletePostTag = `
