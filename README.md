@@ -116,4 +116,4 @@
 
 - Password Encrypt
     - bcrypt
-    - Salt 10
+
