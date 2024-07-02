@@ -53,7 +53,7 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 	
 	// log.Printf("[SIGNUP] userId: %s, encodedEmail: %s, encodedName: %s, encodedPassword: %s",userId, encodedEmail, encodedName, encodedPassword)
 	// 새로운 유저 데이터 입력
-	_, insertErr := database.InsertQuery(connect, queries.InsertSignupUser, userId, encodedEmail, encodedPassword, encodedName)
+	_, insertErr := database.InsertQuery(connect, queries.InsertSignupUser, userId, encodedEmail, encodedPassword, encodedName, signupRequestBody.BlogId)
 
 	if insertErr != nil {
 		dto.SetErrorResponse(res, 405, "05", "Insert New User Info Error", insertErr)

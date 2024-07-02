@@ -13,10 +13,11 @@ var CreateUserTable = `
 		github_url		VARCHAR(100)		NULL,
 		personal_url	VARCHAR(100)		NULL,
 		memo			VARCHAR(200)		NULL,
+		blog_owner		VARCHAR(20)			NOT NULL,
 		reg_date 		DATETIME			NOT NULL	DEFAULT CURRENT_TIMESTAMP,
 		mod_date		DATETIME		    NULL 		DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-		INDEX  user_idx(user_status)
+		INDEX  user_idx(user_status, blog_owner)
 	);
 `
 
@@ -29,10 +30,11 @@ var CreatePostTable = `
 		post_status		TINYINT(1)		NOT NULL DEFAULT 1	COMMENT '0: 비활성, 1: 활성, 2: 삭제',
 		viewed			INT(20)			NOT NULL DEFAULT 0,
 		is_pinned		TINYINT(1)		NOT NULL DEFAULT 1 COMMENT '0 - 비고정, 1 - 고정',
+		blog_owner		VARCHAR(20)		NOT NULL,
 		reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		mod_date		DATETIME	    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-		INDEX post_idx(post_status, user_id)
+		INDEX post_idx(post_status, user_id, blog_owner)
 	);
 `
 

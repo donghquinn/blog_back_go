@@ -8,7 +8,7 @@ import (
 )
 
 func DefaultController(res http.ResponseWriter, req *http.Request) {
-	_, _, _, err := auth.ValidateJwtToken(req)
+	_, _, _, _, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)

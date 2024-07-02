@@ -91,11 +91,12 @@ func Delete(rdb *redis.Client, key string, objKey string) error {
 	return nil
 }
 
-func RedisLoginSet(rdb *redis.Client, sessionId string, email string, userStatus string, userId string) error {
+func RedisLoginSet(rdb *redis.Client, sessionId string, email string, userStatus string, userId string, blogId string) error {
 	sessionInfo := map[string]string {
 		"email": email,
 		"userStatus": userStatus,
-		"userId": userId}
+		"userId": userId,
+		"blogId": blogId}
 
 	var ctx = context.Background()
 

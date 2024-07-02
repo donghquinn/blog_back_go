@@ -13,7 +13,7 @@ import (
 
 // 게시글 등록
 func RegisterPostController(res http.ResponseWriter, req *http.Request) {
-	userId, _, _, err := auth.ValidateJwtToken(req)
+	userId, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -30,7 +30,7 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	postSeq, insertErr := post.InsertPostData(registerPostRequest, userId)
+	postSeq, insertErr := post.InsertPostData(registerPostRequest, userId, blogId)
 
 	if insertErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Insert Post Data Error", insertErr)
@@ -42,7 +42,7 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 
 
 func DeletePostController(res http.ResponseWriter, req *http.Request) {
-	_, _, _, err := auth.ValidateJwtToken(req)
+	_, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -60,7 +60,7 @@ func DeletePostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	deleteErr := post.DeletePost(deleteRequest)
+	deleteErr := post.DeletePost(deleteRequest, blogId)
 
 	if deleteErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Delete Post Error", deleteErr)
@@ -72,7 +72,7 @@ func DeletePostController(res http.ResponseWriter, req *http.Request) {
 
 // 고정 게시글 데이터 업데이트
 func UpdatePinPostController(res http.ResponseWriter, req *http.Request ) {
-	_, _, _, err := auth.ValidateJwtToken(req)
+	_, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -90,7 +90,7 @@ func UpdatePinPostController(res http.ResponseWriter, req *http.Request ) {
 		return
 	}
 
-	updateErr := post.UpdatePinPost(updatePinRequest)
+	updateErr := post.UpdatePinPost(updatePinRequest, blogId)
 
 	if updateErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Update Pin Error", updateErr)
@@ -102,7 +102,7 @@ func UpdatePinPostController(res http.ResponseWriter, req *http.Request ) {
 
 // 고정 게시글 해제 데이터 업데이트
 func UpdateUnPinPostController(res http.ResponseWriter, req *http.Request ) {
-	_, _, _, err := auth.ValidateJwtToken(req)
+	_, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -120,7 +120,7 @@ func UpdateUnPinPostController(res http.ResponseWriter, req *http.Request ) {
 		return
 	}
 
-	updateErr := post.UpdateUnPinPost(updateUnPinRequest)
+	updateErr := post.UpdateUnPinPost(updateUnPinRequest, blogId)
 
 	if updateErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Update Un-Pin Error", updateErr)

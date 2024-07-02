@@ -14,10 +14,11 @@ var SelectUnPinnedPosts = `
 		p.mod_date
 	FROM
 		post_table AS p
-	LEFT JOIN user_table AS u ON u.user_id = p.user_id
+	LEFT JOIN user_table AS u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
 	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	WHERE p.post_status = 1
 		AND p.is_pinned = 0
+		AND p.blog_owner = ?
 	ORDER BY
 		p.reg_date DESC
 	LIMIT ?
@@ -61,10 +62,11 @@ var SelectPinnedPosts = `
 		p.mod_date
 	FROM
 		post_table AS p
-	LEFT JOIN user_table AS u ON u.user_id = p.user_id
+	LEFT JOIN user_table AS u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
 	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	WHERE p.post_status = 1
 		AND p.is_pinned = 1
+		AND p.blog_owner = ?
 	ORDER BY
 		p.reg_date DESC
 	LIMIT 5;
@@ -75,6 +77,7 @@ var SelectUnPinnedPostCount = `
 	FROM post_table
 	WHERE post_status = 1
 		AND is_pinned = 0
+		AND blog_owner = ?
 `
 
 var SelectPinnedPostCount = `
@@ -82,6 +85,7 @@ var SelectPinnedPostCount = `
 	FROM post_table
 	WHERE post_status = 1
 		AND is_pinned = 1
+		AND blog_owner = ?
 `
 
 // 태그 이름을 통해 게시글 가져오기
@@ -98,12 +102,13 @@ var SelectPostByTags = `
 		p.mod_date
 	FROM
 		post_table p
-	LEFT JOIN user_table u ON u.user_id = p.user_id
+	LEFT JOIN user_table u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
 	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
 	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
 	WHERE
 		t.tags LIKE ? AND
-		p.post_status = 1
+		p.post_status = 1 AND
+		p.blog_owner = ?
 	ORDER BY p.reg_date DESC
 	LIMIT ?
 	OFFSET ?;

@@ -6,5 +6,6 @@ var UpdatePinPost = `
 	SET
 		is_pinned = ?
 	WHERE
-		post_seq = ?
+		post_seq = ? AND
+		blog_owner = ?
 `

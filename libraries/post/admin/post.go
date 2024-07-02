@@ -9,14 +9,14 @@ import (
 )
 
 // 게시글 삭제
-func DeletePost(data types.DeletePostRequest) error {
+func DeletePost(data types.DeletePostRequest, blogId string) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
 		return dbErr
 	}
 
-	_, deleteErr := database.InsertQuery(connect, queries.DeletePost, "0", data.PostSeq)
+	_, deleteErr := database.InsertQuery(connect, queries.DeletePost, "0", data.PostSeq, blogId)
 
 	if deleteErr != nil {
 		log.Printf("[DELETE] Delete Post Error: %v", deleteErr)
@@ -29,14 +29,14 @@ func DeletePost(data types.DeletePostRequest) error {
 }
 
 // 고정 게시글 업데이트
-func UpdatePinPost(data types.UpdatePinRequest) error {
+func UpdatePinPost(data types.UpdatePinRequest, blogId string) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
 		return dbErr
 	}
 
-	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "1", data.PostSeq)
+	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "1", data.PostSeq, blogId)
 
 	if updateErr != nil {
 		log.Printf("[PIN] Update Pin Post Error: %v", updateErr)
@@ -49,14 +49,14 @@ func UpdatePinPost(data types.UpdatePinRequest) error {
 }
 
 // 고정 게시글 해제
-func UpdateUnPinPost(data types.UpdatePinRequest) error {
+func UpdateUnPinPost(data types.UpdatePinRequest, blogId string) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
 		return dbErr
 	}
 
-	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "0", data.PostSeq)
+	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "0", data.PostSeq, blogId)
 
 	if updateErr != nil {
 		log.Printf("[PIN] Update Un-Pin Post Error: %v", updateErr)

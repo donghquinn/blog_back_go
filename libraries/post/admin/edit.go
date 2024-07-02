@@ -11,11 +11,11 @@ import (
 )
 
 // 게시글 수정
-func EditPost(data types.EditPostRequest, userId string) error {
+func EditPost(data types.EditPostRequest, userId string, blogId string) error {
 	// 카테고리 유효성 검증
 	isValidCategory := utils.ValidateRequestValue(data.Category)
 
-	editCategoryErr := InsertUpdateCategory(data.PostSeq, data.Category, isValidCategory)
+	editCategoryErr := InsertUpdateCategory(data.PostSeq, data.Category, blogId, isValidCategory)
 
 	if editCategoryErr != nil {
 		return editCategoryErr
@@ -70,7 +70,7 @@ func UpdatePostEdit(postTitle string, postContents string, isPinned string, post
 	return nil
 }
 
-func InsertUpdateCategory(postSeq string, category string, isValidCategory bool) error {
+func InsertUpdateCategory(postSeq string, category string, blogId string, isValidCategory bool) error {
 	connect, connectErr := database.InitDatabaseConnection()
 
 	if connectErr != nil {
@@ -78,7 +78,7 @@ func InsertUpdateCategory(postSeq string, category string, isValidCategory bool)
 	}
 
 	if isValidCategory {
-			_, categoryErr := database.InsertQuery(connect, queries.InsertUpdateCategory, category, postSeq)
+			_, categoryErr := database.InsertQuery(connect, queries.InsertUpdateCategory, category, postSeq, blogId)
 
 		if categoryErr != nil {
 			log.Printf("[EDIT] INSERT/UPDATE category data Error: %v", categoryErr)
@@ -86,7 +86,7 @@ func InsertUpdateCategory(postSeq string, category string, isValidCategory bool)
 		}
 	} else {
 		// 요청에 태그 데이터가 없다면 기존 카테고리 제거
-		_, deleteCategoryErr := database.InsertQuery(connect, queries.DeletePostCategory, category)
+		_, deleteCategoryErr := database.InsertQuery(connect, queries.DeletePostCategory, category, blogId)
 
 		if deleteCategoryErr != nil {
 			log.Printf("[EDIT] DELETE category data Error: %v", deleteCategoryErr)

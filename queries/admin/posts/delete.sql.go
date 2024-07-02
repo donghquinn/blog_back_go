@@ -6,5 +6,6 @@ var DeletePost = `
 	SET
 		post_status = ?
 	WHERE
-		post_seq = ?
+		post_seq = ? AND
+		blog_owner = ?
 `

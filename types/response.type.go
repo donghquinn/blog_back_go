@@ -6,6 +6,12 @@ type ResponseType struct {
 	Result bool `json:"result"`
 }
 
+type ResponseSignupType struct {
+	Code string `json:"code"`
+	Result bool `json:"result"`
+	BlogId string `json:"blogId"`
+}
+
 // 유저 프로필 응답 구조체
 type ResponseProfileType struct {
 	Code string `json:"code"`

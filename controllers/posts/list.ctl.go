@@ -14,10 +14,12 @@ import (
 
 // 전체 포스트 가져오기 - 페이징
 func GetPostController(res http.ResponseWriter, req *http.Request) {
+	var getPostListRequest types.GetPostListRequest
+
 	page, _ := strconv.Atoi(req.URL.Query().Get("page"))
 	size, _ := strconv.Atoi(req.URL.Query().Get("size"))
 
-	unpinnedQueryResult, queryErr := post.QueryUnpinnedPostData(page, size)
+	unpinnedQueryResult, queryErr := post.QueryUnpinnedPostData(getPostListRequest.BlogId, page, size)
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", queryErr)
@@ -25,7 +27,7 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	pinnedQueryResult, pinnedErr := post.QueryisPinnedPostData()
+	pinnedQueryResult, pinnedErr := post.QueryisPinnedPostData(getPostListRequest.BlogId)
 
 	if pinnedErr != nil {
 		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", pinnedErr)
@@ -33,14 +35,13 @@ func GetPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	unpinnedTotalCount, unpinnedTotalCountErr := post.GetTotalUnPinnedPostCount()
+	unpinnedTotalCount, unpinnedTotalCountErr := post.GetTotalUnPinnedPostCount(getPostListRequest.BlogId)
 
 	if unpinnedTotalCountErr != nil {
 		dto.SetErrorResponse(res, 401, "01", "Query Post Data Error", unpinnedTotalCountErr)
 
 		return
 	}
-
 
 	var pinnedData []types.SelectAllPostDataResponse
 	var unpinnedData []types.SelectAllPostDataResponse

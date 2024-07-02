@@ -12,7 +12,7 @@ import (
 )
 
 // 포스트들 가져오기 - 모듈함수
-func QueryUnpinnedPostData(page int, size int) ([]types.SelectAllPostDataResponse, error) {
+func QueryUnpinnedPostData(blogId string, page int, size int) ([]types.SelectAllPostDataResponse, error) {
 		// parseBodyErr :=utils.DecodeBody(&req.Body)
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -21,7 +21,7 @@ func QueryUnpinnedPostData(page int, size int) ([]types.SelectAllPostDataRespons
 	}
 
 	// 페이징 파라미터 파싱
-	result, queryErr := database.Query(connect, queries.SelectUnPinnedPosts,  fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	result, queryErr := database.Query(connect, queries.SelectUnPinnedPosts, blogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get Unpinned Post Data Error: %v", queryErr)
@@ -118,7 +118,7 @@ func QueryisPinnedPostList(page int, size int) ([]types.SelectAllPostDataRespons
 }
 
 // 포스트들 가져오기 - 모듈함수
-func QueryisPinnedPostData() ([]types.SelectAllPostDataResponse, error) {
+func QueryisPinnedPostData(blogId string) ([]types.SelectAllPostDataResponse, error) {
 		// parseBodyErr :=utils.DecodeBody(&req.Body)
 	connect, dbErr := database.InitDatabaseConnection()
 
@@ -127,7 +127,7 @@ func QueryisPinnedPostData() ([]types.SelectAllPostDataResponse, error) {
 	}
 
 	// 페이징 파라미터 파싱
-	result, queryErr := database.Query(connect, queries.SelectPinnedPosts)
+	result, queryErr := database.Query(connect, queries.SelectPinnedPosts, blogId)
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get Pinned Post Data Error: %v", queryErr)
@@ -171,14 +171,14 @@ func QueryisPinnedPostData() ([]types.SelectAllPostDataResponse, error) {
 }
 
 // 고정 개시글 전체 개수
-func GetTotalUnPinnedPostCount() (types.PostTotalUnPinnedCountType, error) {
+func GetTotalUnPinnedPostCount(blogId string) (types.PostTotalUnPinnedCountType, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
 		return types.PostTotalUnPinnedCountType{}, dbErr
 	}
 
-	queryResult, queryErr := database.QueryOne(connect, queries.SelectUnPinnedPostCount)
+	queryResult, queryErr := database.QueryOne(connect, queries.SelectUnPinnedPostCount, blogId)
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get UnPinned Post Count Error: %v", queryErr)

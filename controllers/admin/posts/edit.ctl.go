@@ -11,7 +11,7 @@ import (
 )
 
 func EditPostController(res http.ResponseWriter, req *http.Request) {
-	userId, _, _, err := auth.ValidateJwtToken(req)
+	userId, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
 		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
@@ -28,7 +28,7 @@ func EditPostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	editErr := post.EditPost(editPostRequest, userId)
+	editErr := post.EditPost(editPostRequest, userId, blogId)
 
 	if editErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Edit Post Data Error", editErr)

@@ -3,6 +3,7 @@ package types
 // 상세 포스트 조회 요청
 type ViewPostContents struct {
 	PostSeq string `json:"postSeq"`
+	BlogId	string `json:"blogId"`
 }
 
 // 특정 게시글 응답

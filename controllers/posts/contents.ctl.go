@@ -27,7 +27,7 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// 게시글 쿼리
-	queryResult, queryErr := post.GetPostData(postContentsRequest.PostSeq)
+	queryResult, queryErr := post.GetPostData(postContentsRequest.PostSeq, postContentsRequest.BlogId)
 
 	if queryErr != nil {
 		dto.SetErrorResponse(res, 402, "02", "Query Specific Contents Error", queryErr)

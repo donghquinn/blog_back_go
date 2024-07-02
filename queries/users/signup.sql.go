@@ -6,5 +6,6 @@ var InsertSignupUser = `
 		user_id = ?,
 		user_email = ?,
 		user_password = ?,
-		user_name = ?
+		user_name = ?,
+		blog_owner = ?
 `

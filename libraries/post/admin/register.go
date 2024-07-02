@@ -10,7 +10,7 @@ import (
 	"github.com/donghquinn/blog_back_go/utils"
 )
 
-func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string) (int64, error) {
+func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string, blogId string) (int64, error) {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
@@ -24,7 +24,8 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 		userId, 
 		registerPostRequest.PostTitle, 
 		registerPostRequest.PostContents,
-		registerPostRequest.IsPinned)
+		registerPostRequest.IsPinned,
+		blogId)
 
 	if queryErr != nil {
 		log.Printf("[REGISTER] Insert Post Data Error: %v", queryErr)

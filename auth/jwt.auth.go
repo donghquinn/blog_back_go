@@ -14,7 +14,7 @@ import (
 )
 
 // JWT 토큰 생성
-func CreateJwtToken(userId string, uuid string, userEmail string, userStatus string) (string, error) {
+func CreateJwtToken(userId string, uuid string, userEmail string, userStatus string, blogId string) (string, error) {
 	globalConfig := configs.GlobalConfig
 
 	redis, redisPingErr := database.RedisInstance()
@@ -41,7 +41,7 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 		}
 	}
 
-	setLoginErr := database.RedisLoginSet(redis, uuid, userEmail, userStatus, userId)
+	setLoginErr := database.RedisLoginSet(redis, uuid, userEmail, userStatus, userId, blogId)
 
 	if setLoginErr != nil {
 		log.Printf("[JWT] Set Login Error: %v", setLoginErr)
@@ -57,6 +57,8 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 	claims["userEmail"] = userEmail
 	claims["userStatus"] = userStatus
 	claims["uuid"] = uuid
+	claims["blogId"] = blogId
+
 	// 만료 시간 - 3시간
 	claims["exp"] = time.Now().Add(time.Hour * 3).Unix()
 
@@ -69,7 +71,7 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 	}
 
 	
-	setErr := database.RedisLoginSet(redis, uuid, userEmail, userStatus, userId)
+	setErr := database.RedisLoginSet(redis, uuid, userEmail, userStatus, userId, blogId)
 
 	if setErr != nil {
 		log.Printf("[JWT] Set Key Error: %v", setErr)
@@ -80,12 +82,12 @@ func CreateJwtToken(userId string, uuid string, userEmail string, userStatus str
 }
 
 // JWT 키  검증
-func ValidateJwtToken(req *http.Request) (string, string, string, error) {
+func ValidateJwtToken(req *http.Request) (string, string, string, string, error) {
 	token := strings.Split(req.Header["Authorization"][0], "Bearer ")[1]
 	redis, redisErr := database.RedisInstance()
 
 	if redisErr != nil {
-		return "", "", "", redisErr
+		return "", "", "", "", redisErr
 	}
 
 	globalConfig := configs.GlobalConfig
@@ -106,7 +108,7 @@ func ValidateJwtToken(req *http.Request) (string, string, string, error) {
 	if err != nil {
 		log.Printf("[JWT] Parsing JWT Validation Error: %v", err)
 
-		return "","","",err
+		return "", "", "", "", err
 	}
 
 	claim, ok := parseToken.Claims.(*types.JwtInterface)
@@ -114,15 +116,15 @@ func ValidateJwtToken(req *http.Request) (string, string, string, error) {
 	if !ok {
 		claimErr := fmt.Errorf("can't parse values from token")
 		log.Printf("[JWT] Parse Token with Claims: %v", claimErr)
-		return "", "", "", claimErr
+		return "", "", "", "", claimErr
 	}
 
 	_, getErr := database.RedisLoginGet(redis, claim.Uuid)
 	
 	if getErr != nil {
 		log.Printf("[JWT] Get Token Error: %v", getErr)
-		return "", "", "", getErr
+		return "", "", "", "", getErr
 	}
 
-	return claim.UserId, claim.UserEmail, claim.UserType, nil
+	return claim.UserId, claim.UserEmail, claim.UserType, claim.BlogId, nil
 }
