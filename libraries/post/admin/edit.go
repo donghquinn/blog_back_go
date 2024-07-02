@@ -15,7 +15,7 @@ func EditPost(data types.EditPostRequest, userId string) error {
 	// 카테고리 유효성 검증
 	isValidCategory := utils.ValidateRequestValue(data.Category)
 
-	editCategoryErr := InsertUpdateCategory(data.Category, isValidCategory)
+	editCategoryErr := InsertUpdateCategory(data.PostSeq, data.Category, isValidCategory)
 
 	if editCategoryErr != nil {
 		return editCategoryErr
@@ -70,7 +70,7 @@ func UpdatePostEdit(postTitle string, postContents string, isPinned string, post
 	return nil
 }
 
-func InsertUpdateCategory(category string, isValidCategory bool) error {
+func InsertUpdateCategory(postSeq string, category string, isValidCategory bool) error {
 	connect, connectErr := database.InitDatabaseConnection()
 
 	if connectErr != nil {
@@ -78,7 +78,7 @@ func InsertUpdateCategory(category string, isValidCategory bool) error {
 	}
 
 	if isValidCategory {
-			_, categoryErr := database.InsertQuery(connect, queries.InsertUpdateCategory, category)
+			_, categoryErr := database.InsertQuery(connect, queries.InsertUpdateCategory, category, postSeq)
 
 		if categoryErr != nil {
 			log.Printf("[EDIT] INSERT/UPDATE category data Error: %v", categoryErr)

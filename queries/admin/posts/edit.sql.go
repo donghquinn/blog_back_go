@@ -22,11 +22,11 @@ var InsertUpdateImage = `
 `
 
 var InsertUpdateCategory = `
-	INSERT INTO category_table
+	UPDATE category_table
 	SET
 		category_name = ?
-	ON DUPLICATE KEY UPDATE
-		category_name = VALUES(category_name)
+	WHERE
+		post_seq = ?
 `
 
 var DeletePostCategory = `
