@@ -83,6 +83,7 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 		&queryResult.RegDate,
 		&queryResult.ModDate)
 
+
 	if postScanErr != nil {
 		if postScanErr == sql.ErrNoRows {
 			queryResult.CategoryName = nil
@@ -94,7 +95,8 @@ func GetPostContents(postSeq string) (types.SelectSpecificPostDataResult, error)
 		log.Printf("[CONTENTS] Can Post Data Error: %v", postScanErr)
 		return types.SelectSpecificPostDataResult{}, postScanErr
 	}
-
+		// log.Println(*queryResult.CategoryName)
+		// log.Println(*queryResult.Tags)
 	return queryResult, nil
 }
 
