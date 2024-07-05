@@ -39,7 +39,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 	categories := registerPostRequest.Category
 
 	if categories != ""  {
-		insertCategoriesErr := InsertCategories(categories, postSeq)
+		insertCategoriesErr := InsertCategories(categories, postSeq, blogId)
 
 		if insertCategoriesErr != nil {
 			log.Printf("[REGISTER] Insert Categories Error: %v", insertCategoriesErr)
@@ -71,7 +71,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 	return insertId, nil
 }
 
-func InsertCategories(categories string, postSeq string) error {
+func InsertCategories(categories string, postSeq string, blogId string) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
@@ -81,7 +81,7 @@ func InsertCategories(categories string, postSeq string) error {
 	isValidCategory := utils.ValidateRequestValue(categories)
 
 	if isValidCategory {
-		_, categoryErr := database.InsertQuery(connect, queries.InsertCategory, postSeq, categories)
+		_, categoryErr := database.InsertQuery(connect, queries.InsertCategory, postSeq, categories, blogId)
 
 		if categoryErr != nil {
 			log.Printf("[REGISTER] Insert category data Error: %v", categoryErr)
