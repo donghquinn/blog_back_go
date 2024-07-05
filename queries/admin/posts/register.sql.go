@@ -23,7 +23,8 @@ var InsertCategory  = `
 	INSERT INTO category_table
 	SET
 		post_seq = ?,
-		category_name = ?
+		category_name = ?,
+		blog_owner = ?
 	ON DUPLICATE KEY UPDATE
 		post_seq = VALUES(post_seq)
 `

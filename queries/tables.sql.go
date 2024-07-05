@@ -64,8 +64,8 @@ var CreateCategoryTable = `
 		category_seq 	INT(20)			NOT NULL 	AUTO_INCREMENT PRIMARY KEY,
 		post_seq 		INT(20)			NOT NULL	REFERENCES post_table(post_seq),
 		category_name 	VARCHAR(20)		NOT NULL 	DEFAULT 'default',
-
-		INDEX category_idx(post_seq, category_name)
+		blog_owner		VARCHAR(20)		NOT NULL,
+		INDEX category_idx(post_seq, category_name, blog_owner)
 	);
 `
 
