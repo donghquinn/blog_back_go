@@ -108,8 +108,9 @@ func InsertUpdateTagList(tagList []string, postSeq string) error {
 
 	if len(tagList) > 0 {
 		tagArray, _ := json.Marshal(tagList)
-
-		_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(tagArray))
+		
+		_, tagQueryErr := database.InsertQuery(connect, queries.UpdateTag, string(tagArray), postSeq)
+		// _, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(tagArray))
 
 		if tagQueryErr != nil {
 			log.Printf("[EDIT] Insert Tag Data Error: %v", tagQueryErr)

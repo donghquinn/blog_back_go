@@ -19,6 +19,14 @@ var InsertTag = `
 		tags = ?
 `
 
+var UpdateTag = `
+	UPDATE tag_table
+	SET
+		tags = ?
+	WHERE
+		post_seq = ?
+`
+
 var InsertCategory  = `
 	INSERT INTO category_table
 	SET
