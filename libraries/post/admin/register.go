@@ -51,7 +51,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 	tags := registerPostRequest.Tags
 
 	if len(tags) > 0 {
-		insertTagErr := InsertTags(tags, postSeq)
+		insertTagErr := InsertTags(tags, postSeq, blogId)
 		if insertTagErr != nil {
 			log.Printf("[REGISTER] Insert TagList Error: %v", insertTagErr)
 			return -99999, insertTagErr
@@ -94,7 +94,7 @@ func InsertCategories(categories string, postSeq string, blogId string) error {
 	return nil
 }
 
-func InsertTags(tags []string, postSeq string) error {
+func InsertTags(tags []string, postSeq string, blogId string) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
@@ -104,7 +104,7 @@ func InsertTags(tags []string, postSeq string) error {
 	// Array https://www.infracody.com/2023/08/how-to-deal-with-array-data-in-mysql.html
 	tagArray, _ := json.Marshal(tags)
 
-	_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(tagArray))
+	_, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(tagArray), blogId)
 
 	defer connect.Close()
 

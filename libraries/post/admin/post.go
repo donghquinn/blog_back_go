@@ -9,18 +9,68 @@ import (
 )
 
 // 게시글 삭제
-func DeletePost(data types.DeletePostRequest, blogId string) error {
+func DeletePost(postSeq string, blogId string) error {
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
 		return dbErr
 	}
 
-	_, deleteErr := database.InsertQuery(connect, queries.DeletePost, "0", data.PostSeq, blogId)
+	_, deletePostErr := database.InsertQuery(connect, queries.DeletePost, "0", postSeq, blogId)
 
-	if deleteErr != nil {
-		log.Printf("[DELETE] Delete Post Error: %v", deleteErr)
-		return deleteErr
+	if deletePostErr != nil {
+		log.Printf("[DELETE] Delete Post Error: %v", deletePostErr)
+		return deletePostErr
+	}
+
+	defer connect.Close()
+
+	deleteCategoryErr := DeleteCategory(postSeq, blogId)
+
+	if deleteCategoryErr != nil {
+		return deleteCategoryErr
+	}
+
+	deleteTagErr := DeleteTag(postSeq, blogId)
+
+	if deleteTagErr != nil {
+		return deleteTagErr
+	}
+	
+	return nil
+}
+
+func DeleteCategory(postSeq string, blogOwner string) error {
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return dbErr
+	}
+
+	_, deleteCategoryErr := database.InsertQuery(connect, queries.DeleteCategory, "0", postSeq, blogOwner)
+
+	if deleteCategoryErr != nil {
+		log.Printf("[DELETE] Delete Post Category Error: %v", deleteCategoryErr)
+		return deleteCategoryErr
+	}
+
+	defer connect.Close()
+
+	return nil
+}
+
+func DeleteTag(postSeq string, blogOwner string) error {
+	connect, dbErr := database.InitDatabaseConnection()
+
+	if dbErr != nil {
+		return dbErr
+	}
+
+	_, deleteTagErr := database.InsertQuery(connect, queries.DeleteTags, "0", postSeq, blogOwner)
+
+	if deleteTagErr != nil {
+		log.Printf("[DELETE] Delete Post Tags Error: %v", deleteTagErr)
+		return deleteTagErr
 	}
 
 	defer connect.Close()

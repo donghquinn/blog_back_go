@@ -60,7 +60,7 @@ func DeletePostController(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	deleteErr := post.DeletePost(deleteRequest, blogId)
+	deleteErr := post.DeletePost(deleteRequest.PostSeq, blogId)
 
 	if deleteErr != nil {
 		dto.SetErrorResponse(res, 403, "03", "Delete Post Error", deleteErr)

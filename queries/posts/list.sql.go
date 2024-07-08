@@ -15,7 +15,7 @@ var SelectUnPinnedPosts = `
 	FROM
 		post_table AS p
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
-	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq AND c.category_status = 1
 	WHERE p.post_status = 1
 		AND p.is_pinned = 0
 		AND p.blog_owner = ?
@@ -39,7 +39,7 @@ var SelectAllPinnedPosts = `
 	FROM
 		post_table AS p
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
-	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq AND c.category_status = 1
 	WHERE p.post_status = 1
 		AND p.is_pinned = 1
 		AND p.blog_owner = ?
@@ -64,7 +64,7 @@ var SelectPinnedPosts = `
 	FROM
 		post_table AS p
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
-	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq AND c.category_status = 1
 	WHERE p.post_status = 1
 		AND p.is_pinned = 1
 		AND p.blog_owner = ?
@@ -104,8 +104,8 @@ var SelectPostByTags = `
 	FROM
 		post_table p
 	LEFT JOIN user_table u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
-	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
-	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
+	LEFT JOIN tag_table t ON t.post_seq = p.post_seq AND t.tag_status = 1
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq AND c.category_status = 1
 	WHERE
 		t.tags LIKE ? AND
 		p.post_status = 1 AND
@@ -120,8 +120,8 @@ var SelectTotalPostCountByTags = `
 	FROM
 		post_table p
 	LEFT JOIN user_table u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
-	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
-	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
+	LEFT JOIN tag_table t ON t.post_seq = p.post_seq AND t.tag_status = 1
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq AND c.category_status = 1
 	WHERE
 		t.tags LIKE ? AND
 		p.post_status = 1 AND
@@ -143,8 +143,8 @@ var SelectPostByCategory = `
 	FROM
 		post_table p
 	LEFT JOIN user_table u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
-	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
-	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
+	LEFT JOIN tag_table t ON t.post_seq = p.post_seq AND t.tag_status = 1
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq AND c.category_status = 1
 	WHERE
 		category_name LIKE ? AND
 		p.post_status = 1 AND
@@ -159,8 +159,8 @@ var SelectTotalPostCountByCategory = `
 	FROM
 		post_table p
 	LEFT JOIN user_table u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
-	LEFT JOIN tag_table t ON t.post_seq = p.post_seq
-	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq
+	LEFT JOIN tag_table t ON t.post_seq = p.post_seq AND t.tag_status = 1
+	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq AND c.category_status = 1
 	WHERE
 		category_name LIKE ? AND
 		p.post_status = 1 AND

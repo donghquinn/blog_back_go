@@ -33,12 +33,13 @@ var InsertUpdateCategory = `
 var DeletePostCategory = `
 	DELETE 
 	FROM category_table
-	WHERE post_seq = ? AND
-		blog_owner = ?
+	WHERE post_seq = ? 
+		AND blog_owner = ?
 `
 
 var DeletePostTag = `
 	DELETE
 	FROM tag_table
 	WHERE post_seq = ?
+		AND blog_owner = ?
 `
