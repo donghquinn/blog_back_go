@@ -16,7 +16,8 @@ var InsertTag = `
 	INSERT INTO tag_table
 	SET
 		post_seq = ?,
-		tags = ?
+		tags = ?,
+		blog_owner = ?
 `
 
 var UpdateTag = `
@@ -25,6 +26,7 @@ var UpdateTag = `
 		tags = ?
 	WHERE
 		post_seq = ?
+		AND blog_owner = ?
 `
 
 var InsertCategory  = `
@@ -42,5 +44,5 @@ var InsertUpdatePostImage = `
 	UPDATE file_table SET 
 		target_seq = ?
 	WHERE
-		file_seq = ?;
+		file_seq = ?
 `

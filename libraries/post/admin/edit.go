@@ -23,7 +23,7 @@ func EditPost(data types.EditPostRequest, userId string, blogId string) error {
 
 	tags := data.Tags
 
-	editTagErr := InsertUpdateTagList(tags, data.PostSeq)
+	editTagErr := InsertUpdateTagList(tags, data.PostSeq, blogId)
 
 	if editTagErr != nil {
 		return editTagErr
@@ -99,7 +99,7 @@ func InsertUpdateCategory(postSeq string, category string, blogId string, isVali
 	return nil
 }
 
-func InsertUpdateTagList(tagList []string, postSeq string) error {
+func InsertUpdateTagList(tagList []string, postSeq string, blogId string) error {
 	connect, connectErr := database.InitDatabaseConnection()
 
 	if connectErr != nil {
@@ -109,7 +109,7 @@ func InsertUpdateTagList(tagList []string, postSeq string) error {
 	if len(tagList) > 0 {
 		tagArray, _ := json.Marshal(tagList)
 		
-		_, tagQueryErr := database.InsertQuery(connect, queries.UpdateTag, string(tagArray), postSeq)
+		_, tagQueryErr := database.InsertQuery(connect, queries.UpdateTag, string(tagArray), postSeq, blogId)
 		// _, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(tagArray))
 
 		if tagQueryErr != nil {
@@ -119,7 +119,7 @@ func InsertUpdateTagList(tagList []string, postSeq string) error {
 		}
 	} else {
 		// 요청에 태그 데이터가 없다면 기존 태그 제거
-		_, deleteTagErr := database.InsertQuery(connect, queries.DeletePostTag, postSeq)
+		_, deleteTagErr := database.InsertQuery(connect, queries.DeletePostTag, postSeq, blogId)
 
 		if deleteTagErr != nil {
 			log.Printf("[EDIT] DELETE Tag data Error: %v", deleteTagErr)

@@ -65,17 +65,21 @@ var CreateCategoryTable = `
 		post_seq 		INT(20)			NOT NULL	REFERENCES post_table(post_seq),
 		category_name 	VARCHAR(20)		NOT NULL 	DEFAULT 'default',
 		blog_owner		VARCHAR(20)		NOT NULL,
-		INDEX category_idx(post_seq, category_name, blog_owner)
+		category_status TINYINT(2)		NOT NULL	DEFAULT 1,
+
+		INDEX category_idx(post_seq, category_name, category_status, blog_owner)
 	);
 `
 
 var CreateTagTable = `
 	CREATE TABLE IF NOT EXISTS tag_table (
-		tag_seq  INT(20)	NOT NULL	AUTO_INCREMENT PRIMARY KEY,
-		post_seq INT(20)	NOT NULL	REFERENCES post_table(post_seq),
-		tags	 VARCHAR(255)		NOT NULL,
+		tag_seq  	INT(20)				NOT NULL	AUTO_INCREMENT PRIMARY KEY,
+		post_seq 	INT(20)				NOT NULL	REFERENCES post_table(post_seq),
+		tags	 	VARCHAR(255)		NOT NULL,
+		tag_status  TINYINT(2)			NOT NULL DEFAULT 1,
+		blog_owner 	VARCHAR(20)			NOT NULL,
 
-		INDEX tag_idx(post_seq)
+		INDEX tag_idx(post_seq, tag_status, blog_owner)
 	);
 `
 
