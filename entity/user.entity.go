@@ -8,5 +8,5 @@ type UserTableEntity struct {
 	User_status int
 	Preferred_color string
 	Title string
-	
+	Sns_instagram string
 }

@@ -30,7 +30,7 @@ var CreatePostTable = `
 		post_status		TINYINT(1)		NOT NULL DEFAULT 1	COMMENT '0: 비활성, 1: 활성, 2: 삭제',
 		viewed			INT(20)			NOT NULL DEFAULT 0,
 		is_pinned		TINYINT(1)		NOT NULL DEFAULT 1 COMMENT '0 - 비고정, 1 - 고정',
-		is_secret 		BOOLEAN			NOT NULL DEFAULT FALSE,
+		is_secret 		TINYINT(1)		NOT NULL DEFAULT 1,
 		blog_owner		VARCHAR(20)		NOT NULL,
 		reg_date 		DATETIME		NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		mod_date		DATETIME	    NULL     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
