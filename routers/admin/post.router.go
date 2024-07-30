@@ -14,5 +14,6 @@ func AdminPostRouter(server *http.ServeMux) {
 
 	server.HandleFunc("POST /admin/post/update/pin", admincontrollers.UpdatePinPostController)
 	server.HandleFunc("POST /admin/post/update/unpin", admincontrollers.UpdateUnPinPostController)
-
+ 	server.HandleFunc("POST /admin/post/update/secret", admincontrollers.ChangeToSecretPostController)
+	server.HandleFunc("POST /admin/post/update/unsecret", admincontrollers.ChangeToNotSecretPostController)
 }

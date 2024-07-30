@@ -11,6 +11,8 @@ import (
 	types "github.com/donghquinn/blog_back_go/types/post"
 )
 
+// TODO List 조회에 비밀글 값 추가
+
 // 포스트들 가져오기 - 모듈함수
 func QueryUnpinnedPostData(blogId string, page int, size int) ([]types.SelectAllPostDataResponse, error) {
 		// parseBodyErr :=utils.DecodeBody(&req.Body)

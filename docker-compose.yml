@@ -21,8 +21,10 @@ services:
     image: redis:7.2.5-alpine
     container_name: blog_redis
     restart: always
-    expose:
-      - ${REDIS_PORT}
+    ports:
+      - ${REDIS_PORT}:${REDIS_PORT}
+    # expose:
+    #   - ${REDIS_PORT}
     volumes:
       - ./redis.conf:/usr/local/conf/redis.conf
       - ./redis_data:/data\

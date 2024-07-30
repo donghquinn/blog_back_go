@@ -8,4 +8,5 @@ type EditPostRequest struct {
 	ImageSeqs  []string `json:"imageSeqs,omitempty"`
 	Tags []string `json:"tags,omitempty"`
 	IsPinned string `json:"isPinned"`
+	IsSecret string `json:"isSecret"`
 }

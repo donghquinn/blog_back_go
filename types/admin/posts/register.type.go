@@ -8,4 +8,5 @@ type RegisterPostRequest struct {
 	Category string `json:"category,omitempty"`
 	Tags []string `json:"tags,omitempty"`
 	IsPinned string `json:"isPinned"`
+	IsSecret string `json:"isSecret"`
 }
