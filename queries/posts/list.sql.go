@@ -17,7 +17,6 @@ var SelectUnPinnedPosts = `
 	LEFT JOIN user_table AS u ON u.user_id = p.user_id AND u.blog_owner = p.blog_owner
 	LEFT JOIN category_table AS c ON c.post_seq = p.post_seq AND c.category_status = 1
 	WHERE p.post_status = 1
-		AND p.is_pinned = 0
 		AND p.blog_owner = ?
 	ORDER BY
 		p.reg_date DESC
