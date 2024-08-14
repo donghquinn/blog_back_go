@@ -8,7 +8,6 @@ var InsertPost = `
 		post_title = ?,
 		post_contents = ?,
 		is_pinned = ?,
-		is_secret = ?,
 		blog_owner = ?
 `
 

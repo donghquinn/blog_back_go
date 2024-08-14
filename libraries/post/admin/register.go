@@ -25,7 +25,7 @@ func InsertPostData(registerPostRequest types.RegisterPostRequest, userId string
 		registerPostRequest.PostTitle, 
 		registerPostRequest.PostContents,
 		registerPostRequest.IsPinned,
-		strconv.Itoa(registerPostRequest.IsSecret),
+		// strconv.Itoa(registerPostRequest.IsSecret),
 		blogId)
 
 	if queryErr != nil {
