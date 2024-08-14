@@ -35,7 +35,7 @@ func EditPost(data types.EditPostRequest, userId string, blogId string) error {
 		return editImageErr
 	}
 
-	editPost := UpdatePostEdit(data.PostTitle, data.PostContents, data.IsPinned, data.IsSecret, data.PostSeq)
+	editPost := UpdatePostEdit(data.PostTitle, data.PostContents, data.IsPinned,  data.PostSeq)
 
 	if editPost != nil {
 		return editPost
@@ -44,7 +44,7 @@ func EditPost(data types.EditPostRequest, userId string, blogId string) error {
 	return nil
 }
 
-func UpdatePostEdit(postTitle string, postContents string, isPinned string, isSecret string, postSeq string) error {
+func UpdatePostEdit(postTitle string, postContents string, isPinned string,postSeq string) error {
 	connect, connectErr := database.InitDatabaseConnection()
 
 	if connectErr != nil {
@@ -58,7 +58,6 @@ func UpdatePostEdit(postTitle string, postContents string, isPinned string, isSe
 		postTitle, 
 		postContents,
 		isPinned,
-		isSecret,
 		postSeq)
 	
 	defer connect.Close()

@@ -5,8 +5,7 @@ var UpdateEditPost = `
 	SET
 		post_title = ?,
 		post_contents = ?,
-		is_pinned = ?,
-		is_secret = ?
+		is_pinned = ?
 	WHERE
 		post_seq = ?
 `
