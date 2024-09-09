@@ -12,29 +12,36 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+type DataBaseConnector struct {
+	*sql.DB
+}
+
 // DB 연결 인스턴스
-func InitDatabaseConnection() (*sql.DB, error) {
+func InitDatabaseConnection() (*DataBaseConnector, error) {
 	dbConfig := configs.DatabaseConfig
 
-	dbUrl := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", 
-	dbConfig.User, 
-	dbConfig.Password,
-	dbConfig.Host, 
-	dbConfig.Port, 
-	dbConfig.Database)
+	dbUrl := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s",
+		dbConfig.User,
+		dbConfig.Password,
+		dbConfig.Host,
+		dbConfig.Port,
+		dbConfig.Database)
 
-	connect, err := sql.Open("mysql", dbUrl)
+	// driver := sql.Open("mysql", )
 
+	db, err := sql.Open("mysql", dbUrl)
+	
 	if err != nil {
 		log.Printf("[DATABASE] Start Database Connection Error: %v", err)
 
 		return nil, err
 	}
 
-	connect.SetConnMaxLifetime(time.Second * 60)
-	connect.SetMaxIdleConns(50)
-	connect.SetMaxOpenConns(100)
+	db.SetConnMaxLifetime(time.Second * 60)
+	db.SetMaxIdleConns(50)
+	db.SetMaxOpenConns(100)
 
+	connect :=  &DataBaseConnector{db}
 	return connect, nil
 }
 
@@ -42,21 +49,21 @@ func InitDatabaseConnection() (*sql.DB, error) {
 func CheckConnection() error {
 	log.Printf("Waiting for Database Connection,,,")
 	time.Sleep(time.Second * 10)
-	
+
 	connect, dbErr := InitDatabaseConnection()
 
 	if dbErr != nil {
 		return dbErr
 	}
-	
+
 	pingErr := connect.Ping()
 
 	if pingErr != nil {
 		log.Printf("[DATABASE] Database Ping Error: %v", pingErr)
-		return  pingErr
+		return pingErr
 	}
 
-	createErr := CreateTable(connect, queries.CreateTableQueryList)
+	createErr := connect.CreateTable(queries.CreateTableQueryList)
 
 	if createErr != nil {
 		log.Printf("[DATABASE] Create Table Error: %v", createErr)
@@ -68,7 +75,7 @@ func CheckConnection() error {
 	return nil
 }
 
-func CreateTable(connect *sql.DB, queryList []string) error {
+func (connect *DataBaseConnector) CreateTable( queryList []string) error {
 	ctx := context.Background()
 
 	tx, txErr := connect.Begin()
@@ -80,7 +87,7 @@ func CreateTable(connect *sql.DB, queryList []string) error {
 
 	defer tx.Rollback()
 
-	for _, queryString := range(queryList) {
+	for _, queryString := range queryList {
 		_, execErr := tx.ExecContext(ctx, queryString)
 
 		if execErr != nil {
@@ -101,14 +108,22 @@ func CreateTable(connect *sql.DB, queryList []string) error {
 }
 
 // 쿼리
-func Query(connect *sql.DB, queryString string, args ...string) (*sql.Rows, error) {
-	var arguments []interface{}
+func (connect *DataBaseConnector) Query(queryString string, args ...string) (*sql.Rows, error) {
+	// var arguments []interface{}
 
-    for _, arg := range args {
-        arguments = append(arguments, arg)
-    }	
-	
-	result, err := connect.Query(queryString, arguments...)
+	// for _, arg := range args {
+	//     arguments = append(arguments, arg)
+	// }
+
+	result, err := func() (*sql.Rows, error) {
+		result, err := connect.Query(queryString, args...)
+		if err != nil {
+			log.Printf("[QUERY] Query Error: %v\n", err)
+			return nil, err
+		}
+		defer connect.Close()
+		return result, nil
+	}()
 
 	if err != nil {
 		log.Printf("[QUERY] Query Error: %v\n", err)
@@ -122,13 +137,13 @@ func Query(connect *sql.DB, queryString string, args ...string) (*sql.Rows, erro
 }
 
 // 쿼리
-func QueryOne(connect *sql.DB, queryString string, args ...string) (*sql.Row, error) {
+func (connect *DataBaseConnector) QueryOne(queryString string, args ...string) (*sql.Row, error) {
 	var arguments []interface{}
 
-    for _, arg := range args {
-        arguments = append(arguments, arg)
-    }	
-	
+	for _, arg := range args {
+		arguments = append(arguments, arg)
+	}
+
 	result := connect.QueryRow(queryString, arguments...)
 
 	if result.Err() != nil {
@@ -143,12 +158,12 @@ func QueryOne(connect *sql.DB, queryString string, args ...string) (*sql.Row, er
 }
 
 // 인서트 쿼리
-func InsertQuery(connect *sql.DB, queryString string, args ...string) (int64, error) {
+func (connect *DataBaseConnector)InsertQuery(queryString string, args ...string) (int64, error) {
 	var arguments []interface{}
 
-    for _, arg := range args {
-        arguments = append(arguments, arg)
-    }	
+	for _, arg := range args {
+		arguments = append(arguments, arg)
+	}
 
 	insertResult, insertErr := connect.Exec(queryString, arguments...)
 
@@ -168,7 +183,6 @@ func InsertQuery(connect *sql.DB, queryString string, args ...string) (int64, er
 
 		return -999999, insertIdErr
 	}
-
 
 	return insertId, nil
 }

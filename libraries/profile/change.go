@@ -24,8 +24,7 @@ func ChangeProfile(data types.UserChangeProfileRequest, userId string, blogId st
 		return encodeErr
 	}
 
-	_ , insertErr := database.InsertQuery(
-		connect, 
+	_ , insertErr := connect.InsertQuery(
 		queries.InsertUpdateProfileInfo,
 		encodedName,
 		data.Color,
@@ -59,7 +58,7 @@ func ChangeColor(data types.UserUpdateProfileColorRequest, userId string, blogId
 		return connectErr
 	}
 
-	_, updateErr := database.InsertQuery(connect, queries.UpdateProfileColor, data.Color, userId, blogId)
+	_, updateErr := connect.InsertQuery(queries.UpdateProfileColor, data.Color, userId, blogId)
 
 	if updateErr!= nil {
 		log.Printf("[COLOR] Update Color Error: %v", updateErr)
@@ -80,7 +79,7 @@ func ChangeBlogTitle(data types.UserUpdateBlogTitleRequest, userId string, blogI
 		return connectErr
 	}
 
-	_, updateErr := database.InsertQuery(connect, queries.UpdateTitle, data.Title, userId, blogId)
+	_, updateErr := connect.InsertQuery(queries.UpdateTitle, data.Title, userId, blogId)
 
 	if updateErr != nil {
 		log.Printf("[TITLE] Change Title Error: %v", updateErr)

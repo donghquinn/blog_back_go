@@ -52,8 +52,7 @@ func UpdatePostEdit(postTitle string, postContents string, isPinned string,postS
 	}
 
 	// 데이터 업데이트
-	_, resultErr := database.InsertQuery(
-		connect,
+	_, resultErr := connect.InsertQuery(
 		queries.UpdateEditPost, 
 		postTitle, 
 		postContents,
@@ -78,7 +77,7 @@ func InsertUpdateCategory(postSeq string, category string, blogId string, isVali
 	}
 
 	if isValidCategory {
-			_, categoryErr := database.InsertQuery(connect, queries.InsertUpdateCategory, category, postSeq, blogId)
+			_, categoryErr := connect.InsertQuery(queries.InsertUpdateCategory, category, postSeq, blogId)
 
 		if categoryErr != nil {
 			log.Printf("[EDIT] INSERT/UPDATE category data Error: %v", categoryErr)
@@ -86,7 +85,7 @@ func InsertUpdateCategory(postSeq string, category string, blogId string, isVali
 		}
 	} else {
 		// 요청에 태그 데이터가 없다면 기존 카테고리 제거
-		_, deleteCategoryErr := database.InsertQuery(connect, queries.DeletePostCategory, category, blogId)
+		_, deleteCategoryErr := connect.InsertQuery(queries.DeletePostCategory, category, blogId)
 
 		if deleteCategoryErr != nil {
 			log.Printf("[EDIT] DELETE category data Error: %v", deleteCategoryErr)
@@ -109,7 +108,7 @@ func InsertUpdateTagList(tagList []string, postSeq string, blogId string) error 
 	if len(tagList) > 0 {
 		tagArray, _ := json.Marshal(tagList)
 		
-		_, tagQueryErr := database.InsertQuery(connect, queries.UpdateTag, string(tagArray), postSeq, blogId)
+		_, tagQueryErr := connect.InsertQuery( queries.UpdateTag, string(tagArray), postSeq, blogId)
 		// _, tagQueryErr := database.InsertQuery(connect, queries.InsertTag, postSeq, string(tagArray))
 
 		if tagQueryErr != nil {
@@ -119,7 +118,7 @@ func InsertUpdateTagList(tagList []string, postSeq string, blogId string) error 
 		}
 	} else {
 		// 요청에 태그 데이터가 없다면 기존 태그 제거
-		_, deleteTagErr := database.InsertQuery(connect, queries.DeletePostTag, postSeq, blogId)
+		_, deleteTagErr := connect.InsertQuery( queries.DeletePostTag, postSeq, blogId)
 
 		if deleteTagErr != nil {
 			log.Printf("[EDIT] DELETE Tag data Error: %v", deleteTagErr)
@@ -141,7 +140,7 @@ func InsertImageSeqList(imageSeqs []string, postSeq string) error {
 
 	for _, seq := range(imageSeqs) {
 		// 파일 데이터 업데이트
-		_, insertUpdateErr := database.InsertQuery(connect, queries.InsertUpdatePostImage, postSeq, seq)
+		_, insertUpdateErr := connect.InsertQuery( queries.InsertUpdatePostImage, postSeq, seq)
 
 		if insertUpdateErr != nil {
 			log.Printf("[EDIT] Insert Update File Data Error: %v", insertUpdateErr)

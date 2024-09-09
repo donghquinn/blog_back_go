@@ -23,7 +23,7 @@ func QueryUnpinnedPostData(blogId string, page int, size int) ([]types.SelectAll
 	}
 
 	// 페이징 파라미터 파싱
-	result, queryErr := database.Query(connect, queries.SelectUnPinnedPosts, blogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	result, queryErr := connect.Query(queries.SelectUnPinnedPosts, blogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get Unpinned Post Data Error: %v", queryErr)
@@ -76,7 +76,7 @@ func QueryisPinnedPostList(blogId string, page int, size int) ([]types.SelectAll
 	}
 
 	// 페이징 파라미터 파싱
-	result, queryErr := database.Query(connect, queries.SelectAllPinnedPosts, blogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	result, queryErr := connect.Query(queries.SelectAllPinnedPosts, blogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get Pinned Post Data Error: %v", queryErr)
@@ -129,7 +129,7 @@ func QueryisPinnedPostData(blogId string) ([]types.SelectAllPostDataResponse, er
 	}
 
 	// 페이징 파라미터 파싱
-	result, queryErr := database.Query(connect, queries.SelectPinnedPosts, blogId)
+	result, queryErr := connect.Query(queries.SelectPinnedPosts, blogId)
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get Pinned Post Data Error: %v", queryErr)
@@ -180,7 +180,7 @@ func GetTotalUnPinnedPostCount(blogId string) (types.PostTotalUnPinnedCountType,
 		return types.PostTotalUnPinnedCountType{}, dbErr
 	}
 
-	queryResult, queryErr := database.QueryOne(connect, queries.SelectUnPinnedPostCount, blogId)
+	queryResult, queryErr := connect.QueryOne(queries.SelectUnPinnedPostCount, blogId)
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get UnPinned Post Count Error: %v", queryErr)
@@ -203,7 +203,7 @@ func GetTotalPinnedPostCount(blogId string) (types.PostTotalUnPinnedCountType, e
 		return types.PostTotalUnPinnedCountType{}, dbErr
 	}
 
-	queryResult, queryErr := database.QueryOne(connect, queries.SelectPinnedPostCount, blogId)
+	queryResult, queryErr := connect.QueryOne(queries.SelectPinnedPostCount, blogId)
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get Pinned Post Count Error: %v", queryErr)
@@ -227,7 +227,7 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 		return []types.PostsByTagsResponseType{}, types.PostTotalUnPinnedCountType{}, dbErr
 	}
 
-	posts, selectErr := database.Query(connect, queries.SelectPostByTags, "%"+data.TagName+"%", data.BlogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	posts, selectErr := connect.Query(queries.SelectPostByTags, "%"+data.TagName+"%", data.BlogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if selectErr != nil {
 		log.Printf("[POST_TAG] GET Post by TagName Error: %v", selectErr)
@@ -267,7 +267,7 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 		return []types.PostsByTagsResponseType{}, types.PostTotalUnPinnedCountType{} ,dbErr2
 	}
 
-	count, countErr := database.QueryOne(connect2, queries.SelectTotalPostCountByTags, "%"+data.TagName+"%", data.BlogId)
+	count, countErr := connect.QueryOne(queries.SelectTotalPostCountByTags, "%"+data.TagName+"%", data.BlogId)
 	
 	if countErr != nil {
 		log.Printf("[POST_TAG] GET Post Total Count by TagName Error: %v", countErr)
@@ -319,7 +319,7 @@ func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int)
 	}
 
 	log.Println(data.BlogId)
-	posts, selectErr := database.Query(connect, queries.SelectPostByCategory, "%"+data.CategoryName+"%", data.BlogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	posts, selectErr := connect.Query(queries.SelectPostByCategory, "%"+data.CategoryName+"%", data.BlogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if selectErr != nil {
 		log.Printf("[POST_CATEGORY] GET Post by CategoryName Error: %v", selectErr)
@@ -364,7 +364,7 @@ func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int)
 		return []types.PostByCategoryResponseType{}, types.PostTotalUnPinnedCountType{} ,dbErr2
 	}
 
-	count, countErr := database.QueryOne(connect2, queries.SelectTotalPostCountByCategory, "%"+data.CategoryName+"%", data.BlogId)
+	count, countErr := connect.QueryOne(queries.SelectTotalPostCountByCategory, "%"+data.CategoryName+"%", data.BlogId)
 	
 	if countErr != nil {
 		log.Printf("[POST_TAG] GET Post Total Count by Category Error: %v", countErr)

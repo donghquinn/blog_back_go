@@ -54,8 +54,7 @@ func UploadBackgroundImageController(res http.ResponseWriter, req *http.Request)
 	connect, _ := database.InitDatabaseConnection()
 
 	// 데이터 입력 - DB
-	_, insertErr := database.InsertQuery(
-		connect, 
+	_, insertErr := connect.InsertQuery(
 		queries.InsertProfileImageData,
 		// USER ID from JWT
 		"1",

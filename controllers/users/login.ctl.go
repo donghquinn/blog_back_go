@@ -120,7 +120,7 @@ func getUserInfo(encodedEmail string) (types.UserLoginQueryResult, error){
 		return types.UserLoginQueryResult{}, connectErr
 	}
 
-	result, queryErr := database.QueryOne(connect, queries.SelectUserInfo, encodedEmail)
+	result, queryErr := connect.QueryOne(queries.SelectUserInfo, encodedEmail)
 
 	if queryErr != nil {
 		return types.UserLoginQueryResult{}, queryErr
