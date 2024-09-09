@@ -108,22 +108,14 @@ func (connect *DataBaseConnector) CreateTable( queryList []string) error {
 }
 
 // 쿼리
-func (connect *DataBaseConnector) Query(queryString string, args ...string) (*sql.Rows, error) {
-	// var arguments []interface{}
+func (connect *DataBaseConnector) GetMultiple(queryString string, args ...string) (*sql.Rows, error) {
+	var arguments []interface{}
 
-	// for _, arg := range args {
-	//     arguments = append(arguments, arg)
-	// }
+	for _, arg := range args {
+	    arguments = append(arguments, arg)
+	}
 
-	result, err := func() (*sql.Rows, error) {
-		result, err := connect.Query(queryString, args...)
-		if err != nil {
-			log.Printf("[QUERY] Query Error: %v\n", err)
-			return nil, err
-		}
-		defer connect.Close()
-		return result, nil
-	}()
+	result, err := connect.Query(queryString, arguments...)
 
 	if err != nil {
 		log.Printf("[QUERY] Query Error: %v\n", err)

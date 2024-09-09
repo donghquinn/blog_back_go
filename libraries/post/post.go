@@ -23,7 +23,7 @@ func QueryUnpinnedPostData(blogId string, page int, size int) ([]types.SelectAll
 	}
 
 	// 페이징 파라미터 파싱
-	result, queryErr := connect.Query(queries.SelectUnPinnedPosts, blogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	result, queryErr := connect.GetMultiple(queries.SelectUnPinnedPosts, blogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get Unpinned Post Data Error: %v", queryErr)
@@ -76,7 +76,7 @@ func QueryisPinnedPostList(blogId string, page int, size int) ([]types.SelectAll
 	}
 
 	// 페이징 파라미터 파싱
-	result, queryErr := connect.Query(queries.SelectAllPinnedPosts, blogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	result, queryErr := connect.GetMultiple(queries.SelectAllPinnedPosts, blogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get Pinned Post Data Error: %v", queryErr)
@@ -129,7 +129,7 @@ func QueryisPinnedPostData(blogId string) ([]types.SelectAllPostDataResponse, er
 	}
 
 	// 페이징 파라미터 파싱
-	result, queryErr := connect.Query(queries.SelectPinnedPosts, blogId)
+	result, queryErr := connect.GetMultiple(queries.SelectPinnedPosts, blogId)
 
 	if queryErr != nil {
 		log.Printf("[LIST] Get Pinned Post Data Error: %v", queryErr)
@@ -227,7 +227,7 @@ func GetPostByTag(data types.GetPostsByTagRequest, page int, size int) ([]types.
 		return []types.PostsByTagsResponseType{}, types.PostTotalUnPinnedCountType{}, dbErr
 	}
 
-	posts, selectErr := connect.Query(queries.SelectPostByTags, "%"+data.TagName+"%", data.BlogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	posts, selectErr := connect.GetMultiple(queries.SelectPostByTags, "%"+data.TagName+"%", data.BlogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if selectErr != nil {
 		log.Printf("[POST_TAG] GET Post by TagName Error: %v", selectErr)
@@ -319,7 +319,7 @@ func GetPostByCategory(data types.GetPostsByCategoryRequest, page int, size int)
 	}
 
 	log.Println(data.BlogId)
-	posts, selectErr := connect.Query(queries.SelectPostByCategory, "%"+data.CategoryName+"%", data.BlogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
+	posts, selectErr := connect.GetMultiple(queries.SelectPostByCategory, "%"+data.CategoryName+"%", data.BlogId, fmt.Sprintf("%d", size), fmt.Sprintf("%d", (page - 1) * size))
 
 	if selectErr != nil {
 		log.Printf("[POST_CATEGORY] GET Post by CategoryName Error: %v", selectErr)

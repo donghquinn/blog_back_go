@@ -78,13 +78,21 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		tagsArray = make([]string, 0)
 	}
 
+	var categoryName string
+
+	if queryResult.CategoryName != nil {
+		categoryName = *queryResult.CategoryName
+	} else {
+		categoryName = ""
+	}
+
 	// 게시글 컨텐츠 데이터
 	postContentsData := types.ViewSpecificPostContentsResponse{
 		PostSeq: queryResult.PostSeq,
 		PostTitle: queryResult.PostTitle,
 		Tags: tagsArray,
 		PostContents: queryResult.PostContents,
-		CategoryName: *queryResult.CategoryName,
+		CategoryName: categoryName,
 		UserName: userName,
 		Urls: urlArray,
 		Viewed: queryResult.Viewed,
@@ -107,7 +115,7 @@ func GetImageData(postSeq string) ([]types.SelectPostImageData, error){
 		return []types.SelectPostImageData{}, connectErr
 	}
 
-	result, queryErr := connect.Query(queries.SelectImageData, postSeq, "POST_IMAGE")
+	result, queryErr := connect.GetMultiple(queries.SelectImageData, postSeq, "POST_IMAGE")
 
 	if queryErr != nil {
 		log.Printf("[CONTENTS] Query Image Data Error: %v", queryErr)
