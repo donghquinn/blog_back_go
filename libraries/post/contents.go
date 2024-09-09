@@ -36,7 +36,7 @@ func UpdateViewCount(postSeq string) error {
 	}
 
 	// 조회수 업데이트
-	_, updateErr := database.InsertQuery(connect, queries.UpdateViewCount, postSeq)
+	_, updateErr := connect.InsertQuery(queries.UpdateViewCount, postSeq)
 
 	defer connect.Close()
 
@@ -61,7 +61,7 @@ func GetPostContents(postSeq string, blogId string) (types.SelectSpecificPostDat
 	}
 
 	// 특정 게시글 조회
-	result, queryErr := database.QueryOne(connect, queries.SelectSpecificPostContents, postSeq, blogId)
+	result, queryErr := connect.QueryOne(queries.SelectSpecificPostContents, postSeq, blogId)
 
 	defer connect.Close()
 

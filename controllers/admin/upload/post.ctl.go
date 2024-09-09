@@ -58,8 +58,7 @@ func UploadPostImageController(res http.ResponseWriter, req *http.Request) {
 	var insertId int64
 
 // 데이터 입력 - DB
-	seq, insertErr := database.InsertQuery(
-		connect, 
+	seq, insertErr := connect.InsertQuery(
 		queries.InsertPostImageData,
 		// USER ID from JWT
 		"1",

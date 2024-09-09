@@ -16,7 +16,7 @@ func DeletePost(postSeq string, blogId string) error {
 		return dbErr
 	}
 
-	_, deletePostErr := database.InsertQuery(connect, queries.DeletePost, "0", postSeq, blogId)
+	_, deletePostErr := connect.InsertQuery(queries.DeletePost, "0", postSeq, blogId)
 
 	if deletePostErr != nil {
 		log.Printf("[DELETE] Delete Post Error: %v", deletePostErr)
@@ -47,7 +47,7 @@ func DeleteCategory(postSeq string, blogOwner string) error {
 		return dbErr
 	}
 
-	_, deleteCategoryErr := database.InsertQuery(connect, queries.DeleteCategory, "0", postSeq, blogOwner)
+	_, deleteCategoryErr := connect.InsertQuery(queries.DeleteCategory, "0", postSeq, blogOwner)
 
 	if deleteCategoryErr != nil {
 		log.Printf("[DELETE] Delete Post Category Error: %v", deleteCategoryErr)
@@ -66,7 +66,7 @@ func DeleteTag(postSeq string, blogOwner string) error {
 		return dbErr
 	}
 
-	_, deleteTagErr := database.InsertQuery(connect, queries.DeleteTags, "0", postSeq, blogOwner)
+	_, deleteTagErr := connect.InsertQuery(queries.DeleteTags, "0", postSeq, blogOwner)
 
 	if deleteTagErr != nil {
 		log.Printf("[DELETE] Delete Post Tags Error: %v", deleteTagErr)
@@ -86,7 +86,7 @@ func UpdatePinPost(data types.UpdatePinRequest, blogId string) error {
 		return dbErr
 	}
 
-	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "1", data.PostSeq, blogId)
+	_, updateErr := connect.InsertQuery(queries.UpdatePinPost, "1", data.PostSeq, blogId)
 
 	if updateErr != nil {
 		log.Printf("[PIN] Update Pin Post Error: %v", updateErr)
@@ -106,7 +106,7 @@ func UpdateUnPinPost(data types.UpdatePinRequest, blogId string) error {
 		return dbErr
 	}
 
-	_, updateErr := database.InsertQuery(connect, queries.UpdatePinPost, "0", data.PostSeq, blogId)
+	_, updateErr := connect.InsertQuery(queries.UpdatePinPost, "0", data.PostSeq, blogId)
 
 	if updateErr != nil {
 		log.Printf("[PIN] Update Un-Pin Post Error: %v", updateErr)

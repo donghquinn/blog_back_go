@@ -50,7 +50,7 @@ func getUserEmail(userName string) (types.SelectUserSearchEmailResult, error) {
 		return types.SelectUserSearchEmailResult{}, connectErr
 	}
 
-	queryResult, queryErr := database.QueryOne(connect, queries.SelectUserEmail, userName)
+	queryResult, queryErr := connect.QueryOne(queries.SelectUserEmail, userName)
 
 	if queryErr != nil {
 		return types.SelectUserSearchEmailResult{}, queryErr
@@ -93,7 +93,7 @@ func getUserPassword(userEmail string, userName string) (types.SelectUserSearchP
 		return types.SelectUserSearchPasswordResult{}, connectErr
 	}
 
-	queryResult, queryErr := database.QueryOne(connect, queries.SelectUserPassword, userName, userEmail)
+	queryResult, queryErr := connect.QueryOne(queries.SelectUserPassword, userName, userEmail)
 
 	if queryErr != nil {
 		return types.SelectUserSearchPasswordResult{}, queryErr

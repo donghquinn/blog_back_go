@@ -50,7 +50,7 @@ func GetDefaultUserProfile(blogId string) (types.SelectUserProfileQueryResult, e
 		return types.SelectUserProfileQueryResult{}, dbErr
 	}
 
-	profile, profileErr := database.QueryOne(connect, queries.SelectUserProfile, blogId)
+	profile, profileErr := connect.QueryOne(queries.SelectUserProfile, blogId)
 
 	if profileErr != nil {
 		log.Printf("[PROFILE] Get Profile Error: %v", profileErr)
@@ -83,7 +83,7 @@ func GetUserProfileByUserId(userId string) (types.SelectUserProfileQueryResult, 
 		return types.SelectUserProfileQueryResult{}, dbErr
 	}
 
-	profile, profileErr := database.QueryOne(connect, queries.SelectUserProfileByUserId, userId)
+	profile, profileErr := connect.QueryOne(queries.SelectUserProfileByUserId, userId)
 
 	if profileErr != nil {
 		log.Printf("[PROFILE] Get Profile Error: %v", profileErr)
@@ -117,7 +117,7 @@ func GetUserProfileImageList(userId string) (types.UserImageFileData, error){
 		return types.UserImageFileData{}, dbErr
 	}
 
-	images, imagesErr := database.Query(connect, queries.SelectUserProfileProfileAndBackground, userId, "USER_PROFILE", "USER_BACKGROUND")
+	images, imagesErr := connect.Query(queries.SelectUserProfileProfileAndBackground, userId, "USER_PROFILE", "USER_BACKGROUND")
 	
 	if imagesErr != nil {
 		log.Printf("[PROFILE] Get Profile And Background Images Error: %v", imagesErr)

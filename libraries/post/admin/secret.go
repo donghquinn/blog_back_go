@@ -6,37 +6,37 @@ import (
 )
 
 func ChangeToSecretPost(postSeq string) error {
-	dbconn, dbErr := database.InitDatabaseConnection()
+	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
 		return dbErr
 	}
 
-	_, insertErr := database.InsertQuery(dbconn, queries.ChangeToSecretPostQuery, postSeq)
+	_, insertErr := connect.InsertQuery( queries.ChangeToSecretPostQuery, postSeq)
 
 	if insertErr != nil {
 		return insertErr
 	}
 
-	defer dbconn.Close()
+	defer connect.Close()
 
 	return nil
 }
 
 func ChangeToNotSecretPost(postSeq string) error {
-	dbconn, dbErr := database.InitDatabaseConnection()
+	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
 		return dbErr
 	}
 
-	_, insertErr := database.InsertQuery(dbconn, queries.ChangeToNotSecretPostQuery, postSeq)
+	_, insertErr := connect.InsertQuery( queries.ChangeToNotSecretPostQuery, postSeq)
 
 	if insertErr != nil {
 		return insertErr
 	}
 
-	defer dbconn.Close()
+	defer connect.Close()
 
 	return nil
 }
