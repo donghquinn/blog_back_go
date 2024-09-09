@@ -107,7 +107,7 @@ func GetImageData(postSeq string) ([]types.SelectPostImageData, error){
 		return []types.SelectPostImageData{}, connectErr
 	}
 
-	result, queryErr := connect.Query(queries.SelectImageData, postSeq, "POST_IMAGE")
+	result, queryErr := connect.GetMultiple(queries.SelectImageData, postSeq, "POST_IMAGE")
 
 	if queryErr != nil {
 		log.Printf("[CONTENTS] Query Image Data Error: %v", queryErr)

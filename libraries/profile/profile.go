@@ -117,7 +117,7 @@ func GetUserProfileImageList(userId string) (types.UserImageFileData, error){
 		return types.UserImageFileData{}, dbErr
 	}
 
-	images, imagesErr := connect.Query(queries.SelectUserProfileProfileAndBackground, userId, "USER_PROFILE", "USER_BACKGROUND")
+	images, imagesErr := connect.GetMultiple(queries.SelectUserProfileProfileAndBackground, userId, "USER_PROFILE", "USER_BACKGROUND")
 	
 	if imagesErr != nil {
 		log.Printf("[PROFILE] Get Profile And Background Images Error: %v", imagesErr)

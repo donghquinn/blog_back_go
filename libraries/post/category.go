@@ -17,7 +17,7 @@ func GetAllCategoryList(blogId string) ([]string, error) {
 		return []string{}, dbErr
 	}
 
-	queryResult, queryErr := connect.Query(queries.SelectAllCategories, blogId)
+	queryResult, queryErr := connect.GetMultiple(queries.SelectAllCategories, blogId)
 
 	if queryErr != nil {
 		log.Printf("[CATEGORY] Get All Categories Error: %v", queryErr)
