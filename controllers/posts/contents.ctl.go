@@ -78,13 +78,21 @@ func PostContentsController(res http.ResponseWriter, req *http.Request) {
 		tagsArray = make([]string, 0)
 	}
 
+	var categoryName string
+
+	if queryResult.CategoryName != nil {
+		categoryName = *queryResult.CategoryName
+	} else {
+		categoryName = ""
+	}
+
 	// 게시글 컨텐츠 데이터
 	postContentsData := types.ViewSpecificPostContentsResponse{
 		PostSeq: queryResult.PostSeq,
 		PostTitle: queryResult.PostTitle,
 		Tags: tagsArray,
 		PostContents: queryResult.PostContents,
-		CategoryName: *queryResult.CategoryName,
+		CategoryName: categoryName,
 		UserName: userName,
 		Urls: urlArray,
 		Viewed: queryResult.Viewed,

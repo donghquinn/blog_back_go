@@ -117,15 +117,6 @@ func (connect *DataBaseConnector) GetMultiple(queryString string, args ...string
 
 	result, err := connect.Query(queryString, arguments...)
 
-	// result, err := func() (*sql.Rows, error) {
-	// 	if err != nil {
-	// 		log.Printf("[QUERY] Query Error: %v\n", err)
-	// 		return nil, err
-	// 	}
-	// 	defer connect.Close()
-	// 	return result, nil
-	// }()
-
 	if err != nil {
 		log.Printf("[QUERY] Query Error: %v\n", err)
 
