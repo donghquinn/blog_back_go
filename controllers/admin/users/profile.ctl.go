@@ -18,26 +18,42 @@ func UpdateProfileController(res http.ResponseWriter, req *http.Request) {
 	userId, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UPF001",
+			Message: "JWT Token Validation Error",
+		})
 		return
 	}
-	
+
 	parseErr := utils.DecodeBody(req, &updateProfile)
 
 	if parseErr != nil {
 		log.Printf("[PROFILE] Change Profile Request Error: %v", parseErr)
-		dto.SetErrorResponse(res, 402, "02", "Change Profile Request Error", parseErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UPF002",
+			Message: "Parse Error",
+		})
 		return
 	}
 
 	updateErr := profile.ChangeProfile(updateProfile, userId, blogId)
 
 	if updateErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Insert Profile Update Error", updateErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusInternalServerError,
+			Code:    "UPF003",
+			Message: "Change Profile Error",
+		})
 		return
 	}
 
-	dto.SetResponse(res, 200, "01")
+	dto.Response(res, dto.CommonResponseWithMessage{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Message: "Success",
+	})
 }
 
 // 색상 변경 컨트롤러
@@ -45,7 +61,11 @@ func UpdateColorController(res http.ResponseWriter, req *http.Request) {
 	userId, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UPC001",
+			Message: "JWT Token Validation Error",
+		})
 		return
 	}
 
@@ -55,18 +75,30 @@ func UpdateColorController(res http.ResponseWriter, req *http.Request) {
 
 	if parseErr != nil {
 		log.Printf("[COLOR] Change Color Request Error: %v", parseErr)
-		dto.SetErrorResponse(res, 402, "02", "Change Color Request Error", parseErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UPC002",
+			Message: "Parse Error",
+		})
 		return
 	}
 
 	changeColorErr := profile.ChangeColor(changeColorRequest, userId, blogId)
 
 	if changeColorErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Change Color Error", changeColorErr)
-		return 
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusInternalServerError,
+			Code:    "UPC003",
+			Message: "Change Color Error",
+		})
+		return
 	}
 
-	dto.SetResponse(res, 200, "01")
+	dto.Response(res, dto.CommonResponseWithMessage{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Message: "Success",
+	})
 }
 
 // 블로그 타이틀 변경 컨트롤러
@@ -74,7 +106,11 @@ func UpdateTitleController(res http.ResponseWriter, req *http.Request) {
 	userId, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UPT001",
+			Message: "JWT Token Validation Error",
+		})
 		return
 	}
 
@@ -84,16 +120,28 @@ func UpdateTitleController(res http.ResponseWriter, req *http.Request) {
 
 	if parseErr != nil {
 		log.Printf("[TITLE] Change Title Request Error: %v", parseErr)
-		dto.SetErrorResponse(res, 402, "02", "Change Title Request Error", parseErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UPT002",
+			Message: "Parse Error",
+		})
 		return
 	}
 
 	changeTitleErr := profile.ChangeBlogTitle(changeTitleRequest, userId, blogId)
 
 	if changeTitleErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Change Title Error", changeTitleErr)
-		return 
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusInternalServerError,
+			Code:    "UPT003",
+			Message: "Change Title Error",
+		})
+		return
 	}
 
-	dto.SetResponse(res, 200, "01")
+	dto.Response(res, dto.CommonResponseWithMessage{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Message: "Success",
+	})
 }

@@ -14,7 +14,11 @@ func EditPostController(res http.ResponseWriter, req *http.Request) {
 	userId, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "EDP001",
+			Message: "JWT Validate Error",
+		})
 
 		return
 	}
@@ -24,16 +28,28 @@ func EditPostController(res http.ResponseWriter, req *http.Request) {
 	parseErr := utils.DecodeBody(req, &editPostRequest)
 
 	if parseErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Parse Request Body Error", parseErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "EDP002",
+			Message: "Parse Error",
+		})
 		return
 	}
 
 	editErr := post.EditPost(editPostRequest, userId, blogId)
 
 	if editErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Edit Post Data Error", editErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusInternalServerError,
+			Code:    "EDP003",
+			Message: "Edit Post Error",
+		})
 		return
 	}
 
-	dto.SetResponse(res, 200, "01")
+	dto.Response(res, dto.CommonResponseWithMessage{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Message: "Success",
+	})
 }
