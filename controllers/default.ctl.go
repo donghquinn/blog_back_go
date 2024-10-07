@@ -11,14 +11,26 @@ func DefaultController(res http.ResponseWriter, req *http.Request) {
 	_, _, _, _, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status: http.StatusBadRequest,
+			Code: "01",
+			Message: "JWT Validation Error",
+		})
 
 		return
 	}
 
-	dto.SetResponseWithMessage(res, 200, "01", "Hello World") 
+	dto.Response(res, dto.CommonResponseWithMessage{
+			Status: http.StatusOK,
+			Code: "0000",
+			Message: "Validation success",
+		})
 }
 
 func CorsTestController(res http.ResponseWriter, req *http.Request) {
-	dto.SetResponseWithMessage(res, 200, "01",  "Hi")
+	dto.Response(res, dto.CommonResponseWithMessage{
+			Status: http.StatusOK,
+			Code: "0000",
+			Message: "Hi",
+		})
 }

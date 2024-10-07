@@ -1,46 +1,51 @@
-package controllers
+// package controllers
 
-import (
-	"net/http"
+// import (
+// 	"net/http"
 
-	"github.com/donghquinn/blog_back_go/dto"
-	"github.com/donghquinn/blog_back_go/libraries/database"
-	types "github.com/donghquinn/blog_back_go/types/post"
-	"github.com/donghquinn/blog_back_go/utils"
-)
+// 	"github.com/donghquinn/blog_back_go/dto"
+// 	"github.com/donghquinn/blog_back_go/libraries/database"
+// 	types "github.com/donghquinn/blog_back_go/types/post"
+// 	"github.com/donghquinn/blog_back_go/utils"
+// )
 
-func GetImageUrl(res http.ResponseWriter, req *http.Request) {
-	var getPostRequest types.GetPostByPostSeq
+// func GetImageUrl(res http.ResponseWriter, req *http.Request) {
+// 	var getPostRequest types.GetPostByPostSeq
 
-	err := utils.DecodeBody(req, &getPostRequest)
-	
-	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "Request Is Not Valid", err)
-	}
+// 	err := utils.DecodeBody(req, &getPostRequest)
 
-	imageData, imageErr := GetImageData(getPostRequest.PostSeq)
+// 	if err != nil {
+// 		dto.Response(res, types.ResponsePostContentsType{
+// 			Status:  http.StatusBadRequest,
+// 			Code:    "PCT001",
+// 			Result:  false,
+// 			Message: "Parse Error",
+// 		})
+// 	}
 
-	if imageErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Image Data Error", imageErr)
-		return
-	}
+// 	imageData, imageErr := GetImageData(getPostRequest.PostSeq)
 
-	var urlArray []string
+// 	if imageErr != nil {
+// 		dto.SetErrorResponse(res, 402, "02", "Image Data Error", imageErr)
+// 		return
+// 	}
 
-	// 게시글 URL 배열 만들기
-	for _, data := range(imageData) {
-		url, getErr := database.GetImageUrl(data.ObjectName, data.FileFormat)
+// 	var urlArray []string
 
-		if getErr != nil {
-			dto.SetErrorResponse(res, 403, "03", "Get Presigned URL Error", getErr)
-			return
-		}
+// 	// 게시글 URL 배열 만들기
+// 	for _, data := range imageData {
+// 		url, getErr := database.GetImageUrl(data.ObjectName, data.FileFormat)
 
-		urlArray = append(urlArray, url.String())
-	}
+// 		if getErr != nil {
+// 			dto.SetErrorResponse(res, 403, "03", "Get Presigned URL Error", getErr)
+// 			return
+// 		}
 
-	// responseData := types.ViewImageUrl {
-	// 	Urls: urlArray}
+// 		urlArray = append(urlArray, url.String())
+// 	}
 
-	dto.SetImageUrlResponse(res, 200, "01", urlArray)
-}
+// 	// responseData := types.ViewImageUrl {
+// 	// 	Urls: urlArray}
+
+// 	dto.SetImageUrlResponse(res, 200, "01", urlArray)
+// }

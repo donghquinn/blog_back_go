@@ -19,14 +19,24 @@ func GetUserProfileController(res http.ResponseWriter, req *http.Request) {
 	if parseErr != nil {
 		log.Printf("[LOGIN] Parse Body Error: %v", parseErr)
 
-		dto.SetErrorResponse(res, 401, "01", "SignUp Parsing Error", parseErr)
+		dto.Response(res, types.ResponseProfileType{
+			Status:        http.StatusBadRequest,
+			Code:          "UPF001",
+			ProfileResult: types.UserProfileDataResponseType{},
+			Message:       "Parsing Error",
+		})
 		return
 	}
 
 	profile, querErr := profile.GetUserProfile(getUserProfileRequest.BlogId, getUserProfileRequest.UserId)
 
 	if querErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Profile query Error", querErr)
+		dto.Response(res, types.ResponseProfileType{
+			Status:        http.StatusInternalServerError,
+			Code:          "UPF002",
+			ProfileResult: types.UserProfileDataResponseType{},
+			Message:       "Query Error",
+		})
 		return
 	}
 
@@ -34,7 +44,12 @@ func GetUserProfileController(res http.ResponseWriter, req *http.Request) {
 
 	if nameErr != nil {
 		log.Printf("[PROFILE] Decode User Name: %v", nameErr)
-		dto.SetErrorResponse(res, 403, "03", "Decode User Name Error", nameErr)
+		dto.Response(res, types.ResponseProfileType{
+			Status:        http.StatusInternalServerError,
+			Code:          "UPF003",
+			ProfileResult: types.UserProfileDataResponseType{},
+			Message:       "Decrypt Error",
+		})
 		return
 	}
 
@@ -42,12 +57,22 @@ func GetUserProfileController(res http.ResponseWriter, req *http.Request) {
 
 	if emailErr != nil {
 		log.Printf("[PROFILE] Decode User Email: %v", emailErr)
-		dto.SetErrorResponse(res, 404, "04", "Decode User Email Error", emailErr)
+		dto.Response(res, types.ResponseProfileType{
+			Status:        http.StatusInternalServerError,
+			Code:          "UPF004",
+			ProfileResult: types.UserProfileDataResponseType{},
+			Message:       "Decrypt Error",
+		})
 		return
 	}
 
 	profile.UserName = decodedName
 	profile.UserEmail = decodedEmail
 
-	dto.SetProfileResponse(res, 200, "01", profile)
+	dto.Response(res, types.ResponseProfileType{
+		Status:        http.StatusOK,
+		Code:          "0000",
+		ProfileResult: profile,
+		Message:       "Success",
+	})
 }

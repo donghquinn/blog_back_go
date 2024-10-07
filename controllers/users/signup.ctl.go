@@ -22,7 +22,13 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 	if parseErr != nil {
 		log.Printf("[SIGN_UP] Parse Body Error: %v", parseErr)
 
-		dto.SetErrorResponse(res, 401, "01", "SignUp Parsing Error", parseErr)
+		dto.Response(res, types.ResponseSignupType{
+			Status:  http.StatusBadRequest,
+			Code:    "USG001",
+			Result:  false,
+			Message: "Parsing Error",
+		})
+
 		return
 	}
 
@@ -32,14 +38,24 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 	// log.Printf("[SIGNUP] decodedEmail: %s, decodedName: %s, decodedPassword: %s", decodedEmail, decodedName, decodedPassword)
 
 	if decodeErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Decode Received User Info", decodeErr)
+		dto.Response(res, types.ResponseSignupType{
+			Status:  http.StatusInternalServerError,
+			Code:    "USG002",
+			Result:  false,
+			Message: "Decode Error",
+		})
 		return
 	}
 
 	connect, dbErr := database.InitDatabaseConnection()
 
 	if dbErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Database Connect Error", dbErr)
+		dto.Response(res, types.ResponseSignupType{
+			Status:  http.StatusInternalServerError,
+			Code:    "USG003",
+			Result:  false,
+			Message: "Db Connection Error",
+		})
 		return
 	}
 
@@ -47,20 +63,35 @@ func SignupController(res http.ResponseWriter, req *http.Request) {
 	userId, encodedEmail, encodedName, encodedPassword, enocodErr := encodeSignupUserInfo(decodedEmail, decodedPassword, decodedName)
 
 	if enocodErr != nil {
-		dto.SetErrorResponse(res, 404, "04", "Encoding Process Error", enocodErr)
+		dto.Response(res, types.ResponseSignupType{
+			Status:  http.StatusInternalServerError,
+			Code:    "USG004",
+			Result:  false,
+			Message: "Encrypt User Data Error",
+		})
 		return
 	}
-	
+
 	// log.Printf("[SIGNUP] userId: %s, encodedEmail: %s, encodedName: %s, encodedPassword: %s",userId, encodedEmail, encodedName, encodedPassword)
 	// 새로운 유저 데이터 입력
 	_, insertErr := connect.InsertQuery(queries.InsertSignupUser, userId, encodedEmail, encodedPassword, encodedName, signupRequestBody.BlogId)
 
 	if insertErr != nil {
-		dto.SetErrorResponse(res, 405, "05", "Insert New User Info Error", insertErr)
+		dto.Response(res, types.ResponseSignupType{
+			Status:  http.StatusBadRequest,
+			Code:    "USG005",
+			Result:  false,
+			Message: "Insert User Info Error",
+		})
 		return
 	}
 
-	dto.SetResponse(res, 200, "01")
+	dto.Response(res, types.ResponseSignupType{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Result:  true,
+		Message: "Success",
+	})
 }
 
 func decodeSignupUserRequest(signupRequest types.UserSignupRequest) (string, string, string, error) {
@@ -68,21 +99,21 @@ func decodeSignupUserRequest(signupRequest types.UserSignupRequest) (string, str
 
 	if decodeEmailErr != nil {
 		log.Printf("[SIGNUP] Decode Email Error: %v", decodeEmailErr)
-		return "","","",decodeEmailErr
+		return "", "", "", decodeEmailErr
 	}
 
 	decodedName, decodeNameErr := crypt.DecryptString(signupRequest.Name)
 
 	if decodeNameErr != nil {
 		log.Printf("[SIGNUP] Decode Name Error: %v", decodeNameErr)
-		return "","","",decodeNameErr
+		return "", "", "", decodeNameErr
 	}
 
 	decodedPassword, decodePasswordErr := crypt.DecryptString(signupRequest.Password)
 
 	if decodePasswordErr != nil {
 		log.Printf("[SIGNUP] Decode Password Error: %v", decodePasswordErr)
-		return "","","",decodePasswordErr
+		return "", "", "", decodePasswordErr
 	}
 
 	return decodedEmail, decodedName, decodedPassword, nil
@@ -97,23 +128,23 @@ func encodeSignupUserInfo(decodeEmail string, decodePassword string, decodeName 
 
 		return "", "", "", "", uuidErr
 	}
-	
+
 	encodedEmail, encodeEmailErr := crypt.EncryptString(decodeEmail)
 
 	if encodeEmailErr != nil {
-		return "","","","",encodeEmailErr
+		return "", "", "", "", encodeEmailErr
 	}
 
 	encodedName, encodeNameErr := crypt.EncryptString(decodeName)
 
 	if encodeNameErr != nil {
-		return "","","","",encodeNameErr
+		return "", "", "", "", encodeNameErr
 	}
 
 	encodedPassword, encodePasswordErr := crypt.EncryptHashPassword(decodePassword)
 
 	if encodePasswordErr != nil {
-		return "","","","",encodePasswordErr
+		return "", "", "", "", encodePasswordErr
 	}
 
 	return userId.String(), encodedEmail, encodedName, encodedPassword, nil
