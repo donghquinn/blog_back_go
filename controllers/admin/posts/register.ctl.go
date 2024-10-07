@@ -16,7 +16,11 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 	userId, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+		dto.Response(res, types.ResponsePostRegisterType{
+			Status:  http.StatusBadRequest,
+			Code:    "RGP001",
+			Message: "JWT Validate Error",
+		})
 
 		return
 	}
@@ -26,26 +30,42 @@ func RegisterPostController(res http.ResponseWriter, req *http.Request) {
 	parseErr := utils.DecodeBody(req, &registerPostRequest)
 
 	if parseErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Parsing Request Body", parseErr)
+		dto.Response(res, types.ResponsePostRegisterType{
+			Status:  http.StatusBadRequest,
+			Code:    "RGP002",
+			Message: "Parse Error",
+		})
 		return
 	}
 
 	postSeq, insertErr := post.InsertPostData(registerPostRequest, userId, blogId)
 
 	if insertErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Insert Post Data Error", insertErr)
+		dto.Response(res, types.ResponsePostRegisterType{
+			Status:  http.StatusInternalServerError,
+			Code:    "RGP003",
+			Message: "Query Error",
+		})
 		return
 	}
 
-	dto.SetPostRegisterResponse(res, 200, "01", postSeq)
+	dto.Response(res, types.ResponsePostRegisterType{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		PostSeq: postSeq,
+		Message: "Success",
+	})
 }
-
 
 func DeletePostController(res http.ResponseWriter, req *http.Request) {
 	_, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "DTP001",
+			Message: "JWT Validate Error",
+		})
 
 		return
 	}
@@ -56,27 +76,42 @@ func DeletePostController(res http.ResponseWriter, req *http.Request) {
 
 	if parseErr != nil {
 		log.Printf("[DELETE] Parse Delete Request Error: %v", parseErr)
-		dto.SetErrorResponse(res, 402, "02", "Delete Post Error", parseErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "DTP002",
+			Message: "Parse Error",
+		})
 		return
 	}
 
 	deleteErr := post.DeletePost(deleteRequest.PostSeq, blogId)
 
 	if deleteErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Delete Post Error", deleteErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusInternalServerError,
+			Code:    "DTP003",
+			Message: "Delete Error",
+		})
 		return
 	}
-	
-	dto.SetResponse(res, 200, "01")
+
+	dto.Response(res, dto.CommonResponseWithMessage{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Message: "Success",
+	})
 }
 
 // 고정 게시글 데이터 업데이트
-func UpdatePinPostController(res http.ResponseWriter, req *http.Request ) {
+func UpdatePinPostController(res http.ResponseWriter, req *http.Request) {
 	_, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
-
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UPP001",
+			Message: "JWT Validation Error",
+		})
 		return
 	}
 
@@ -86,27 +121,42 @@ func UpdatePinPostController(res http.ResponseWriter, req *http.Request ) {
 
 	if parseErr != nil {
 		log.Printf("[PIN] Parse Pin Request Error: %v", parseErr)
-		dto.SetErrorResponse(res, 402, "02", "Update Pin Error", parseErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UPP002",
+			Message: "Parse Error",
+		})
 		return
 	}
 
 	updateErr := post.UpdatePinPost(updatePinRequest, blogId)
 
 	if updateErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Update Pin Error", updateErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusInternalServerError,
+			Code:    "UPP003",
+			Message: "Update Error",
+		})
 		return
 	}
 
-	dto.SetResponse(res, 200, "01")
+	dto.Response(res, dto.CommonResponseWithMessage{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Message: "Success",
+	})
 }
 
 // 고정 게시글 해제 데이터 업데이트
-func UpdateUnPinPostController(res http.ResponseWriter, req *http.Request ) {
+func UpdateUnPinPostController(res http.ResponseWriter, req *http.Request) {
 	_, _, _, blogId, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
-
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UUP001",
+			Message: "JWT Validation Error",
+		})
 		return
 	}
 
@@ -116,16 +166,28 @@ func UpdateUnPinPostController(res http.ResponseWriter, req *http.Request ) {
 
 	if parseErr != nil {
 		log.Printf("[PIN] Parse Un-Pin Request Error: %v", parseErr)
-		dto.SetErrorResponse(res, 402, "02", "Update Un-Pin Error", parseErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UUP002",
+			Message: "Parse Error",
+		})
 		return
 	}
 
 	updateErr := post.UpdateUnPinPost(updateUnPinRequest, blogId)
 
 	if updateErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Update Un-Pin Error", updateErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusInternalServerError,
+			Code:    "UUP003",
+			Message: "Update Unpin Error",
+		})
 		return
 	}
 
-	dto.SetResponse(res, 200, "01")
+	dto.Response(res, dto.CommonResponseWithMessage{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Message: "Success",
+	})
 }

@@ -14,8 +14,12 @@ import (
 func ChangeToSecretPostController(response http.ResponseWriter, request *http.Request) {
 	_, _, _, _, err := auth.ValidateJwtToken(request)
 
-	if (err != nil ) {
-		dto.SetErrorResponse(response, 401, "01", "JWT Validate Error", err)
+	if err != nil {
+		dto.Response(response, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "CSP001",
+			Message: "JWT Validation Error",
+		})
 		return
 	}
 
@@ -23,27 +27,43 @@ func ChangeToSecretPostController(response http.ResponseWriter, request *http.Re
 
 	parseErr := utils.DecodeBody(request, &changeRequest)
 
-	if (parseErr != nil ) {
-		dto.SetErrorResponse(response, 402, "02", "Invalid Request Body", parseErr)
+	if parseErr != nil {
+		dto.Response(response, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "CSP002",
+			Message: "Parse Error",
+		})
 		return
 	}
-	
+
 	changeErr := post.ChangeToSecretPost(changeRequest.PostSeq)
 
-	if (changeErr != nil ) {
-		dto.SetErrorResponse(response, 403, "03", "Change Secret Failed", changeErr)
+	if changeErr != nil {
+		dto.Response(response, dto.CommonResponseWithMessage{
+			Status:  http.StatusInternalServerError,
+			Code:    "CSP003",
+			Message: "Chnage to Secret Error",
+		})
 		return
 	}
 
-	dto.SetResponse(response, 200, "01")
+	dto.Response(response, dto.CommonResponseWithMessage{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Message: "Success",
+	})
 }
 
 // 비공개 게시글에서 공개 게시글로 변경
 func ChangeToNotSecretPostController(response http.ResponseWriter, request *http.Request) {
 	_, _, _, _, err := auth.ValidateJwtToken(request)
 
-	if (err != nil ) {
-		dto.SetErrorResponse(response, 401, "01", "JWT Validate Error", err)
+	if err != nil {
+		dto.Response(response, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "CNS001",
+			Message: "JWT Validation Error",
+		})
 		return
 	}
 
@@ -51,17 +71,29 @@ func ChangeToNotSecretPostController(response http.ResponseWriter, request *http
 
 	parseErr := utils.DecodeBody(request, &changeRequest)
 
-	if (parseErr != nil ) {
-		dto.SetErrorResponse(response, 402, "02", "Invalid Request Body", parseErr)
+	if parseErr != nil {
+		dto.Response(response, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "CNS002",
+			Message: "Parse Error",
+		})
 		return
 	}
-	
+
 	changeErr := post.ChangeToNotSecretPost(changeRequest.PostSeq)
 
-	if (changeErr != nil ) {
-		dto.SetErrorResponse(response, 403, "03", "Change Not Secret Failed", changeErr)
+	if changeErr != nil {
+		dto.Response(response, dto.CommonResponseWithMessage{
+			Status:  http.StatusInternalServerError,
+			Code:    "CNS003",
+			Message: "Chnage to Not Secret Error",
+		})
 		return
 	}
 
-	dto.SetResponse(response, 200, "01")
+	dto.Response(response, dto.CommonResponseWithMessage{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Message: "Success",
+	})
 }

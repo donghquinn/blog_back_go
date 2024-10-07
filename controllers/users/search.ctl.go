@@ -89,26 +89,26 @@ func getUserEmail(userName string) (types.SelectUserSearchEmailResult, error) {
 }
 
 // 페스워드 찾기
-func SearchPasswordController(res http.ResponseWriter, req *http.Request) {
-	var findEmailRequest types.UserSearchPasswordRequest
+// func SearchPasswordController(res http.ResponseWriter, req *http.Request) {
+// 	var findEmailRequest types.UserSearchPasswordRequest
 
-	parsErr := utils.DecodeBody(req, &findEmailRequest)
+// 	parsErr := utils.DecodeBody(req, &findEmailRequest)
 
-	if parsErr != nil {
-		dto.SetErrorResponse(res, 401, "01", "Parse Find Email Request Body", parsErr)
-		return
-	}
+// 	if parsErr != nil {
+// 		dto.SetErrorResponse(res, 401, "01", "Parse Find Email Request Body", parsErr)
+// 		return
+// 	}
 
-	// 패스워드 쿼리
-	foundUserPassword, findErr := getUserPassword(findEmailRequest.Email, findEmailRequest.Name)
+// 	// 패스워드 쿼리
+// 	foundUserPassword, findErr := getUserPassword(findEmailRequest.Email, findEmailRequest.Name)
 
-	if findErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Could Not Found User Email Error", findErr)
-		return
-	}
+// 	if findErr != nil {
+// 		dto.SetErrorResponse(res, 402, "02", "Could Not Found User Email Error", findErr)
+// 		return
+// 	}
 
-	dto.SetEmailResponse(res, 200, "01", foundUserPassword.UserPassword)
-}
+// 	dto.SetEmailResponse(res, 200, "01", foundUserPassword.UserPassword)
+// }
 
 func getUserPassword(userEmail string, userName string) (types.SelectUserSearchPasswordResult, error) {
 	var emailQueryResult types.SelectUserSearchPasswordResult

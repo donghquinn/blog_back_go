@@ -18,17 +18,23 @@ func UploadBackgroundImageController(res http.ResponseWriter, req *http.Request)
 	userId, _, _, _, err := auth.ValidateJwtToken(req)
 
 	if err != nil {
-		dto.SetErrorResponse(res, 401, "01", "JWT Verifying Error", err)
-
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UBI001",
+			Message: "JWT Token Validation Error",
+		})
 		return
 	}
 
-		// 요청으로부터 이미지 파일 가져오기
+	// 요청으로부터 이미지 파일 가져오기
 	file, handler, fileErr := upload.GetImagefileFromRequest(res, req)
 
 	if fileErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "File Getting Error", fileErr)
-
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusInternalServerError,
+			Code:    "UBI002",
+			Message: "Upload Image Error",
+		})
 		return
 	}
 
@@ -36,7 +42,11 @@ func UploadBackgroundImageController(res http.ResponseWriter, req *http.Request)
 	tempFile, tempErr := upload.CreateFileImage(res, req, file, handler)
 
 	if tempErr != nil {
-		dto.SetErrorResponse(res, 403, "03", "Create Temp Image File", tempErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UBI003",
+			Message: "Upload Image Error",
+		})
 
 		return
 	}
@@ -47,7 +57,11 @@ func UploadBackgroundImageController(res http.ResponseWriter, req *http.Request)
 	_, uploadErr := database.UploadImage(handler.Filename, tempFile.Name(), contentType)
 
 	if uploadErr != nil {
-		dto.SetErrorResponse(res, 404, "04", "Upload Image Error", uploadErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UBI004",
+			Message: "Upload Image Error",
+		})
 		return
 	}
 
@@ -62,25 +76,36 @@ func UploadBackgroundImageController(res http.ResponseWriter, req *http.Request)
 		"user_table",
 		"USER_BACKGROUND",
 		strconv.Itoa(int(handler.Size)),
-		handler.Filename, 
+		handler.Filename,
 		contentType)
-    
-	if insertErr != nil {
- 		dto.SetErrorResponse(res, 405, "05", "Insert Image Info Error", insertErr)
 
+	if insertErr != nil {
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UBI005",
+			Message: "Upload Image Error",
+		})
 		return
-    }
+	}
 
 	defer connect.Close()
 
 	removeErr := os.Remove(tempFile.Name())
-	
+
 	if removeErr != nil {
 		log.Printf("[UPLOAD] Remove Saved Image Error: %v", removeErr)
 
-		dto.SetErrorResponse(res, 406, "06", "Remove Image Error", removeErr)
+		dto.Response(res, dto.CommonResponseWithMessage{
+			Status:  http.StatusBadRequest,
+			Code:    "UBI006",
+			Message: "Upload Image Error",
+		})
 		return
 	}
 
-	dto.SetResponseWithMessage(res, 200, "01", "Successfully Image Uploaded")
+	dto.Response(res, dto.CommonResponseWithMessage{
+		Status:  http.StatusOK,
+		Code:    "0000",
+		Message: "Success",
+	})
 }

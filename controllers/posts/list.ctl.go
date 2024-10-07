@@ -231,7 +231,12 @@ func GetPostsByTagController(res http.ResponseWriter, req *http.Request) {
 	parseErr := utils.DecodeBody(req, &getPostByTagRequest)
 
 	if parseErr != nil {
-		dto.SetErrorResponse(res, 401, "01", "Parse Request Body Error", parseErr)
+		dto.Response(res, types.ResponsePostByTagListType{
+			Status:  http.StatusBadRequest,
+			Code:    "PBT001",
+			Result:  false,
+			Message: "Parse Error",
+		})
 		return
 	}
 
@@ -241,11 +246,23 @@ func GetPostsByTagController(res http.ResponseWriter, req *http.Request) {
 	postList, totalPostCount, postErr := post.GetPostByTag(getPostByTagRequest, page, size)
 
 	if postErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Get Post List By Tag Error", postErr)
+		dto.Response(res, types.ResponsePostByTagListType{
+			Status:  http.StatusInternalServerError,
+			Code:    "PBT002",
+			Result:  false,
+			Message: "Query Error",
+		})
 		return
 	}
 
-	dto.SetPostByTagResponse(res, 200, "01", postList, totalPostCount.Count)
+	dto.Response(res, types.ResponsePostByTagListType{
+		Status:    http.StatusOK,
+		Code:      "0000",
+		Result:    true,
+		PostList:  postList,
+		PostCount: totalPostCount.Count,
+		Message:   "Success",
+	})
 }
 
 // 태그로 포스트 찾기
@@ -255,7 +272,12 @@ func GetPostsByCategoryController(res http.ResponseWriter, req *http.Request) {
 	parseErr := utils.DecodeBody(req, &getPostByCategoryRequest)
 
 	if parseErr != nil {
-		dto.SetErrorResponse(res, 401, "01", "Parse Request Body Error", parseErr)
+		dto.Response(res, types.ResponsePostByCategoryListType{
+			Status:  http.StatusBadRequest,
+			Code:    "PBC001",
+			Result:  false,
+			Message: "Parse Error",
+		})
 		return
 	}
 
@@ -265,9 +287,21 @@ func GetPostsByCategoryController(res http.ResponseWriter, req *http.Request) {
 	postList, totalCount, postErr := post.GetPostByCategory(getPostByCategoryRequest, page, size)
 
 	if postErr != nil {
-		dto.SetErrorResponse(res, 402, "02", "Get Post List By Tag Error", postErr)
+		dto.Response(res, types.ResponsePostByCategoryListType{
+			Status:  http.StatusInternalServerError,
+			Code:    "PBC002",
+			Result:  false,
+			Message: "Query Error",
+		})
 		return
 	}
 
-	dto.SetPostByCategoryResponse(res, 200, "01", postList, totalCount.Count)
+	dto.Response(res, types.ResponsePostByCategoryListType{
+		Status:    http.StatusInternalServerError,
+		Code:      "0000",
+		Result:    true,
+		PostList:  postList,
+		PostCount: totalCount.Count,
+		Message:   "Success",
+	})
 }
