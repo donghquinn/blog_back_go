@@ -53,12 +53,3 @@ type LoginRedisStruct struct {
 	UserStatus string `json:"userStatus"`
 	UserId     string `json:"userId"`
 }
-
-// 파일 데이터 쿼리 결과
-type SelectFileQueryResult struct {
-	FileFormat    string
-	FileType      string
-	TargetPurpose string
-	TargetId      string
-	ObjectName    string
-}
