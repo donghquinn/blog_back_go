@@ -52,6 +52,7 @@ services:
     ports:
       - ${APP_PORT}:${APP_PORT}
     volumes:
+      - ./logs:/home/node/logs
       - ./.env:/home/node/.env
     networks:
       - proxy
